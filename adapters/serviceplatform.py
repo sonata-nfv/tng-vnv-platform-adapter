@@ -49,6 +49,32 @@ class ServicePlatform:
 
 
 
+    def getServicePlatflormType(self):
+        try:
+            connection = psycopg2.connect(user = "sonatatest",
+                                        password = "sonata",
+                                        host = "172.18.0.2",
+                                        port = "5432",
+                                        database = "gatekeeper")
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            get_sp = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (get_sp)
+            cursor.execute(get_sp)
+            all = cursor.fetchall()
+            return jsonify(all), 200     
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed") 
+
 
 
     def getServicePlatflorm(self):

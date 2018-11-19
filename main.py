@@ -8,10 +8,11 @@ import requests
 
 from adapters import sonata
 from adapters import osm
-from adapters import adapter
+from adapters import adapter as adapter
+
 from models import utils
 from models import users
-from models import serviceplatform
+
 
 import psycopg2
 
@@ -31,77 +32,8 @@ def login():
    return jsonify(login)
 
 
-################### get all users from DB ##################
-@app.route('/users', methods=['GET'])
-def getAllUsers():
-    allusers = users.User("prueba","prueba","prueba")
-    return allusers.getUsers()
-
-################### get all SPs from DB ##################
-@app.route('/sps', methods=['GET'])
-def getAllServicePlatforms():
-    sps = serviceplatform.ServicePlatform("name", "host", "type", "service_token")
-    return sps.getServicePlatforms()
-
-################### register user ##################
-@app.route('/users', methods=['POST'])
-def registerNewUser():    
-    print (request.is_json)
-    content = request.get_json()
-    print (content)
-    newUser = users.User(content['username'],content['password'],content['service_platform'])    
-    return newUser.registerUser()
-
-################### register service platform ##################
-@app.route('/sps', methods=['POST'])
-def registerNewServicePlatform():    
-    print (request.is_json)
-    content = request.get_json()
-    print (content)
-    newSP = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['service_token'])    
-    return newSP.registerServicePlatform()
-
-################### get 1 service platform by name ##################
-@app.route('/sps/<name>', methods=['GET'])
-def getServicePlatform(name):      
-    newSP = serviceplatform.ServicePlatform(name,'host','type','service_token')
-    return newSP.getServicePlatflorm()
-
-################### get service platforms by type ##################
-@app.route('/sps/type/<type>', methods=['GET'])
-def getServicePlatformByType(type):     
-    newSP = serviceplatform.ServicePlatform('name','host',type,'service_token')
-    return newSP.getServicePlatflormsByType()    
-
-################### get 1 user ##################
-@app.route('/users/<username>', methods=['GET'])
-def getUser(username):     
-    newUser = users.User(username,'password','sp')
-    return newUser.getUser()
-
-################### get service platform token ##################
-@app.route('/sps/<name>/token', methods=['GET'])
-def getServicePlatformToken(name):     
-    newSP = serviceplatform.ServicePlatform(name,'host','type','service_token')
-    return newSP.getServicePlatformToken()    
 
 
-
-
-
-########################################## API Actions #########################################
-#Check the connection to the PM component
-@app.route('/pings', methods=['GET'])
-def getPings():
-    ping_response  = {'alive_since': '2018-07-18 10:00:00 UTC'}
-    return jsonify(ping_response), 200
-
-########################################## API Actions #########################################
-#GET the Platform Manager description
-@app.route('/pm', methods=['GET'])
-def getPm():
-    pm_response  = {'Description': 'VnV Platform Manager'}
-    return jsonify(pm_response), 200    
 
 
 ########################################## ADAPTERS Actions #########################################
@@ -123,27 +55,122 @@ def getSonUsers():
 def getSonataSPs():
     sonatas = sonata.Sonata("nameTest","localhostTest", "typeTest")
     return sonatas.getSPs()
+
+
+
   
 
-#sonata adapter test
-@app.route('/sonata/services')
-def getServices():
-    prueba = sonata.Sonata("sonata-1","http://pre-int-sp-ath.5gtango.eu:32002/api/v3", "sonata")    
-    return prueba.getServices()
-@app.route('/sonata/packages')
-def getPackages():
-    prueba = sonata.Sonata("sonata-1","http://pre-int-sp-ath.5gtango.eu:32002/api/v3", "sonata")    
-    return prueba.getPackages()
 
-#osm adapter test
-@app.route('/osm/services')
-def getOSMServices():
-    prueba = osm.Osm("osm-1","http://pre-int-sp-ath.5gtango.eu:32002/api/v3", "sonata")    
-    return prueba.getServices()    
-@app.route('/osm/packages')
-def getOSMPackages():
-    prueba = osm.Osm("osm-1","http://pre-int-sp-ath.5gtango.eu:32002/api/v3", "sonata")    
-    return prueba.getPackages()    
+
+
+
+
+
+##### ADAPTER GENERIC ROUTES #####
+@app.route('/adapters/<service_platform>/get_token')
+def adapter_get_token(service_platform):
+    if service_platform == 'sonata':
+        adapter = "asasas"
+        return adapter
+    if service_platform == 'osm':
+        token = osmclient.Client().get_token()
+        return token
+
+@app.route('/adapters/<service_platform>/ns')
+def adapter_ns(service_platform):
+    if service_platform == 'sonata':
+        adapter = "asasas"
+        return adapter
+    if service_platform == 'osm':
+        list = osmclient.Client().ns.list()
+        return list
+
+@app.route('/adapters/<service_platform>/ns/<name>')
+def adapter_ns_name(service_platform,name):
+    if service_platform == 'sonata':
+        adapter = "asasas"
+        return adapter
+    if service_platform == 'osm':
+        ns = osmclient.Client().ns.get(name)
+        return ns
+
+@app.route('/adapters/<service_platform>/ns/alarm')
+def adapter_ns_alarm(service_platform):
+    if service_platform == 'sonata':
+        adapter = "asasas"
+        return adapter
+    if service_platform == 'osm':
+        alarma = "aaa"
+        alarm = osmclient.Client().ns.create_alarm(alarma)
+        #return alarm
+
+@app.route('/adapters/<service_platform>/nsd')
+def adapter_nsd(service_platform):
+
+    if service_platform == 'sonata':
+        adapter = "asasas"
+        return adapter
+    if service_platform == 'osm':
+        nsd = osmclient.Client().nsd.list()
+        return nsd
+
+
+@app.route('/adapters/<service_platform>/services')
+def adapter_services(service_platform):
+    if service_platform == 'sonata':
+        adapter = "asasas"
+        return adapter
+    if service_platform == 'osm':
+        nsd = 'services'
+        return nsd    
+
+
+##### ADAPTER GENERIC ROUTES #####
+@app.route('/adapters/<service_platform>/get_type')
+def adapter_get_type(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getDBType()
+    
+
+@app.route('/adapters/<service_platform>/get_host')
+def adapter_get_host(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getDBHost()
+  
+
+@app.route('/adapters/<service_platform>/packages', methods=['GET'])
+def adapter_get_packages(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getPackages()
+
+@app.route('/adapters/<service_platform>/packages/<name>/<vendor>/<version>', methods=['GET'])
+def adapter_get_package(service_platform,name,vendor, version):
+    ad = adapter.Adapter(service_platform)
+    return ad.getPackage(name,vendor,version)    
+
+@app.route('/adapters/<service_platform>/packages/<name>/<vendor>/<version>', methods=['DELETE'])
+def adapter_delete_package(service_platform,name,vendor, version):
+    ad = adapter.Adapter(service_platform)
+    return ad.deletePackage(name,vendor,version)   
+
+@app.route('/adapters/<service_platform>/packages/<name>/<vendor>/<version>/id', methods=['GET'])
+def adapter_get_package_by_id(service_platform,name,vendor, version):
+    ad = adapter.Adapter(service_platform)
+    return ad.getPackagebyId(name,vendor,version)  
+    
+
+@app.route('/adapters/<service_platform>/packages', methods=['POST'])
+def adapter_upload_package(service_platform):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    ad = adapter.Adapter(service_platform)  
+    print (ad.name)         
+    return ad.uploadPackage(content['package'])
+    
+
+    
+
 
 
 
@@ -161,9 +188,9 @@ if __name__ == '__main__':
     #db.settings = config
     #createTableUsers()
     #createTableServicePlatforms()
-    createUsersObj = utils.Utils()
-    createUsersObj.createTableUsers()
-    createUsersObj.createTableServicePlatforms()
+    #createUsersObj = utils.Utils()
+    #createUsersObj.createTableUsers()
+    #createUsersObj.createTableServicePlatforms()
 
     
     #RUN SERVER
