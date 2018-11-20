@@ -9,6 +9,7 @@ import requests
 from adapters import sonata
 from adapters import osm
 from adapters import adapter as adapter
+from adapters import serviceplatform as serviceplatform
 
 from models import utils
 from models import users
@@ -31,98 +32,21 @@ def login():
    login = requests.post('http://172.18.0.3:4567/login')
    return jsonify(login)
 
+##### SERVICE PLATFORMS ROUTES #####
+@app.route('/service_platforms', methods=['GET'])
+def get_sps():
+    sp = serviceplatform.ServicePlatform("name","host","type","service_token")
+    return sp.getServicePlatforms()
 
+@app.route('/service_platforms', methods=['POST'])
+def register_sp():
+    #sp = serviceplatform.ServicePlatform("name","host","type","service_token")   
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['service_token'])
+    return sp.registerServicePlatform()    
 
-
-
-
-########################################## ADAPTERS Actions #########################################
-#test for creating a new Adapter
-@app.route('/adapters')
-def getAdapters():
-    prueba = adapter.Adapter("nameTest","localhostTest", "typeTest")
-    prueba.host = "my_new_host"
-    prueba.name = "my_new_name"
-    prueba.type = "my_new_type"
-    return prueba.host + " " + prueba.name + " " + prueba.type 
-
-###### sonata gets ########
-@app.route('/adapters/sonata/users', methods=['GET'])
-def getSonUsers():
-    sonatas = sonata.Sonata("nameTest","localhostTest", "typeTest")
-    return sonatas.getUsers()
-@app.route('/adapters/sonata/sps')
-def getSonataSPs():
-    sonatas = sonata.Sonata("nameTest","localhostTest", "typeTest")
-    return sonatas.getSPs()
-
-
-
-  
-
-
-
-
-
-
-
-##### ADAPTER GENERIC ROUTES #####
-@app.route('/adapters/<service_platform>/get_token')
-def adapter_get_token(service_platform):
-    if service_platform == 'sonata':
-        adapter = "asasas"
-        return adapter
-    if service_platform == 'osm':
-        token = osmclient.Client().get_token()
-        return token
-
-@app.route('/adapters/<service_platform>/ns')
-def adapter_ns(service_platform):
-    if service_platform == 'sonata':
-        adapter = "asasas"
-        return adapter
-    if service_platform == 'osm':
-        list = osmclient.Client().ns.list()
-        return list
-
-@app.route('/adapters/<service_platform>/ns/<name>')
-def adapter_ns_name(service_platform,name):
-    if service_platform == 'sonata':
-        adapter = "asasas"
-        return adapter
-    if service_platform == 'osm':
-        ns = osmclient.Client().ns.get(name)
-        return ns
-
-@app.route('/adapters/<service_platform>/ns/alarm')
-def adapter_ns_alarm(service_platform):
-    if service_platform == 'sonata':
-        adapter = "asasas"
-        return adapter
-    if service_platform == 'osm':
-        alarma = "aaa"
-        alarm = osmclient.Client().ns.create_alarm(alarma)
-        #return alarm
-
-@app.route('/adapters/<service_platform>/nsd')
-def adapter_nsd(service_platform):
-
-    if service_platform == 'sonata':
-        adapter = "asasas"
-        return adapter
-    if service_platform == 'osm':
-        nsd = osmclient.Client().nsd.list()
-        return nsd
-
-
-@app.route('/adapters/<service_platform>/services')
-def adapter_services(service_platform):
-    if service_platform == 'sonata':
-        adapter = "asasas"
-        return adapter
-    if service_platform == 'osm':
-        nsd = 'services'
-        return nsd    
 
 
 ##### ADAPTER GENERIC ROUTES #####
@@ -188,9 +112,9 @@ if __name__ == '__main__':
     #db.settings = config
     #createTableUsers()
     #createTableServicePlatforms()
-    #createUsersObj = utils.Utils()
-    #createUsersObj.createTableUsers()
-    #createUsersObj.createTableServicePlatforms()
+    createUsersObj = utils.Utils()
+    createUsersObj.createTableUsers()
+    createUsersObj.createTableServicePlatforms()
 
     
     #RUN SERVER
