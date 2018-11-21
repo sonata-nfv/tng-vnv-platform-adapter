@@ -260,3 +260,95 @@ class Adapter:
 
         
 
+
+
+    def getServices(self):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+
+        sp_host_0 = self.getDBHost()
+        print (sp_host_0)
+        sp_host = sp_host_0.__str__()
+        print (sp_host)
+        #print (self.getDBHost())
+        sp_host_1 = sp_host[4:]
+        print ("sp1 es: ")
+        print (sp_host_1)
+        sp_host_2 = sp_host_1[:-10]
+        print ("sp2 es: ")
+        print (sp_host_2)
+
+        url = sp_host_2 + '/services'
+        #url = sp_url + '/packages'
+        response = requests.get(url, headers=JSON_CONTENT_HEADER)    
+        if response.ok:        
+                return (response.text, response.status_code, response.headers.items()) 
+
+    def getService(self,name,vendor,version):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+
+        sp_host_0 = self.getDBHost()
+        print (sp_host_0)
+        sp_host = sp_host_0.__str__()
+        print (sp_host)
+        #print (self.getDBHost())
+        sp_host_1 = sp_host[4:]
+        print ("sp1 es: ")
+        print (sp_host_1)
+        sp_host_2 = sp_host_1[:-10]
+        print ("sp2 es: ")
+        print (sp_host_2)
+
+        url = sp_host_2 + '/services'  
+        print (name,vendor,version)
+        response = requests.get(url,headers=JSON_CONTENT_HEADER)
+        response_json = response.content
+        jjson = json.loads(response_json)
+        pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
+        
+        if response.ok: 
+                print(pkg)
+                return jsonify(pkg)                
+
+
+    def getServiceId(self,name,vendor,version):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+
+        sp_host_0 = self.getDBHost()
+        print (sp_host_0)
+        sp_host = sp_host_0.__str__()
+        print (sp_host)
+        #print (self.getDBHost())
+        sp_host_1 = sp_host[4:]
+        print ("sp1 es: ")
+        print (sp_host_1)
+        sp_host_2 = sp_host_1[:-10]
+        print ("sp2 es: ")
+        print (sp_host_2)
+
+        url = sp_host_2 + '/services'  
+        print (name,vendor,version)
+        response = requests.get(url,headers=JSON_CONTENT_HEADER)
+        response_json = response.content
+        print (response_json)
+        jjson = json.loads(response_json)
+        pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
+        
+        if pkg:
+
+            print(pkg)
+            uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['nsd']['name'] == name)]            
+            print(uuid_to_delete_1)
+            uuid_0 = uuid_to_delete_1.__str__()
+            uuid_to_delete_2 = uuid_0[2:]
+            print(uuid_to_delete_2)
+            uuid_to_delete_3 = uuid_to_delete_2[:-2]
+            print(uuid_to_delete_3)
+            url_for_delete = url + '/' + uuid_to_delete_3
+            print (url_for_delete)
+            delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
+      
+        if response.ok:                                        
+                return uuid_to_delete_3

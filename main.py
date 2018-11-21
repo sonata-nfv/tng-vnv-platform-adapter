@@ -62,6 +62,23 @@ def adapter_get_host(service_platform):
     return ad.getDBHost()
   
 
+@app.route('/adapters/<service_platform>/services', methods=['GET'])
+def adapter_get_services(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getServices()
+
+@app.route('/adapters/<service_platform>/services/<name>/<vendor>/<version>', methods=['GET'])
+def adapter_get_service(service_platform,name,vendor, version):
+    ad = adapter.Adapter(service_platform)
+    return ad.getService(name,vendor,version)   
+
+@app.route('/adapters/<service_platform>/services/<name>/<vendor>/<version>/id', methods=['GET'])
+def adapter_get_service_by_id(service_platform,name,vendor, version):
+    ad = adapter.Adapter(service_platform)
+    return ad.getServiceId(name,vendor,version)      
+
+
+
 @app.route('/adapters/<service_platform>/packages', methods=['GET'])
 def adapter_get_packages(service_platform):
     ad = adapter.Adapter(service_platform)
