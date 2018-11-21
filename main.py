@@ -110,6 +110,22 @@ def adapter_upload_package(service_platform):
     return ad.uploadPackage(content['package'])
     
 
+#### SERVICES OPERATIONS ####    
+@app.route('/adapters/<service_platform>/instantiations/<id>', methods=['GET'])
+def serviceInstantiationGetStatus(service_platform,id):
+    ad = adapter.Adapter(service_platform)
+    return ad.instantiationStatus(id)
+
+@app.route('/adapters/<service_platform>/instantiations/<id>', methods=['POST'])
+def serviceInstantiation(service_platform,id):
+    ad = adapter.Adapter(service_platform)
+    return ad.instantiation(id)    
+
+@app.route('/adapters/<service_platform>/instantiations/<id>', methods=['DELETE'])
+def serviceInstantiationDelete(service_platform,id):
+    ad = adapter.Adapter(service_platform)
+    return ad.instantiationDelete(id)       
+
     
 
 

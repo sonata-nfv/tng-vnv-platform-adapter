@@ -46,7 +46,14 @@ class Adapter:
             print (get_type)
             cursor.execute(get_type)
             all = cursor.fetchall()
-            return jsonify(all), 200     
+            #return jsonify(all), 200 
+            type_0 = all.__str__()
+            print(type_0)
+            type_1 = type_0[3:]            
+            print(type_1)            
+            type_2 = type_1[:-4]            
+            print(type_2)                  
+            return type_2
         except (Exception, psycopg2.Error) as error :
             print (error)
             exception_message = str(error)
@@ -352,3 +359,40 @@ class Adapter:
       
         if response.ok:                                        
                 return uuid_to_delete_3
+
+
+    def instantiationStatus(self,id):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            print('this SP is a Sonata')
+            print("status")
+            return "status"
+        if my_type == 'osm':
+            print('this SP is a OSM')         
+
+    def instantiation(self,id):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            print('this SP is a Sonata')
+            print("status")
+            return "status"
+        if my_type == 'osm':
+            print('this SP is a OSM')   
+
+    def instantiationDelete(self,id):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            print('this SP is a Sonata')
+            print("status")
+            return "status"
+        if my_type == 'osm':
+            print('this SP is a OSM')                            
