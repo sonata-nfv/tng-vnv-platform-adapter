@@ -77,6 +77,11 @@ def adapter_get_service_by_id(service_platform,name,vendor, version):
     ad = adapter.Adapter(service_platform)
     return ad.getServiceId(name,vendor,version)      
 
+@app.route('/adapters/<service_platform>/services/<name>/<vendor>/<version>/instantiations', methods=['GET'])
+def adapter_get_service_instantiations(service_platform,name,vendor, version):
+    ad = adapter.Adapter(service_platform)
+    return ad.getServiceInstantiations(name,vendor,version)       
+
 
 
 @app.route('/adapters/<service_platform>/packages', methods=['GET'])
@@ -110,21 +115,36 @@ def adapter_upload_package(service_platform):
     return ad.uploadPackage(content['package'])
     
 
-#### SERVICES OPERATIONS ####    
+#### SERVICES OPERATIONS #### 
+@app.route('/adapters/<service_platform>/instantiations', methods=['GET'])
+def serviceInstantiationsGetStatus(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.instantiationsStatus() 
+ 
+   
 @app.route('/adapters/<service_platform>/instantiations/<id>', methods=['GET'])
 def serviceInstantiationGetStatus(service_platform,id):
     ad = adapter.Adapter(service_platform)
     return ad.instantiationStatus(id)
 
-@app.route('/adapters/<service_platform>/instantiations/<id>', methods=['POST'])
-def serviceInstantiation(service_platform,id):
+@app.route('/adapters/<service_platform>/instantiations', methods=['POST'])
+def serviceInstantiation(service_platform):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)    
     ad = adapter.Adapter(service_platform)
-    return ad.instantiation(id)    
+    print (content['service_uuid'])         
+    return ad.instantiation(request)    
+    
 
-@app.route('/adapters/<service_platform>/instantiations/<id>', methods=['DELETE'])
-def serviceInstantiationDelete(service_platform,id):
+@app.route('/adapters/<service_platform>/instantiations/delete', methods=['POST'])
+def serviceInstantiationDelete(service_platform):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)    
     ad = adapter.Adapter(service_platform)
-    return ad.instantiationDelete(id)       
+    print (content['service_uuid'])        
+    return ad.instantiationDelete(request)      
 
     
 

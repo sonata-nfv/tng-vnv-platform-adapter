@@ -96,143 +96,152 @@ class Adapter:
     def getPackages(self):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+        if my_type == 'sonata':               
 
-        sp_host_0 = self.getDBHost()
-        print (sp_host_0)
-        sp_host = sp_host_0.__str__()
-        print (sp_host)
-        #print (self.getDBHost())
-        sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
 
-        url = sp_host_2 + '/packages'
-        #url = sp_url + '/packages'
-        response = requests.get(url, headers=JSON_CONTENT_HEADER)    
-        if response.ok:        
-                return (response.text, response.status_code, response.headers.items()) 
+            url = sp_host_2 + '/packages'
+            #url = sp_url + '/packages'
+            response = requests.get(url, headers=JSON_CONTENT_HEADER)    
+            if response.ok:        
+                    return (response.text, response.status_code, response.headers.items()) 
 
 
 
 
     def getPackage(self,name,vendor,version):    
 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'} 
 
-        sp_host_0 = self.getDBHost()
-        print (sp_host_0)
-        sp_host = sp_host_0.__str__()
-        print (sp_host)
-        #print (self.getDBHost())
-        sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+        my_type =  self.getDBType()
+        if my_type == 'sonata':    
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
 
-        url = sp_host_2 + '/packages'  
-        print (name,vendor,version)
-        response = requests.get(url,headers=JSON_CONTENT_HEADER)
-        response_json = response.content
-        jjson = json.loads(response_json)
-        pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
-        
-        if response.ok: 
-                print(pkg)
-                return jsonify(pkg)
+            url = sp_host_2 + '/packages'  
+            print (name,vendor,version)
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            jjson = json.loads(response_json)
+            pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+            
+            if response.ok: 
+                    print(pkg)
+                    return jsonify(pkg)
 
     def deletePackage(self,name,vendor,version):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
 
-        sp_host_0 = self.getDBHost()
-        print (sp_host_0)
-        sp_host = sp_host_0.__str__()
-        print (sp_host)
-        #print (self.getDBHost())
-        sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+        my_type =  self.getDBType()
+        if my_type == 'sonata':    
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
 
-        url = sp_host_2 + '/packages'  
-        print (name,vendor,version)
-        response = requests.get(url,headers=JSON_CONTENT_HEADER)
-        response_json = response.content
-        jjson = json.loads(response_json)
-        pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
-        
-        if pkg:
+            url = sp_host_2 + '/packages'  
+            print (name,vendor,version)
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            jjson = json.loads(response_json)
+            pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+            
+            if pkg:
 
-            print(pkg)
-            #uuid_to_delete = pkg['pd']['uuid']
-            #uuid_to_delete_1 = [uuid for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
-            uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]            
-            print(uuid_to_delete_1)
-            uuid_0 = uuid_to_delete_1.__str__()
-            uuid_to_delete_2 = uuid_0[2:]
-            print(uuid_to_delete_2)
-            uuid_to_delete_3 = uuid_to_delete_2[:-2]
-            print(uuid_to_delete_3)
+                print(pkg)
+                #uuid_to_delete = pkg['pd']['uuid']
+                #uuid_to_delete_1 = [uuid for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]            
+                print(uuid_to_delete_1)
+                uuid_0 = uuid_to_delete_1.__str__()
+                uuid_to_delete_2 = uuid_0[2:]
+                print(uuid_to_delete_2)
+                uuid_to_delete_3 = uuid_to_delete_2[:-2]
+                print(uuid_to_delete_3)
 
-            url_for_delete = url + '/' + uuid_to_delete_3
-            print (url_for_delete)
-            delete = requests.delete(url_for_delete, headers=JSON_CONTENT_HEADER)
+                url_for_delete = url + '/' + uuid_to_delete_3
+                print (url_for_delete)
+                delete = requests.delete(url_for_delete, headers=JSON_CONTENT_HEADER)
 
-        if response.ok:                 
-                return (delete.text, delete.status_code, delete.headers.items())
+            if response.ok:                 
+                    return (delete.text, delete.status_code, delete.headers.items())
 
 
 
 
     def getPackagebyId(self,name,vendor,version):    
 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
-
-        sp_host_0 = self.getDBHost()
-        print (sp_host_0)
-        sp_host = sp_host_0.__str__()
-        print (sp_host)
-        #print (self.getDBHost())
-        sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
-
-        url = sp_host_2 + '/packages'  
-        print (name,vendor,version)
-        response = requests.get(url,headers=JSON_CONTENT_HEADER)
-        response_json = response.content
-        jjson = json.loads(response_json)
-        pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'} 
         
-        if pkg:
+        my_type =  self.getDBType()
+        if my_type == 'sonata':              
 
-            print(pkg)
-            #uuid_to_delete = pkg['pd']['uuid']
-            #uuid_to_delete_1 = [uuid for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
-            uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]            
-            print(uuid_to_delete_1)
-            uuid_0 = uuid_to_delete_1.__str__()
-            uuid_to_delete_2 = uuid_0[2:]
-            print(uuid_to_delete_2)
-            uuid_to_delete_3 = uuid_to_delete_2[:-2]
-            print(uuid_to_delete_3)
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
 
-            url_for_delete = url + '/' + uuid_to_delete_3
-            print (url_for_delete)
-            delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
+            url = sp_host_2 + '/packages'  
+            print (name,vendor,version)
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            jjson = json.loads(response_json)
+            pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+            
+            if pkg:
 
-        if response.ok:                 
-                return (delete.text, delete.status_code, delete.headers.items())                
+                print(pkg)
+                #uuid_to_delete = pkg['pd']['uuid']
+                #uuid_to_delete_1 = [uuid for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]            
+                print(uuid_to_delete_1)
+                uuid_0 = uuid_to_delete_1.__str__()
+                uuid_to_delete_2 = uuid_0[2:]
+                print(uuid_to_delete_2)
+                uuid_to_delete_3 = uuid_to_delete_2[:-2]
+                print(uuid_to_delete_3)
+
+                url_for_delete = url + '/' + uuid_to_delete_3
+                print (url_for_delete)
+                delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
+
+            if response.ok:                 
+                    return (delete.text, delete.status_code, delete.headers.items())                
 
                 
 
@@ -242,28 +251,31 @@ class Adapter:
 
     def uploadPackage(self,package):
 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}           
-        sp_host_0 = self.getDBHost()
-        print (sp_host_0)
-        sp_host = sp_host_0.__str__()
-        print (sp_host)
-        #print (self.getDBHost())
-        sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
-        url = sp_host_2 + '/packages'
-        
-        print(package)
-        print(url)
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+        if my_type == 'sonata':               
 
-        files = {'package': open(package,'rb')}
-        upload = requests.post(url, files=files)
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            url = sp_host_2 + '/packages'
+            
+            print(package)
+            print(url)
 
-        if request.method == 'POST':
-            return upload.text
+            files = {'package': open(package,'rb')}
+            upload = requests.post(url, files=files)
+
+            if request.method == 'POST':
+                return upload.text
 
         
 
@@ -271,94 +283,137 @@ class Adapter:
 
     def getServices(self):    
 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+        my_type =  self.getDBType()
+        if my_type == 'sonata':                
 
-        sp_host_0 = self.getDBHost()
-        print (sp_host_0)
-        sp_host = sp_host_0.__str__()
-        print (sp_host)
-        #print (self.getDBHost())
-        sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
 
-        url = sp_host_2 + '/services'
-        #url = sp_url + '/packages'
-        response = requests.get(url, headers=JSON_CONTENT_HEADER)    
-        if response.ok:        
-                return (response.text, response.status_code, response.headers.items()) 
+            url = sp_host_2 + '/services'
+            #url = sp_url + '/packages'
+            response = requests.get(url, headers=JSON_CONTENT_HEADER)    
+            if response.ok:        
+                    return (response.text, response.status_code, response.headers.items()) 
 
     def getService(self,name,vendor,version):    
 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
 
-        sp_host_0 = self.getDBHost()
-        print (sp_host_0)
-        sp_host = sp_host_0.__str__()
-        print (sp_host)
-        #print (self.getDBHost())
-        sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+        my_type =  self.getDBType()
+        if my_type == 'sonata':                
 
-        url = sp_host_2 + '/services'  
-        print (name,vendor,version)
-        response = requests.get(url,headers=JSON_CONTENT_HEADER)
-        response_json = response.content
-        jjson = json.loads(response_json)
-        pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
-        
-        if response.ok: 
-                print(pkg)
-                return jsonify(pkg)                
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + '/services'  
+            print (name,vendor,version)
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            jjson = json.loads(response_json)
+            pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
+            
+            if response.ok: 
+                    print(pkg)
+                    return jsonify(pkg)     
+
+    def getServiceInstantiations(self,name,vendor,version):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+
+        my_type =  self.getDBType()
+        if my_type == 'sonata':                
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + '/requests'  
+            print (name,vendor,version)
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            #response_json = response.content
+            response_json = response.text
+            print (response_json)
+            jjson = json.loads(response_json)
+            print (jjson)
+            #pkg = [x for x in jjson if x['service']['name'] == name and x['service']['vendor'] == vendor and x['service']['version'] == version]
+            pkg = [x for x in jjson if x['status'] == 'NEW']
+            print (pkg)
+            
+            if response.ok: 
+                    #print(pkg)
+                    return response_json
+                    #return jsonify(pkg)                             
 
 
     def getServiceId(self,name,vendor,version):    
 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+        my_type =  self.getDBType()
+        if my_type == 'sonata':                
 
-        sp_host_0 = self.getDBHost()
-        print (sp_host_0)
-        sp_host = sp_host_0.__str__()
-        print (sp_host)
-        #print (self.getDBHost())
-        sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
 
-        url = sp_host_2 + '/services'  
-        print (name,vendor,version)
-        response = requests.get(url,headers=JSON_CONTENT_HEADER)
-        response_json = response.content
-        print (response_json)
-        jjson = json.loads(response_json)
-        pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
+            url = sp_host_2 + '/services'  
+            print (name,vendor,version)
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            print (response_json)
+            jjson = json.loads(response_json)
+            pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
+            
+            if pkg:
+
+                print(pkg)
+                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['nsd']['name'] == name)]            
+                print(uuid_to_delete_1)
+                uuid_0 = uuid_to_delete_1.__str__()
+                uuid_to_delete_2 = uuid_0[2:]
+                print(uuid_to_delete_2)
+                uuid_to_delete_3 = uuid_to_delete_2[:-2]
+                print(uuid_to_delete_3)
+                url_for_delete = url + '/' + uuid_to_delete_3
+                print (url_for_delete)
+                delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
         
-        if pkg:
-
-            print(pkg)
-            uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['nsd']['name'] == name)]            
-            print(uuid_to_delete_1)
-            uuid_0 = uuid_to_delete_1.__str__()
-            uuid_to_delete_2 = uuid_0[2:]
-            print(uuid_to_delete_2)
-            uuid_to_delete_3 = uuid_to_delete_2[:-2]
-            print(uuid_to_delete_3)
-            url_for_delete = url + '/' + uuid_to_delete_3
-            print (url_for_delete)
-            delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
-      
-        if response.ok:                                        
-                return uuid_to_delete_3
+            if response.ok:                                        
+                    return uuid_to_delete_3
 
 
     def instantiationStatus(self,id):    
@@ -368,31 +423,128 @@ class Adapter:
 
         if my_type == 'sonata':
             print('this SP is a Sonata')
-            print("status")
-            return "status"
-        if my_type == 'osm':
-            print('this SP is a OSM')         
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
 
-    def instantiation(self,id):    
+            url = sp_host_2 + '/requests/' +  id
+            print (url)
+            
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            print (response_json)
+            return response_json
+
+        if my_type == 'osm':
+            print('this SP is a OSM')     
+
+    def instantiationsStatus(self):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
         if my_type == 'sonata':
             print('this SP is a Sonata')
-            print("status")
-            return "status"
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + '/requests'  
+            print (url)
+            
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            print (response_json)
+            return response_json
+
+            #print("status")
+            #return "status"
+        if my_type == 'osm':
+            print('this SP is a OSM')                   
+
+    def instantiation(self,request):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            print('this SP is a Sonata')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            url = sp_host_2 + '/requests'
+            
+            print(request.get_json())
+            data = request.get_json()
+            print(url)
+            #upload = requests.post(url, files=files)
+            
+            #upload = requests.post(url, files=files)
+            instantiate = requests.post(url,data,headers=JSON_CONTENT_HEADER) 
+
+            if request.method == 'POST':
+                return instantiate.text
+
         if my_type == 'osm':
             print('this SP is a OSM')   
 
-    def instantiationDelete(self,id):    
+    def instantiationDelete(self,request):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
         if my_type == 'sonata':
             print('this SP is a Sonata')
-            print("status")
-            return "status"
+
+            print('this SP is a Sonata')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            url = sp_host_2 + '/requests'
+            
+            print(request.get_json())
+            data = request.get_json()
+            print(url)
+            #upload = requests.post(url, files=files)
+            
+            #upload = requests.post(url, files=files)
+            terminate = requests.post(url,data,headers=JSON_CONTENT_HEADER) 
+
+            if request.method == 'POST':
+                return terminate.text
+
+
         if my_type == 'osm':
             print('this SP is a OSM')                            
