@@ -190,9 +190,6 @@ if __name__ == '__main__':
     args, remaining_argv = conf_parser.parse_known_args()
     config = ConfigParser()
     config.read(args.conf_file)
-    #db.settings = config
-    #createTableUsers()
-    #createTableServicePlatforms()
     createUsersObj = utils.Utils()
     createUsersObj.createTableUsers()
     createUsersObj.createTableServicePlatforms()

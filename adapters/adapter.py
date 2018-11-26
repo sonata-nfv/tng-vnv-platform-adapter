@@ -612,7 +612,28 @@ class Adapter:
 
 
         if my_type == 'osm':
-            print('this SP is a OSM')     
+            print('this SP is a OSM')   
+            print('this SP is a OSM')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+            url = sp_host_3            
+            
+            get_status = "osm --hostname " + sp_host_3 + " ns-op-list " + id
+            print (get_status)
+            status = subprocess.check_output([get_status], shell=True)
+            return (status)              
+
 
     def instantiationsStatus(self):    
 
@@ -646,7 +667,27 @@ class Adapter:
             #print("status")
             #return "status"
         if my_type == 'osm':
-            print('this SP is a OSM')                   
+            print('this SP is a OSM')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+            url = sp_host_3            
+            
+            get_status = "osm --hostname " + sp_host_3 + " ns-list"
+            print (get_status)
+            status = subprocess.check_output([get_status], shell=True)
+            return (status)              
+
 
     def instantiation(self,request):    
 
