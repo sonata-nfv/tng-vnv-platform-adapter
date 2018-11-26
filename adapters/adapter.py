@@ -7,6 +7,7 @@ from werkzeug import secure_filename
 #import serviceplatform
 import psycopg2
 import requests
+import subprocess
 
 
 class Adapter:
@@ -75,6 +76,7 @@ class Adapter:
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")
             #create table Service Platforms
+            print (self.name)
             get_host = "SELECT host FROM service_platforms WHERE name=\'" +self.name+ "\'"
             print (get_host)
             cursor.execute(get_host)
@@ -116,7 +118,8 @@ class Adapter:
             response = requests.get(url, headers=JSON_CONTENT_HEADER)    
             if response.ok:        
                     return (response.text, response.status_code, response.headers.items()) 
-
+        if my_type == 'osm': 
+            return "osm packages"
 
 
 
@@ -277,7 +280,66 @@ class Adapter:
             if request.method == 'POST':
                 return upload.text
 
-        
+    def uploadOSMService(self,service): 
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+        if my_type == 'osm':               
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_2 + '/services'
+            
+            
+            print(service)
+            upload_nsd = "osm --hostname " + sp_host_3 + " nsd-create " + service
+            print (upload_nsd)
+            upload = subprocess.check_output([upload_nsd], shell=True)
+            return (upload)
+      
+
+    def uploadOSMFunction(self,function): 
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+        if my_type == 'osm':               
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_2 + '/functions'
+            
+            
+            print(function)
+            upload_vnfd = "osm --hostname " + sp_host_3 + " vnfd-create " + function
+            print (upload_vnfd)
+            upload = subprocess.check_output([upload_vnfd], shell=True)
+            return (upload)      
 
 
 
@@ -304,6 +366,80 @@ class Adapter:
             response = requests.get(url, headers=JSON_CONTENT_HEADER)    
             if response.ok:        
                     return (response.text, response.status_code, response.headers.items()) 
+
+        if my_type == 'osm':                
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_2 + '/services'
+            get_nsd_list = "osm --hostname " + sp_host_3 + " nsd-list"
+            print (get_nsd_list)
+            #get = os.system(get_nsd_list).__str__()    
+            #return get
+            get = subprocess.check_output([get_nsd_list], shell=True)
+            return (get)
+            
+
+    def getFunctions(self):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+        my_type =  self.getDBType()
+        if my_type == 'sonata':                
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + '/functions'
+            #url = sp_url + '/packages'
+            response = requests.get(url, headers=JSON_CONTENT_HEADER)    
+            if response.ok:        
+                    return (response.text, response.status_code, response.headers.items()) 
+
+        if my_type == 'osm':                
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_2 + '/functions'
+            get_vnfd_list = "osm --hostname " + sp_host_3 + " vnfd-list"
+            print (get_vnfd_list)
+            #get = os.system(get_nsd_list).__str__()
+            #return get                    
+            get = subprocess.check_output([get_vnfd_list], shell=True)
+            return (get)            
 
     def getService(self,name,vendor,version):    
 
@@ -357,19 +493,48 @@ class Adapter:
             url = sp_host_2 + '/requests'  
             print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
-            #response_json = response.content
-            response_json = response.text
+            response_json = response.content
+            #response_json = response.text
             print (response_json)
-            jjson = json.loads(response_json)
+            #json_str = json.dumps(response._content)
+            #jjson = json.loads(response.text.__str__())
+            #jjson = json.loads(response_json)
+            jjson = json.loads(response.content)
             print (jjson)
-            #pkg = [x for x in jjson if x['service']['name'] == name and x['service']['vendor'] == vendor and x['service']['version'] == version]
-            pkg = [x for x in jjson if x['status'] == 'NEW']
-            print (pkg)
+            #services = [x for x in jjson if x['service']['name'] == name and x['service']['vendor'] == vendor and x['service']['version'] == version]
+
+            #print (jjson['service']['name'])
+            #print (obj for obj in jjson if(obj['service']['vendor'] == 'eu.5gtango'))
+            #illo = [obj for obj in jjson if(obj['service'] == '11111')]
             
-            if response.ok: 
-                    #print(pkg)
-                    return response_json
-                    #return jsonify(pkg)                             
+            print ("illo")
+            #idd = print ([obj for obj in jjson[0]['service']['uuid']])
+            idd = print (jjson[0]['service']['uuid'])
+            idd = print (jjson[0]['service']['name'])
+            idd = print (jjson[1]['service']['uuid'])
+            idd = print (jjson[1]['service']['name'])            
+   
+            #idd = [obj.service['name'] for obj in jjson]
+            print ("illo")
+            
+            
+            N = 0
+            for N in range(10000):
+                print (jjson['service']['uuid'])
+
+                N = N + 1
+                print (N)
+
+
+            
+
+            
+
+
+            if response.ok:        
+                #return (response.text, response.status_code, response.headers.items())      
+                    return jsonify("no")
+                            
 
 
     def getServiceId(self,name,vendor,version):    
@@ -441,7 +606,10 @@ class Adapter:
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
             print (response_json)
-            return response_json
+            #return response_json
+            if response.ok:        
+                return (response.text, response.status_code, response.headers.items()) 
+
 
         if my_type == 'osm':
             print('this SP is a OSM')     
@@ -471,7 +639,9 @@ class Adapter:
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
             print (response_json)
-            return response_json
+            #return response_json
+            if response.ok:        
+                return (response.text, response.status_code, response.headers.items())
 
             #print("status")
             #return "status"
@@ -548,3 +718,40 @@ class Adapter:
 
         if my_type == 'osm':
             print('this SP is a OSM')                            
+
+
+    def getOSMToken(self):            
+        #JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        JSON_CONTENT_HEADER = {'Accept':'application/yaml'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'osm':
+            print('this SP is a OSM')
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            #url = sp_host_2 + '/requests'
+            url = sp_host_2 + ':9999/osm/admin/v1/tokens'
+            print (url)
+            
+            admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
+            print (admin_data)
+
+            get_token = requests.post(url,data=admin_data,headers=JSON_CONTENT_HEADER)
+            print (get_token.text)
+
+            return url
+            #upload = requests.post(url, files=files)
+            
+            #upload = requests.post(url, files=files)
+             
+   

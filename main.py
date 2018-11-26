@@ -67,6 +67,32 @@ def adapter_get_services(service_platform):
     ad = adapter.Adapter(service_platform)
     return ad.getServices()
 
+@app.route('/adapters/<service_platform>/services', methods=['POST'])
+def adapter_upload_service(service_platform):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    ad = adapter.Adapter(service_platform)  
+    print (ad.name)         
+    return ad.uploadOSMService(content['service'])    
+
+@app.route('/adapters/<service_platform>/functions', methods=['GET'])
+def adapter_get_Functions(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getFunctions()  
+
+@app.route('/adapters/<service_platform>/functions', methods=['POST'])
+def adapter_upload_function(service_platform):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    ad = adapter.Adapter(service_platform)  
+    print (ad.name)         
+    return ad.uploadOSMFunction(content['function'])    
+
+
+
+
 @app.route('/adapters/<service_platform>/services/<name>/<vendor>/<version>', methods=['GET'])
 def adapter_get_service(service_platform,name,vendor, version):
     ad = adapter.Adapter(service_platform)
@@ -147,9 +173,11 @@ def serviceInstantiationDelete(service_platform):
     return ad.instantiationDelete(request)      
 
     
-
-
-
+##### OSM specific endpoints ####
+@app.route('/adapters/<service_platform>/get_token', methods=['GET'])
+def adapter_osm_get_token(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getOSMToken()
 
 
 
