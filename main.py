@@ -159,7 +159,7 @@ def serviceInstantiation(service_platform):
     content = request.get_json()
     print (content)    
     ad = adapter.Adapter(service_platform)
-    print (content['service_uuid'])         
+    #print (content['service_uuid'])         
     return ad.instantiation(request)    
     
 
@@ -169,7 +169,7 @@ def serviceInstantiationDelete(service_platform):
     content = request.get_json()
     print (content)    
     ad = adapter.Adapter(service_platform)
-    print (content['service_uuid'])        
+    #print (content['service_uuid'])        
     return ad.instantiationDelete(request)      
 
     

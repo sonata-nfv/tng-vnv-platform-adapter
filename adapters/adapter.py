@@ -680,7 +680,41 @@ class Adapter:
                 return instantiate.text
 
         if my_type == 'osm':
-            print('this SP is a OSM')   
+            print('this SP is a OSM')  
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_3
+            print(request.get_json())
+            data = request.get_json()
+            print(url)
+            print (data)
+            print (data['nsd_name'])
+            print (data['ns_name'])
+            print (data['vim_account'])
+            
+            
+            instantiate_nsd = "osm --hostname " + sp_host_3 + " ns-create --nsd_name " + data['nsd_name'] + " --ns_name " + data['ns_name']+ " --vim_account " + data['vim_account'] 
+            print (instantiate_nsd)
+            upload = subprocess.check_output([instantiate_nsd], shell=True)
+            return (upload)             
+
+
+
 
     def instantiationDelete(self,request):    
 
@@ -715,9 +749,39 @@ class Adapter:
             if request.method == 'POST':
                 return terminate.text
 
-
         if my_type == 'osm':
-            print('this SP is a OSM')                            
+            print('this SP is a OSM')  
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_3
+            print(request.get_json())
+            data = request.get_json()
+            print(url)
+            print (data)
+            #print (data['nsd_name'])
+            print (data['ns_name'])
+            
+            
+            
+            delete_ns = "osm --hostname " + sp_host_3 + " ns-delete " + data['ns_name']
+            print (delete_ns)
+            delete = subprocess.check_output([delete_ns], shell=True)
+            return (delete)                            
 
 
     def getOSMToken(self):            
