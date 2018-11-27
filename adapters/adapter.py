@@ -8,6 +8,11 @@ from werkzeug import secure_filename
 import psycopg2
 import requests
 import subprocess
+import models.database as database
+
+FILE = "db-config.cfg"
+
+  
 
 
 class Adapter:
@@ -35,11 +40,12 @@ class Adapter:
 
     def getDBType(self):
         try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "172.18.0.2",
-                                        port = "5432",
-                                        database = "gatekeeper")
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")
             #create table Service Platforms
@@ -68,11 +74,12 @@ class Adapter:
 
     def getDBHost(self):
         try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "172.18.0.2",
-                                        port = "5432",
-                                        database = "gatekeeper")
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")
             #create table Service Platforms
