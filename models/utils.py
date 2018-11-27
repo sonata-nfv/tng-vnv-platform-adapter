@@ -6,17 +6,25 @@ import requests
 from flask import Flask, request, jsonify, render_template
 import os, sys, logging, json, argparse 
 from configparser import ConfigParser
+import models.database as database
 
 
 class Utils:
 
-    def createTableUsers(self):
+    def createTableUsers(self,file):
         try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "172.18.0.2",
-                                        port = "5432",
-                                        database = "gatekeeper")
+            db = database.Database(file)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)            
+
+#            connection = psycopg2.connect(user = "sonatatest",
+#                                        password = "sonata",
+#                                        host = "172.18.0.2",
+#                                        port = "5432",
+#                                        database = "gatekeeper")
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")
             #create table PM-USERS        
@@ -44,13 +52,14 @@ class Utils:
                     connection.close()
                     print("PostgreSQL connection is closed")
 
-    def createTableServicePlatforms(self):
+    def createTableServicePlatforms(self,file):
         try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "172.18.0.2",
-                                        port = "5432",
-                                        database = "gatekeeper")
+            db = database.Database(file)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database) 
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")
             #create table Service Platforms

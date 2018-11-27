@@ -191,8 +191,8 @@ if __name__ == '__main__':
     config = ConfigParser()
     config.read(args.conf_file)
     createUsersObj = utils.Utils()
-    createUsersObj.createTableUsers()
-    createUsersObj.createTableServicePlatforms()
+    createUsersObj.createTableUsers("db-config.cfg")
+    createUsersObj.createTableServicePlatforms("db-config.cfg")
 
     
     #RUN SERVER
