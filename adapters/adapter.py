@@ -862,8 +862,98 @@ class Adapter:
             print (get_token.text)
 
             return url
-            #upload = requests.post(url, files=files)
+
+
+
+
+    def getVims(self):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            print('this SP is a Sonata')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + '/requests'  
+            print (url)
+            return url
+
+        if my_type == 'osm':
+            print('this SP is a OSM')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+            url = sp_host_3            
             
-            #upload = requests.post(url, files=files)
+            get_vims = "osm --hostname " + sp_host_3 + " vim-list"
+            print (get_vims)
+            vims = subprocess.check_output([get_vims], shell=True)
+            return (vims)              
+
              
+    def getVim(self,vim):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            print('this SP is a Sonata')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + '/requests'  
+            print (url)
+            return url
+
+        if my_type == 'osm':
+            print('this SP is a OSM')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+            url = sp_host_3            
+            
+            get_vim = "osm --hostname " + sp_host_3 + " vim-show " + vim
+            print (get_vim)
+            vim_info = subprocess.check_output([get_vim], shell=True)
+            return (vim_info) 
    
