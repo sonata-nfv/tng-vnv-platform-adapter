@@ -10,7 +10,7 @@ pipeline {
         }
         stage('tng-vnv-platform-mngr') {
           steps {
-            sh 'docker build -t registry.sonata-nfv.eu:5000/tng-vnv-platform-mngr .'
+            sh 'docker build -t registry.sonata-nfv.eu:5000/tng-vnv-platform-adapter .'
           }
         }
       }
@@ -34,7 +34,7 @@ pipeline {
         }
         stage('tng-gtk-usr') {
           steps {
-            sh 'docker push registry.sonata-nfv.eu:5000/tng-vnv-platform-mngr'
+            sh 'docker push registry.sonata-nfv.eu:5000/tng-vnv-platform-adapter'
           }
         }
       }
@@ -75,8 +75,8 @@ pipeline {
         }
         stage('tng-vnv-platform-mngr) {
           steps {
-            sh 'docker tag registry.sonata-nfv.eu:5000/tng-vnv-platform-mngr:latest registry.sonata-nfv.eu:5000/tng-vnv-platform-mngr:int'
-            sh 'docker push  registry.sonata-nfv.eu:5000/tng-vnv-platform-mngr:int'
+            sh 'docker tag registry.sonata-nfv.eu:5000/tng-vnv-platform-adapter:latest registry.sonata-nfv.eu:5000/tng-vnv-platform-adapter:int'
+            sh 'docker push  registry.sonata-nfv.eu:5000/tng-vnv-platform-adapter:int'
             sh 'rm -rf tng-devops || true'
             sh 'git clone https://github.com/sonata-nfv/tng-devops.git'
             dir(path: 'tng-devops') {
