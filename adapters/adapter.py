@@ -38,6 +38,37 @@ class Adapter:
         self.type = newType        
 
 
+    def updateToken(self,token):
+        try:
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            print (self.name)
+            get_type = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (get_type)            
+            update_token = "UPDATE service_platforms SET service_token = \'" +token+ "\' WHERE name = \'" +self.name+ "\'"            
+            print (update_token)
+            cursor.execute(update_token)
+            connection.commit()
+            return "token updated", 200    
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")         
+
+
+
     def getDBType(self):
         try:
             db = database.Database(FILE)
@@ -875,8 +906,15 @@ class Adapter:
 
             get_token = requests.post(url_2,data=data,headers=JSON_CONTENT_HEADER,verify=False)
             print (get_token.text)
+            print (get_token.content)
+            token_id = get_token.json()
+            print (token_id['id'])
 
-            return get_token.text
+            upd_tok = self.updateToken(token_id['id'])
+
+            print (upd_tok)
+
+            return token_id['id']
 
 
 
