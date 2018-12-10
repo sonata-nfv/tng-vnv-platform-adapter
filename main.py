@@ -172,7 +172,6 @@ def serviceInstantiationDelete(service_platform):
     #print (content['service_uuid'])        
     return ad.instantiationDelete(request)      
 
-
 @app.route('/adapters/<service_platform>/vims', methods=['GET'])
 def getVims(service_platform):
     ad = adapter.Adapter(service_platform)      
@@ -182,18 +181,16 @@ def getVims(service_platform):
 def getVimInfo(service_platform,vim_name):
     ad = adapter.Adapter(service_platform)      
     return ad.getVim(vim_name)    
-       
- 
-
-
-
 
     
 ##### OSM specific endpoints ####
-@app.route('/adapters/<service_platform>/get_token', methods=['GET'])
+@app.route('/adapters/<service_platform>/get_token', methods=['POST'])
 def adapter_osm_get_token(service_platform):
-    ad = adapter.Adapter(service_platform)
-    return ad.getOSMToken()
+    print (request.is_json)
+    content = request.get_json()
+    print (content)    
+    ad = adapter.Adapter(service_platform)        
+    return ad.getOSMToken(request)        
 
 
 
