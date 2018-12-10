@@ -8,6 +8,6 @@ RUN pip3 install -r requirements.txt
 #ENTRYPOINT ["python"]
 #CMD ["main.py"]
 
-EXPOSE 5000
+EXPOSE 5001
 CMD ["python3", "/app/main.py"]
 #CMD ["python3", "/app/main.py"]
