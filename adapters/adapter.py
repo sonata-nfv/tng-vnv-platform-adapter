@@ -832,9 +832,9 @@ class Adapter:
             return (delete)                            
 
 
-    def getOSMToken(self):            
+    def getOSMToken(self,request):            
         #JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
-        JSON_CONTENT_HEADER = {'Accept':'application/yaml'}   
+        JSON_CONTENT_HEADER = {'Accept':'application/json'}   
         my_type =  self.getDBType()
 
         if my_type == 'osm':
@@ -853,15 +853,30 @@ class Adapter:
             print (sp_host_2)
             #url = sp_host_2 + '/requests'
             url = sp_host_2 + ':9999/osm/admin/v1/tokens'
-            print (url)
+            url_2 = url.replace("http","https")
+
+            print (url_2)
+
+            print(request.get_json())
+            data = request.get_json()
+            print(url_2)
+            print (data)
+            #print (data['nsd_name'])
+            print (data['username'])
+            print (data['password'])
+            print (data['project_id'])
+
+            username_for_token = data['username']
+            password_for_token = data['password']
+            project_id_for_token = data['project_id']
             
             admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
             print (admin_data)
 
-            get_token = requests.post(url,data=admin_data,headers=JSON_CONTENT_HEADER)
+            get_token = requests.post(url_2,data=data,headers=JSON_CONTENT_HEADER,verify=False)
             print (get_token.text)
 
-            return url
+            return get_token.text
 
 
 
