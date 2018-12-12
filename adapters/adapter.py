@@ -318,8 +318,8 @@ class Adapter:
             if request.method == 'POST':
                 return upload.text
 
-    def uploadOSMService(self,service): 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+    def uploadOSMService(self,request): 
+        #JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
         if my_type == 'osm':               
 
@@ -339,14 +339,50 @@ class Adapter:
             print ("sp3 es: ")
             print (sp_host_3)            
 
-            url = sp_host_2 + '/services'
+
+            content = request.get_json()
+            print ("request content:")
+            print (content)
             
+
+            token = self.getOSMToken(request)
+            print (token)
+            file_to_upload = content['service']
+            print ("File to upload")
+            print (file_to_upload)
+            file_composed = "@" + file_to_upload
+            print (file_composed)
+
+            #file = {'file': open(file_to_upload, 'rb')}
+            file = {'nsd-create': open(file_to_upload, 'rb')}
             
-            print(service)
-            upload_nsd = "osm --hostname " + sp_host_3 + " nsd-create " + service
-            print (upload_nsd)
-            upload = subprocess.check_output([upload_nsd], shell=True)
+            print (file)
+            data = {'service':file_to_upload}
+            #data = request.get_json()
+            print (data)
+
+            HEADERS = {
+                'Accept':'application/yaml',
+                'Content-Type':'application/zip', 
+                'Authorization':'Bearer ' +token+''                
+            }
+            print (HEADERS)
+
+            url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
+            url_2 = url.replace("http","https")
+            print (url_2)
+            print ("HASTA AQUI")
+
+            #upload_nsddddd = "osm --hostname " + sp_host_3 + " vnfd-create " + url_2
+            upload_nsd = "curl -X POST --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            upload_nsd_2 = upload_nsd +token + "\" "
+            upload_nsd_3 = upload_nsd_2 + " --data-binary "
+            upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
+            print (upload_nsd_4)
+            upload = subprocess.check_output([upload_nsd_4], shell=True)
+            #return jsonify(upload_nsd_4) 
             return (upload)
+
       
 
     def uploadOSMFunction(self,function): 
@@ -386,7 +422,7 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
         my_type =  self.getDBType()
         if my_type == 'sonata':                
-
+ 
             sp_host_0 = self.getDBHost()
             print (sp_host_0)
             sp_host = sp_host_0.__str__()

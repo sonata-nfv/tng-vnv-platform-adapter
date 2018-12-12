@@ -67,14 +67,14 @@ def adapter_get_services(service_platform):
     ad = adapter.Adapter(service_platform)
     return ad.getServices()
 
-@app.route('/adapters/<service_platform>/services', methods=['POST'])
-def adapter_upload_service(service_platform):
-    print (request.is_json)
-    content = request.get_json()
-    print (content)
-    ad = adapter.Adapter(service_platform)  
-    print (ad.name)         
-    return ad.uploadOSMService(content['service'])    
+#@app.route('/adapters/<service_platform>/services', methods=['POST'])
+#def adapter_upload_service(service_platform):
+    #print (request.is_json)
+    #content = request.get_json()
+    #print (content)
+    #ad = adapter.Adapter(service_platform)  
+    #print (ad.name)         
+    #return ad.uploadOSMService(content['service'])    
 
 @app.route('/adapters/<service_platform>/functions', methods=['GET'])
 def adapter_get_Functions(service_platform):
@@ -191,6 +191,22 @@ def adapter_osm_get_token(service_platform):
     print (content)    
     ad = adapter.Adapter(service_platform)        
     return ad.getOSMToken(request)        
+
+
+@app.route('/adapters/<service_platform>/services', methods=['POST'])
+def adapter_upload_service(service_platform):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    ad = adapter.Adapter(service_platform)  
+    print (ad.name)         
+    return ad.uploadOSMService(request)   
+    #return jsonify(content)
+
+
+
+
+
 
 
 
