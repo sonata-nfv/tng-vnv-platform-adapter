@@ -9,6 +9,9 @@ import psycopg2
 import requests
 import subprocess
 import models.database as database
+import re
+import ast
+from ast import literal_eval
 
 FILE = "db-config.cfg"
 
@@ -824,18 +827,52 @@ class Adapter:
 
             url = sp_host_3
             print(request.get_json())
-            data = request.get_json()
-            print(url)
-            print (data)
-            print (data['nsd_name'])
-            print (data['ns_name'])
-            print (data['vim_account'])
+            content = request.get_json()
+            print(content)
+
+
+            token = self.getOSMToken(request)
+            print (token)
+            content = request.get_json()
+            print (content)
+            print (content['nsd_name'])
+            print (content['ns_name'])
+            print (content['vim_account'])
             
+            url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+            url_2 = url.replace("http","https")
+            print (url_2)
+
+            print (content['vim_account'])
+            vim_id = self.getVimId(content['vim_account'])
+            print (vim_id)
+            print (content['nsd_name'])
+            nsd_id = self.getOSMNsdId(content['nsd_name'])
+            print (nsd_id)
+
+
+
+            HEADERS = {
+                'Accept':'application/json',
+                'Content-Type':'application/json', 
+                'Authorization':'Bearer ' +token+''                
+            }     
+
+            data_inst = {
+                'nsdId':''+nsd_id+'',
+                'nsName':''+content['ns_name']+'',
+                'vimAccountId':''+vim_id+''
+            }       
             
-            instantiate_nsd = "osm --hostname " + sp_host_3 + " ns-create --nsd_name " + data['nsd_name'] + " --ns_name " + data['ns_name']+ " --vim_account " + data['vim_account'] 
-            print (instantiate_nsd)
-            upload = subprocess.check_output([instantiate_nsd], shell=True)
-            return (upload)             
+            instantiate_nsd = "curl -X POST --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            instantiate_nsd_2 = instantiate_nsd +token + "\" "
+            instantiate_nsd_3 = instantiate_nsd_2 + " --data \"" + str(data_inst) + "\""
+            instantiate_nsd_4 = instantiate_nsd_3 + " " + url_2
+            print (instantiate_nsd_4)
+
+            inst = subprocess.check_output([instantiate_nsd_4], shell=True)
+            return (inst)
+           
 
 
 
@@ -1053,5 +1090,117 @@ class Adapter:
             get_vim = "osm --hostname " + sp_host_3 + " vim-show " + vim
             print (get_vim)
             vim_info = subprocess.check_output([get_vim], shell=True)
-            return (vim_info) 
+            return jsonify(vim_info) 
    
+
+
+    def getVimId(self,vim):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            print('this SP is a Sonata')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + '/requests'  
+            print (url)
+            return url
+
+        if my_type == 'osm':
+            print('this SP is a OSM')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+            url = sp_host_3            
+            
+            get_vim = "osm --hostname " + sp_host_3 + " vim-show " + vim
+            print (get_vim)
+            vim_info = subprocess.check_output([get_vim], shell=True)
+            print (vim_info)
+            
+            print (type(vim_info))    
+
+
+            s = json.dumps(str(vim_info))
+
+            print(s)
+            print (type(s))                 
+            
+            print ("ILLO")
+            start = s.find('_id')
+            end = s.find('\\\" ', start)
+            print (s[start+20:end])
+            vim_id = s[start+20:end]
+            print ("ILLO")
+            return vim_id
+
+
+
+
+    def getOSMNsdId(self,nsd_name):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'osm':
+            print('this SP is a OSM')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+            url = sp_host_3            
+            
+            get_nsd = "osm --hostname " + sp_host_3 + "  nsd-show " + nsd_name
+            print (get_nsd)
+            nsd_info = subprocess.check_output([get_nsd], shell=True)
+            print (nsd_info)
+            
+            print (type(nsd_info))    
+
+
+            s = json.dumps(str(nsd_info))
+
+            print(s)
+            print (type(s))   
+                
+            
+            print ("ILLO")
+            start = s.find('_id')
+            end = s.find('\\\" ', start)
+            print (s[start+21:end])
+            vim_id = s[start+21:end]
+            print ("ILLO")
+
+
+
+            return vim_id            
