@@ -931,18 +931,41 @@ class Adapter:
 
             url = sp_host_3
             print(request.get_json())
-            data = request.get_json()
             print(url)
-            print (data)
-            #print (data['nsd_name'])
-            print (data['ns_name'])
+            
+
+
+
+            token = self.getOSMToken(request)
+            print (token)
+            content = request.get_json()
+
+
+            url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+            url_2 = url.replace("http","https")
+            print (url_2)
+
+
+            print (content['ns_id'])
+            ns_id = content['ns_id']
+            print (ns_id)
+
+            
+            delete_ns = "curl -X DELETE --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            delete_ns_2 = delete_ns +token + "\" "
+            delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
+            print (delete_ns_3)
+
+            terminate = subprocess.check_output([delete_ns_3], shell=True)
+            return (terminate)            
+
             
             
             
-            delete_ns = "osm --hostname " + sp_host_3 + " ns-delete " + data['ns_name']
-            print (delete_ns)
-            delete = subprocess.check_output([delete_ns], shell=True)
-            return (delete)                            
+            #delete_ns = "osm --hostname " + sp_host_3 + " ns-delete " + data['ns_name']
+            #print (delete_ns)
+            #delete = subprocess.check_output([delete_ns], shell=True)
+            #return (delete)                            
 
 
     def getOSMToken(self,request):            
