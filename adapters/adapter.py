@@ -667,7 +667,7 @@ class Adapter:
                     return uuid_to_delete_3
 
 
-    def instantiationStatus(self,id):    
+    def instantiationStatus(self,request):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
@@ -713,12 +713,30 @@ class Adapter:
             sp_host_3 = sp_host_2[7:]
             print ("sp3 es: ")
             print (sp_host_3)            
-            url = sp_host_3            
+            url = sp_host_3    
+
+
+            token = self.getOSMToken(request)
+            print (token)
+
+            content = request.get_json()
+            ns_id = content['ns_id']
+            print (ns_id)            
             
-            get_status = "osm --hostname " + sp_host_3 + " ns-op-list " + id
-            print (get_status)
-            status = subprocess.check_output([get_status], shell=True)
-            return (status)              
+            url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances'
+            url_2 = url.replace("http","https")
+            print (url_2)
+
+            
+            status_ns = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            status_ns_2 = status_ns +token + "\" "
+            status_ns_3 = status_ns_2 + " " + url_2 + "/" + ns_id          
+            print (status_ns_3)
+
+            status = subprocess.check_output([status_ns_3], shell=True)
+            return (status)       
+
+          
 
 
     def instantiationsStatus(self):    
