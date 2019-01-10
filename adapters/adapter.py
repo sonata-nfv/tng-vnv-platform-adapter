@@ -1374,8 +1374,10 @@ class Adapter:
             print ("ILLO")
             start = s.find('_id')
             end = s.find('\\\" ', start)
-            print (s[start+21:end])
-            vim_id = s[start+21:end]
+            #print (s[start+21:end])
+            #vim_id = s[start+21:end]
+            print (s[start+29:end])
+            vim_id = s[start+29:end]
             print ("ILLO")
 
 
