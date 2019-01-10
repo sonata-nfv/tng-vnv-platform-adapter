@@ -35,7 +35,7 @@ def login():
 ##### SERVICE PLATFORMS ROUTES #####
 @app.route('/service_platforms', methods=['GET'])
 def get_sps():
-    sp = serviceplatform.ServicePlatform("name","host","type","service_token")
+    sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","service_token")
     return sp.getServicePlatforms()
 
 @app.route('/service_platforms', methods=['POST'])
@@ -44,17 +44,32 @@ def register_sp():
     print (request.is_json)
     content = request.get_json()
     print (content)
-    sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['service_token'])
+    sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],content['service_token'])
     return sp.registerServicePlatform()    
 
 
 
 ##### ADAPTER GENERIC ROUTES #####
+
+@app.route('/adapters/<service_platform>/get_username')
+def adapter_get_username(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getDBUserName()
+ 
+@app.route('/adapters/<service_platform>/get_password')
+def adapter_get_password(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getDBPassword() 
+
 @app.route('/adapters/<service_platform>/get_type')
 def adapter_get_type(service_platform):
     ad = adapter.Adapter(service_platform)
     return ad.getDBType()
-    
+
+@app.route('/adapters/<service_platform>/get_project_name')
+def adapter_get_project_name(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getDBProjectName()    
 
 @app.route('/adapters/<service_platform>/get_host')
 def adapter_get_host(service_platform):

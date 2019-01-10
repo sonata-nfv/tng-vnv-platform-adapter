@@ -68,6 +68,9 @@ class Utils:
                         name varchar(40) PRIMARY KEY, 
                         host varchar(255), 
                         type varchar(40),
+                        username varchar(255),
+                        password varchar(255),
+                        project_name varchar(255),
                         service_token varchar(256)                    
                         )
                         """)               

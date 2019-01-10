@@ -106,6 +106,116 @@ class Adapter:
                     connection.close()
                     print("PostgreSQL connection is closed") 
 
+
+
+
+    def getDBUserName(self):
+        try:
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            get_username = "SELECT username FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (get_username)
+            cursor.execute(get_username)
+            all = cursor.fetchall()
+            #return jsonify(all), 200 
+            type_0 = all.__str__()
+            print(type_0)
+            type_1 = type_0[3:]            
+            print(type_1)            
+            type_2 = type_1[:-4]            
+            print(type_2)                  
+            return type_2
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")
+
+
+    def getDBProjectName(self):
+        try:
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            get_project_name = "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (get_project_name)
+            cursor.execute(get_project_name)
+            all = cursor.fetchall()
+            #return jsonify(all), 200 
+            type_0 = all.__str__()
+            print(type_0)
+            type_1 = type_0[3:]            
+            print(type_1)            
+            type_2 = type_1[:-4]            
+            print(type_2)                  
+            return type_2
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")                    
+
+
+    def getDBPassword(self):
+        try:
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            get_password= "SELECT username FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (get_password)
+            cursor.execute(get_password)
+            all = cursor.fetchall()
+            #return jsonify(all), 200 
+            type_0 = all.__str__()
+            print(type_0)
+            type_1 = type_0[3:]            
+            print(type_1)            
+            type_2 = type_1[:-4]            
+            print(type_2)                  
+            return type_2
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")                    
+
+
+
+
     def getDBHost(self):
         try:
             db = database.Database(FILE)
@@ -1012,30 +1122,56 @@ class Adapter:
             print (url_2)
 
             print(request.get_json())
-            data = request.get_json()
+            #data = request.get_json()
             print(url_2)
-            print (data)
+            #print (data)
             #print (data['nsd_name'])
-            print (data['username'])
-            print (data['password'])
-            print (data['project_id'])
+            #print (data['username'])
+            #print (data['password'])
+            #print (data['project_id'])
 
-            username_for_token = data['username']
-            password_for_token = data['password']
-            project_id_for_token = data['project_id']
+
+            pr_name = self.getDBProjectName()
+            print ("project name from DB:")
+            print (pr_name)
+
+            if pr_name:
+                project_id_for_token = pr_name
+
+            if not pr_name:
+                data = request.get_json()
+                project_id_for_token = data['project_id']
+                print ("project name from json body:")
+                print (pr_name)
+
+            #project_id_for_token = data['project_id']
+            print (project_id_for_token)
+
+            #username_for_token = data['username']
+            #password_for_token = data['password']
+
+            username_for_token = self.getDBUserName()
+            password_for_token = self.getDBPassword()
+
+            #project_id_for_token = data['project_id']
             
             admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
             print (admin_data)
 
-            get_token = requests.post(url_2,data=data,headers=JSON_CONTENT_HEADER,verify=False)
+            #update_token = "UPDATE service_platforms SET service_token = \'" +token+ "\' WHERE name = \'" +self.name+ "\'" 
+            
+            data_for_token= "{username: \'" +username_for_token+ "\', password: \'" +password_for_token+ "\', project_id: \'" +project_id_for_token+ "\'}"
+            #print (data)
+
+            get_token = requests.post(url_2,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
             print (get_token.text)
             print (get_token.content)
             token_id = get_token.json()
             print (token_id['id'])
 
-            upd_tok = self.updateToken(token_id['id'])
+            #upd_tok = self.updateToken(token_id['id'])
 
-            print (upd_tok)
+            #print (upd_tok)
 
             return token_id['id']
 
