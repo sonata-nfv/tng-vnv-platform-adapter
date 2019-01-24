@@ -81,15 +81,8 @@ def adapter_get_host(service_platform):
 def adapter_get_services(service_platform):
     ad = adapter.Adapter(service_platform)
     return ad.getServices()
-
-#@app.route('/adapters/<service_platform>/services', methods=['POST'])
-#def adapter_upload_service(service_platform):
-    #print (request.is_json)
-    #content = request.get_json()
-    #print (content)
-    #ad = adapter.Adapter(service_platform)  
-    #print (ad.name)         
-    #return ad.uploadOSMService(content['service'])    
+    #return ad.getDBType()
+   
 
 @app.route('/adapters/<service_platform>/functions', methods=['GET'])
 def adapter_get_Functions(service_platform):
