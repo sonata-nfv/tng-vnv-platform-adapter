@@ -908,6 +908,7 @@ class Adapter:
     def instantiation(self,request):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        JSON_CONTENT_HEADER = {'content-Type':'application/json'}   
         my_type =  self.getDBType()
 
         if my_type == 'sonata':
@@ -924,14 +925,19 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
             url = sp_host_2 + '/api/v3/requests'
+            print (url)
             
             print(request.get_json())
             data = request.get_json()
             print(url)
+            print (data)
             #upload = requests.post(url, files=files)
             
             #upload = requests.post(url, files=files)
-            instantiate = requests.post(url,data,headers=JSON_CONTENT_HEADER) 
+            #instantiate = requests.post(url,data,headers=JSON_CONTENT_HEADER)
+            instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER) 
+            
+            print (instantiate)
 
             if request.method == 'POST':
                 return instantiate.text
