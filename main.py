@@ -147,6 +147,21 @@ def adapter_upload_package(service_platform):
     ad = adapter.Adapter(service_platform)  
     print (ad.name)         
     return ad.uploadPackage(content['package'])
+
+
+@app.route('/adapters/download-package', methods=['POST'])
+def adapter_download_package(request):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)	
+    ad = adapter.Adapter(content['service_platform'])
+    package = ad.downloadPackage()
+    my_type = ad.getDBType()
+    if my_type == 'sonata':
+        return ad.uploadPackage(package)
+#	if type == 'osm':
+#		return ad.uploadOSMService(package)		
+
     
 
 #### SERVICES OPERATIONS #### 
