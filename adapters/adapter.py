@@ -798,7 +798,8 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + ':32002/api/v3/requests/' +  id
+            #url = sp_host_2 + ':32002/api/v3/requests/' +  id
+            url = sp_host_2 + ':32002/api/v3/requests/' +  request
             print (url)
             
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
