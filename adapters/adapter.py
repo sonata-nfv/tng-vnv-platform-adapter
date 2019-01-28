@@ -264,7 +264,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/packages'
+            url = sp_host_2 + ':32002/api/v3/packages'
             #url = sp_url + '/packages'
             response = requests.get(url, headers=JSON_CONTENT_HEADER)    
             if response.ok:        
@@ -292,7 +292,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/packages'  
+            url = sp_host_2 + ':32002/api/v3/packages'  
             print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
@@ -321,7 +321,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/packages'  
+            url = sp_host_2 + ':32002/api/v3/packages'  
             print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
@@ -370,7 +370,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/packages'  
+            url = sp_host_2 + ':32002/api/v3/packages'  
             print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
@@ -420,7 +420,7 @@ class Adapter:
             sp_host_2 = sp_host_1[:-10]
             print ("sp2 es: ")
             print (sp_host_2)
-            url = sp_host_2 + '/api/v3/packages'
+            url = sp_host_2 + ':32002/api/v3/packages'
             
             print(package)
             print(url)
@@ -558,7 +558,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/services'
+            url = sp_host_2 + ':32002/api/v3/services'
             print (url)
             #url = sp_url + '/packages'
             response = requests.get(url, headers=JSON_CONTENT_HEADER)    
@@ -581,7 +581,7 @@ class Adapter:
             print ("sp3 es: ")
             print (sp_host_3)            
 
-            url = sp_host_2 + '/api/v3/services'
+            url = sp_host_2 + ':32002/api/v3/services'
             get_nsd_list = "osm --hostname " + sp_host_3 + " nsd-list"
             print (get_nsd_list)
             #get = os.system(get_nsd_list).__str__()    
@@ -608,7 +608,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/functions'
+            url = sp_host_2 + ':32002/api/v3/functions'
             #url = sp_url + '/packages'
             response = requests.get(url, headers=JSON_CONTENT_HEADER)    
             if response.ok:        
@@ -631,7 +631,7 @@ class Adapter:
             print ("sp3 es: ")
             print (sp_host_3)            
 
-            url = sp_host_2 + '/api/v3/functions'
+            url = sp_host_2 + ':32002/api/v3/functions'
             get_vnfd_list = "osm --hostname " + sp_host_3 + " vnfd-list"
             print (get_vnfd_list)
             #get = os.system(get_nsd_list).__str__()
@@ -658,7 +658,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/services'  
+            url = sp_host_2 + ':32002/api/v3/services'  
             print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
@@ -688,7 +688,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/requests'  
+            url = sp_host_2 + ':32002/api/v3/requests'  
             print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
@@ -753,7 +753,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/services'  
+            url = sp_host_2 + ':32002/api/v3/services'  
             print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
@@ -798,7 +798,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/requests/' +  id
+            url = sp_host_2 + ':32002/api/v3/requests/' +  id
             print (url)
             
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
@@ -870,7 +870,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/requests'  
+            url = sp_host_2 + ':32002/api/v3/requests'  
             print (url)
             
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
@@ -924,7 +924,7 @@ class Adapter:
             sp_host_2 = sp_host_1[:-10]
             print ("sp2 es: ")
             print (sp_host_2)
-            url = sp_host_2 + '/api/v3/requests'
+            url = sp_host_2 + ':32002/api/v3/requests'
             print (url)
             
             print(request.get_json())
@@ -1033,7 +1033,7 @@ class Adapter:
             sp_host_2 = sp_host_1[:-10]
             print ("sp2 es: ")
             print (sp_host_2)
-            url = sp_host_2 + '/api/v3/requests'
+            url = sp_host_2 + ':32002/api/v3/requests'
             
             print(request.get_json())
             data = request.get_json()
@@ -1205,7 +1205,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/requests'  
+            url = sp_host_2 + ':32002/api/v3/requests'  
             print (url)
             return url
 
@@ -1251,7 +1251,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/requests'  
+            url = sp_host_2 + ':32002/api/v3/requests'  
             print (url)
             return url
 
@@ -1298,7 +1298,7 @@ class Adapter:
             print ("sp2 es: ")
             print (sp_host_2)
 
-            url = sp_host_2 + '/api/v3/requests'  
+            url = sp_host_2 + ':32002/api/v3/requests'  
             print (url)
             return url
 
@@ -1413,7 +1413,7 @@ class Adapter:
             sp_host_2 = sp_host_1[:-10]
             print ("sp2 es: ")
             print (sp_host_2)
-            url = sp_host_2 + '/api/v3/packages'
+            url = sp_host_2 + ':32002/api/v3/packages'
             
             
             print(url)
