@@ -244,6 +244,16 @@ def adapter_upload_function(service_platform):
     print (ad.name)         
     return ad.uploadOSMFunction(request)  
 
+@app.route('/adapters/<service_platform>/functions/<id_to_delete>/delete', methods=['DELETE'])
+def adapter_delete_function(service_platform,id_to_delete):
+    ad = adapter.Adapter(service_platform)  
+    return ad.deleteOSMFunction(id_to_delete)    
+
+@app.route('/adapters/<service_platform>/services/<id_to_delete>/delete', methods=['DELETE'])
+def adapter_delete_service(service_platform,id_to_delete):
+    ad = adapter.Adapter(service_platform)  
+    return ad.deleteOSMService(id_to_delete)  
+
 
 
 

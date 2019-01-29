@@ -211,7 +211,42 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed")                    
+                    print("PostgreSQL connection is closed")      
+
+
+    def getDBProject(self):
+        try:
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            get_password= "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (get_password)
+            cursor.execute(get_password)
+            all = cursor.fetchall()
+            #return jsonify(all), 200 
+            type_0 = all.__str__()
+            print(type_0)
+            type_1 = type_0[3:]            
+            print(type_1)            
+            type_2 = type_1[:-4]            
+            print(type_2)                  
+            return type_2
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")                                    
 
 
 
@@ -1441,3 +1476,176 @@ class Adapter:
 
             if request.method == 'POST':
                 return upload.text
+
+
+
+
+    def deleteOSMService(self,id_to_delete):
+            print('this SP is a OSM')  
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_3
+
+
+            token = self.getOSMTokenForDelete()
+            print (token)
+
+           
+
+            url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
+            url_2 = url.replace("http","https")
+            print (url_2)            
+
+            
+
+
+      
+            
+            delete_nsd = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            delete_nsd_2 = delete_nsd +token + "\"  " + url_2 + "/" + id_to_delete + " -X DELETE" 
+            print (delete_nsd_2)
+
+            deletion = subprocess.check_output([delete_nsd_2], shell=True)
+            return (deletion)
+
+
+
+    def deleteOSMFunction(self,id_to_delete):
+            print('this SP is a OSM')  
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_3
+
+
+            token = self.getOSMTokenForDelete()
+            print (token)
+
+           
+
+            url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages'
+            url_2 = url.replace("http","https")
+            print (url_2)            
+
+            
+
+
+      
+            
+            delete_nsd = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            delete_nsd_2 = delete_nsd +token + "\"  " + url_2 + "/" + id_to_delete + " -X DELETE" 
+            print (delete_nsd_2)
+
+            deletion = subprocess.check_output([delete_nsd_2], shell=True)
+            return (deletion)            
+
+
+
+    def getOSMTokenForDelete(self):            
+        #JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        JSON_CONTENT_HEADER = {'Accept':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'osm':
+            print('this SP is a OSM')
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            #url = sp_host_2 + '/requests'
+            url = sp_host_2 + ':9999/osm/admin/v1/tokens'
+            url_2 = url.replace("http","https")
+
+            print (url_2)
+
+            
+            #data = request.get_json()
+            print(url_2)
+            #print (data)
+            #print (data['nsd_name'])
+            #print (data['username'])
+            #print (data['password'])
+            #print (data['project_id'])
+
+
+            pr_name = self.getDBProjectName()
+            print ("project name from DB:")
+            print (pr_name)
+
+            if pr_name:
+                project_id_for_token = pr_name
+
+            if not pr_name:
+                #data = request.get_json()
+                #project_id_for_token = data['project_id']
+                project_id_for_token = self.getDBProject(self)
+                print ("project name from json body:")
+                print (pr_name)
+
+            #project_id_for_token = data['project_id']
+            print (project_id_for_token)
+
+            #username_for_token = data['username']
+            #password_for_token = data['password']
+
+            username_for_token = self.getDBUserName()
+            password_for_token = self.getDBPassword()
+
+            #project_id_for_token = data['project_id']
+            
+            admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
+            print (admin_data)
+
+            #update_token = "UPDATE service_platforms SET service_token = \'" +token+ "\' WHERE name = \'" +self.name+ "\'" 
+            
+            data_for_token= "{username: \'" +username_for_token+ "\', password: \'" +password_for_token+ "\', project_id: \'" +project_id_for_token+ "\'}"
+            #print (data)
+
+            get_token = requests.post(url_2,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
+            print (get_token.text)
+            print (get_token.content)
+            token_id = get_token.json()
+            print (token_id['id'])
+
+            #upd_tok = self.updateToken(token_id['id'])
+
+            #print (upd_tok)
+
+            return token_id['id']            
