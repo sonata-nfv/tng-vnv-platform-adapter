@@ -425,11 +425,28 @@ class Adapter:
             print(package)
             print(url)
 
-            files = {'package': open(package,'rb')}
-            upload = requests.post(url, files=files)
+            #files = {'package': open(package,'rb')}
+            #upload = requests.post(url, files=files)
 
-            if request.method == 'POST':
-                return upload.text
+            #if request.method == 'POST':
+            #    return upload.text
+
+
+
+#curl -v -i -X POST  -F "package=@./eu.5gtango.test-connectivity.0.1.tgo" http://sta-vnv-ave-v4-0.5gtango.eu:32002/api/v3/packages                
+            #upload_nsd_3 = upload_nsd_2 + " --data-binary "
+            #upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
+            #print (upload_nsd_4)
+            #upload = subprocess.check_output([upload_nsd_4], shell=True)
+            #return jsonify(upload_nsd_4) 
+            #return (upload)
+
+
+            upload_package_1="curl -v -i -X POST  -F \"package=@." + package + "\" " + url
+            return upload_package_1
+
+
+
 
     def uploadOSMService(self,request): 
         #JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
