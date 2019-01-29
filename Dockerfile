@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 MAINTAINER Luis Hens "luis.hens@atos.net"
-RUN apt-get update -y && apt-get install -y python3 python3-dev python3-pip
+RUN apt-get update -y && apt-get install -y python3 python3-dev python3-pip curl
 COPY . /app
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
