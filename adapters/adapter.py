@@ -425,11 +425,11 @@ class Adapter:
             print(package)
             print(url)
 
-            #files = {'package': open(package,'rb')}
-            #upload = requests.post(url, files=files)
+            files = {'package': open(package,'rb')}
+            upload = requests.post(url, files=files)
 
-            #if request.method == 'POST':
-            #    return upload.text
+            if request.method == 'POST':
+                return upload.text
 
 
 
@@ -442,8 +442,8 @@ class Adapter:
             #return (upload)
 
 
-            upload_package_1="curl -v -i -X POST  -F \"package=@." + package + "\" " + url
-            return upload_package_1
+            #upload_package_1="curl -v -i -X POST  -F \"package=@." + package + "\" " + url
+            #return upload_package_1
 
 
 
