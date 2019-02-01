@@ -107,7 +107,7 @@ def adapter_get_service(service_platform,name,vendor, version):
     return ad.getService(name,vendor,version)   
 
 @app.route('/adapters/<service_platform>/services/<name>/<vendor>/<version>/id', methods=['GET'])
-def adapter_get_service_by_id(service_platform,name,vendor, version):
+def adapter_get_service_id(service_platform,name,vendor, version):
     ad = adapter.Adapter(service_platform)
     return ad.getServiceId(name,vendor,version)      
 
@@ -115,6 +115,18 @@ def adapter_get_service_by_id(service_platform,name,vendor, version):
 def adapter_get_service_instantiations(service_platform,name,vendor, version):
     ad = adapter.Adapter(service_platform)
     return ad.getServiceInstantiations(name,vendor,version)       
+
+
+@app.route('/adapters/<service_platform>/packages/<name>/<vendor>/<version>/id', methods=['GET'])
+def adapter_get_package_id(service_platform,name,vendor, version):
+    ad = adapter.Adapter(service_platform)
+    return ad.getPackageId(name,vendor,version) 
+
+@app.route('/adapters/<service_platform>/packages/<pkg_id>/package-file', methods=['GET'])
+def adapter_get_package_file(service_platform, pkg_id):
+    ad = adapter.Adapter(service_platform)
+    return ad.getPackageFile(pkg_id)   
+
 
 
 

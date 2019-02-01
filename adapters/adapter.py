@@ -831,6 +831,83 @@ class Adapter:
                     return uuid_to_delete_3
 
 
+    def getPackageId(self,name,vendor,version):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+        my_type =  self.getDBType()
+        if my_type == 'sonata':                
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + ':32002/api/v3/packages'  
+            print (name,vendor,version)
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            print (response_json)
+            jjson = json.loads(response_json)
+            pkg = [x for x in jjson if x['pd']['name'] == name and x['pdd']['vendor'] == vendor and x['pd']['version'] == version]
+            
+            if pkg:
+
+                print(pkg)
+                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]            
+                print(uuid_to_delete_1)
+                uuid_0 = uuid_to_delete_1.__str__()
+                uuid_to_delete_2 = uuid_0[2:]
+                print(uuid_to_delete_2)
+                uuid_to_delete_3 = uuid_to_delete_2[:-2]
+                print(uuid_to_delete_3)
+                url_for_delete = url + '/' + uuid_to_delete_3
+                print (url_for_delete)
+                delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
+        
+            if response.ok:                                        
+                    return uuid_to_delete_3
+
+
+
+    def getPackageFile(self,pkg_id):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+        my_type =  self.getDBType()
+        if my_type == 'sonata':                
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            url = sp_host_2 + ':32002/api/v3/packages'  
+            url_2 = url + "/" + pkg_id + "/package-file --output temp-file.tgo"
+            print(url_2)
+            
+
+            response = requests.get(url_2,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            print (response_json)
+            #return response_json
+            if response.ok:        
+                return (response.text, response.status_code, response.headers.items())                  
+
+
+
     def instantiationStatus(self,request):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
