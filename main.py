@@ -161,16 +161,15 @@ def adapter_upload_package(service_platform):
     return ad.uploadPackage(content['package'])
 
 
-@app.route('/adapters/download-package', methods=['POST'])
-def adapter_download_package(request):
+@app.route('/adapters/<service_platform>/packages/<package_id>/download', methods=['GET'])
+def adapter_download_package(service_platform,package_id):
     print (request.is_json)
     content = request.get_json()
     print (content)	
-    ad = adapter.Adapter(content['service_platform'])
-    package = ad.downloadPackage()
+    ad = adapter.Adapter(service_platform)    
     my_type = ad.getDBType()
     if my_type == 'sonata':
-        return ad.uploadPackage(package)
+        return ad.downloadPackageSonata(package_id)
 #	if type == 'osm':
 #		return ad.uploadOSMService(package)		
 

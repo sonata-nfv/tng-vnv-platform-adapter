@@ -1526,33 +1526,35 @@ class Adapter:
 
 
 
-    def downloadPackage(self):
+    def downloadPackageSonata(self,package_id):
 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
-        my_type =  self.getDBType()
-        if my_type == 'sonata':               
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}                              
+        sp_host_0 = self.getDBHost()
+        print (sp_host_0)
+        sp_host = sp_host_0.__str__()
+        print (sp_host)
+        #print (self.getDBHost())
+        sp_host_1 = sp_host[4:]
+        print ("sp1 es: ")
+        print (sp_host_1)
+        sp_host_2 = sp_host_1[:-10]
+        print ("sp2 es: ")
+        print (sp_host_2)
+        url = sp_host_2 + ':32002/api/v3/packages'
+        
+        url2 = 'curl ' + url + '/' + package_id + '/package-file --output /app/packages/' + package_id + '.tgo'
+        
+        print(url2)
 
-            sp_host_0 = self.getDBHost()
-            print (sp_host_0)
-            sp_host = sp_host_0.__str__()
-            print (sp_host)
-            #print (self.getDBHost())
-            sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
-            url = sp_host_2 + ':32002/api/v3/packages'
-            
-            
-            print(url)
+        download = subprocess.check_output([url2], shell=True)
+        #return (download)    
+        msg = "Package downloaded to: " + "/app/packages/" + package_id + '.tgo' 
+        return (msg)
 
-            files = {'package': open(package,'rb')}
-            upload = requests.post(url, files=files)
-
-            if request.method == 'POST':
-                return upload.text
+        
+        #download = requests.get(url2)
+        #if request.method == 'GET':
+        #    return download.text
 
 
 
