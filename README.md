@@ -21,17 +21,17 @@ The repo is organized into three main directories;
 ## Repository Structure
   
  * `adapters` contains the python code to  communicate with downstream service platform 
- * `models` contains the VIM/WIM Wrappers files.
- * `packages` contains the VIM/WIM Wrappers files.
+ * `models` contains utility classes.
+ * `packages` contains samples packages from SONATA and OSM
 
 ## Contributing
 
-Contributing to the son-sp-infrabstract is really easy. You must:
+Contributing to this repo is really easy. You must:
 
 1. Clone [this repository](https://github.com/sonata-nfv/tng-vnv-platform-adapter);
 2. Work on your proposed changes, preferably through submiting [issues](https://github.com/sonata-nfv/tng-vnv-platform-adapter/issues);
 3. Submit a Pull Request;
-4. Follow/answer related [issues](https://github.com/sonata-nfv/tng-vnv-platform-adapter/issues) (see Feedback-Chanel, below).
+4. Follow/answer related [issues](https://github.com/sonata-nfv/tng-vnv-platform-adapter/issues) (see Feedback, below).
 
 For more information, please see the README file in the relevant subfolder.
 
