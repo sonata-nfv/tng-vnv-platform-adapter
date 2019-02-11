@@ -633,13 +633,31 @@ class Adapter:
             print ("sp3 es: ")
             print (sp_host_3)            
 
-            url = sp_host_2 + ':32002/api/v3/services'
-            get_nsd_list = "osm --hostname " + sp_host_3 + " nsd-list"
-            print (get_nsd_list)
+            #url = sp_host_2 + ':32002/api/v3/services'
+            #get_nsd_list = "osm --hostname " + sp_host_3 + " nsd-list"
+            #print (get_nsd_list)
             #get = os.system(get_nsd_list).__str__()    
             #return get
-            get = subprocess.check_output([get_nsd_list], shell=True)
-            return (get)
+            #get = subprocess.check_output([get_nsd_list], shell=True)
+            #return (get)
+
+    
+            token = self.getOSMToken(request)
+            print (token)
+            url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors'
+            url_2 = url.replace("http","https")
+            print (url_2)
+            
+            services_nsd = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            services_nsd_2 = services_nsd +token + "\" "  + url_2
+            print (services_nsd_2)
+            services = subprocess.check_output([services_nsd_2], shell=True)
+            #return jsonify(upload_nsd_4) 
+            return (services) 
+
+
+
+
             
 
     def getFunctions(self):    
@@ -683,13 +701,23 @@ class Adapter:
             print ("sp3 es: ")
             print (sp_host_3)            
 
-            url = sp_host_2 + ':32002/api/v3/functions'
-            get_vnfd_list = "osm --hostname " + sp_host_3 + " vnfd-list"
-            print (get_vnfd_list)
-            #get = os.system(get_nsd_list).__str__()
-            #return get                    
-            get = subprocess.check_output([get_vnfd_list], shell=True)
-            return (get)            
+            token = self.getOSMToken(request)
+            print (token)
+            url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages'
+            url_2 = url.replace("http","https")
+            print (url_2)
+            
+            functions_vnfd = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            functions_vnfd_2 = functions_vnfd +token + "\" "  + url_2
+            print (functions_vnfd_2)
+            functions = subprocess.check_output([functions_vnfd_2], shell=True)
+            #return jsonify(upload_nsd_4) 
+            return (functions)          
+
+
+
+
+
 
     def getService(self,name,vendor,version):    
 
@@ -1029,10 +1057,20 @@ class Adapter:
             print (sp_host_3)            
             url = sp_host_3            
             
-            get_status = "osm --hostname " + sp_host_3 + " ns-list"
-            print (get_status)
-            status = subprocess.check_output([get_status], shell=True)
-            return (status)              
+
+            token = self.getOSMToken(request)
+            print (token)
+            url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances'
+            url_2 = url.replace("http","https")
+            print (url_2)
+            
+            instances_1 = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            instances_2 = instances_1 +token + "\" "  + url_2
+            print (instances_2)
+            ns_instances = subprocess.check_output([instances_2], shell=True)
+            #return jsonify(upload_nsd_4) 
+            return (ns_instances)         
+
 
 
     def instantiation(self,request):    
@@ -1356,9 +1394,17 @@ class Adapter:
             print (sp_host_3)            
             url = sp_host_3            
             
-            get_vims = "osm --hostname " + sp_host_3 + " vim-list"
-            print (get_vims)
-            vims = subprocess.check_output([get_vims], shell=True)
+            token = self.getOSMToken(request)
+            print (token)
+            url = sp_host_2 + ':9999/osm/admin/v1/vim_accounts'
+            url_2 = url.replace("http","https")
+            print (url_2)
+            
+            vimss = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            vimss_2 = vimss +token + "\" "  + url_2
+            print (vimss_2)
+            vims = subprocess.check_output([vimss_2], shell=True)
+            #return jsonify(upload_nsd_4) 
             return (vims)              
 
              
@@ -1402,10 +1448,19 @@ class Adapter:
             print (sp_host_3)            
             url = sp_host_3            
             
-            get_vim = "osm --hostname " + sp_host_3 + " vim-show " + vim
-            print (get_vim)
-            vim_info = subprocess.check_output([get_vim], shell=True)
-            return jsonify(vim_info) 
+    
+            token = self.getOSMToken(request)
+            print (token)
+            url = sp_host_2 + ':9999/osm/admin/v1/vim_accounts'
+            url_2 = url.replace("http","https")
+            print (url_2)
+            
+            vimss = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            vimss_2 = vimss +token + "\" "  + url_2 + "/" + vim
+            print (vimss_2)
+            vims = subprocess.check_output([vimss_2], shell=True)
+            #return jsonify(upload_nsd_4) 
+            return (vims) 
    
 
 
