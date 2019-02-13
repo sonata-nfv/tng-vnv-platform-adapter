@@ -467,18 +467,30 @@ class Adapter:
                 return upload.text
 
 
+        if my_type == 'onap':               
 
-#curl -v -i -X POST  -F "package=@./eu.5gtango.test-connectivity.0.1.tgo" http://sta-vnv-ave-v4-0.5gtango.eu:32002/api/v3/packages                
-            #upload_nsd_3 = upload_nsd_2 + " --data-binary "
-            #upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
-            #print (upload_nsd_4)
-            #upload = subprocess.check_output([upload_nsd_4], shell=True)
-            #return jsonify(upload_nsd_4) 
-            #return (upload)
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            url = sp_host_2 + '/sdc/v1/catalog/services/{uuid}/resourceInstances/{resourceInstanceNormalizedName}/artifacts'
+            
+            print(package)
+            print(url)
 
+            files = {'package': open(package,'rb')}
+            upload = requests.post(url, files=files)
 
-            #upload_package_1="curl -v -i -X POST  -F \"package=@." + package + "\" " + url
-            #return upload_package_1
+            if request.method == 'POST':
+                return upload.text
+
 
 
 
@@ -1079,6 +1091,33 @@ class Adapter:
         JSON_CONTENT_HEADER = {'content-Type':'application/json'}   
         my_type =  self.getDBType()
 
+
+        if my_type == 'onap':
+            print('this SP is ONAP')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            url = sp_host_2 + '}/serviceInstances/v4'
+            print (url)
+
+            print(request.get_json())
+            data = request.get_json()
+            print(url)
+            print (data)
+            instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER)            
+            print (instantiate)
+            if request.method == 'POST':
+                return instantiate.text            
+
+
         if my_type == 'sonata':
             print('this SP is a Sonata')
             sp_host_0 = self.getDBHost()
@@ -1186,6 +1225,42 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
+
+        if my_type == 'onap':
+            print('this SP is ONAP')
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            url = sp_host_2
+            print (url)
+
+
+            content = request.get_json()
+
+            print (content['ns_instance_id'])
+            ns_instance_id = content['ns_instance_id']
+            print (ns_instance_id) 
+
+
+
+            url_2 = url + '/ns/' + ns_instance_id
+            print (url_2)                    
+            
+            #upload = requests.post(url, files=files)
+            terminate = requests.delete(url_2,headers=JSON_CONTENT_HEADER) 
+
+            if request.method == 'POST':
+                return terminate.text
+
+
         if my_type == 'sonata':
             print('this SP is a Sonata')
 
@@ -1207,6 +1282,10 @@ class Adapter:
             data = request.get_json()
             print(url)
             #upload = requests.post(url, files=files)
+
+            print (content['ns_id'])
+            ns_id = content['ns_id']
+            print (ns_id)            
             
             #upload = requests.post(url, files=files)
             terminate = requests.post(url,data,headers=JSON_CONTENT_HEADER) 
