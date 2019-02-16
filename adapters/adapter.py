@@ -12,6 +12,8 @@ import models.database as database
 import re
 import ast
 from ast import literal_eval
+import yaml
+import time
 
 FILE = "db-config.cfg"
 
@@ -1001,8 +1003,9 @@ class Adapter:
             token = self.getOSMToken(request)
             print (token)
 
-            content = request.get_json()
-            ns_id = content['ns_id']
+            #content = request.get_json()
+            #ns_id = content['ns_id']
+            ns_id = request
             print (ns_id)            
             
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances'
@@ -1207,15 +1210,24 @@ class Adapter:
                 'vimAccountId':''+vim_id+''
             }       
             
-            instantiate_nsd = "curl -X POST --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            #instantiate_nsd = "curl -X POST --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            instantiate_nsd = "curl -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "                
             instantiate_nsd_2 = instantiate_nsd +token + "\" "
             instantiate_nsd_3 = instantiate_nsd_2 + " --data \"" + str(data_inst) + "\""
             instantiate_nsd_4 = instantiate_nsd_3 + " " + url_2
             print (instantiate_nsd_4)
 
+
+
+            
+
             inst = subprocess.check_output([instantiate_nsd_4], shell=True)
+
+            if content['callback']:
+                self.OSMInstantiateCallback(token,url_2,content['callback'],inst)
+
+            #inst = subprocess.check_output([instantiate_nsd_4], shell=True)
             return (inst)
-           
 
 
 
@@ -1376,7 +1388,7 @@ class Adapter:
 
             print (url_2)
 
-            print(request.get_json())
+            #print(request.get_json())
             #data = request.get_json()
             print(url_2)
             #print (data)
@@ -1862,3 +1874,89 @@ class Adapter:
             #print (upd_tok)
 
             return token_id['id']            
+
+
+    def getOSMInstaceStatus(self,service_id):             
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+            url = sp_host_3    
+
+
+            token = self.getOSMToken(service_id)
+            print (token)     
+            
+            url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances/' + service_id
+            url_2 = url.replace("http","https")
+            print (url_2)
+
+            
+            status_ns = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            status_ns_2 = status_ns +token + "\" "
+            status_ns_3 = status_ns_2 + " " + url_2        
+            print (status_ns_3)
+
+            status = subprocess.check_output([status_ns_3], shell=True)
+            return (status)     
+
+    def OSMInstantiateCallback(self,token,url_2,callback_url,inst_resp_yaml):
+        print ("callback start")
+                
+        response = yaml.load(inst_resp_yaml)
+        service_id = response['id']
+        print(service_id)
+
+        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        print(status_url)
+        status_curl = subprocess.check_output([status_url], shell=True)
+        print (status_curl)
+        #status_json = json.dumps(status_curl)
+        #status_json = status_curl.get_json()
+
+        with open('/app/temp.file') as f:
+            data = json.load(f)
+
+        status = 'my_status'
+        is_active = 'not'
+
+        while status != 'ACTIVE':    
+            while is_active == 'not':
+                try:
+                    status = data['admin']['deployed']['RO']['nsr_status'] 
+                    is_active = 'yes'
+                    status = 'ACTIVE'
+                except:
+                    is_active = 'not'
+                    status = 'my_status'
+                    print("Retraying in 3 sec")
+                    print(status)
+                    time.sleep(3)
+                    status_curl = subprocess.check_output([status_url], shell=True)
+                    print (status_curl)
+                    with open('/app/temp.file') as f:
+                        data = json.load(f)
+                                   
+
+        #status = data['admin']['deployed']['RO']['nsr_status']        
+        print (status)
+
+
+        callback_msg = {
+            'Message':'The service ' + service_id + ' is in status: ' + status + ''
+        }
+        print (callback_msg)
+        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
+        print (callback_post)
+        #call = subprocess.check_output([callback_post], shell=True)
+        #print(call)
+        print ("callback end")

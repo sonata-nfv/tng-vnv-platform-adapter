@@ -197,14 +197,17 @@ def serviceInstantiation(service_platform):
     return ad.instantiation(request)    
     
 
-@app.route('/adapters/<service_platform>/instantiations/status', methods=['POST'])
-def serviceInstantiationStatus(service_platform):
+@app.route('/adapters/<service_platform>/instantiations/<service_id>', methods=['GET'])
+def serviceInstantiationStatus(service_platform,service_id):
     print (request.is_json)
     content = request.get_json()
     print (content)    
     ad = adapter.Adapter(service_platform)
     #print (content['service_uuid'])        
-    return ad.instantiationStatus(request)      
+    return ad.instantiationStatus(service_id)      
+
+
+
 
 @app.route('/adapters/<service_platform>/instantiations/delete', methods=['POST'])
 def serviceInstantiationDelete(service_platform):
