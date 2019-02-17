@@ -14,6 +14,12 @@ import ast
 from ast import literal_eval
 import yaml
 import time
+from threading import Thread
+import threading 
+from _thread import start_new_thread
+import _thread
+
+
 
 FILE = "db-config.cfg"
 
@@ -1224,7 +1230,7 @@ class Adapter:
             inst = subprocess.check_output([instantiate_nsd_4], shell=True)
 
             if content['callback']:
-                self.OSMInstantiateCallback(token,url_2,content['callback'],inst)
+                _thread.start_new_thread(self.OSMInstantiateCallback, (token,url_2,content['callback'],inst))
 
             #inst = subprocess.check_output([instantiate_nsd_4], shell=True)
             return (inst)
