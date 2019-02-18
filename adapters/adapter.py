@@ -1961,15 +1961,12 @@ class Adapter:
         #status = data['admin']['deployed']['RO']['nsr_status']        
         print (status)
 
-
-        callback_msg = {
-            'Message':'The service ' + service_id + ' is in status: ' + status + ''
-        }
+        callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
         print (callback_msg)
-        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
-        print (callback_post)
-        #call = subprocess.check_output([callback_post], shell=True)
-        #print(call)
+        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
+
+        call = subprocess.check_output([callback_post], shell=True)
+        print(call)
         print ("callback end")
 
 
@@ -2076,14 +2073,12 @@ class Adapter:
         print (status)
 
 
-        callback_msg = {
-            'Message':'The service ' + service_id + ' was terminated.'
-        }
+
+        callback_msg='{\"Message\":\"The service ' + service_id + ' was terminated\"}'
         print (callback_msg)
-        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
-        print (callback_post)
-        #call = subprocess.check_output([callback_post], shell=True)
-        #print(call)
+        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
+        call = subprocess.check_output([callback_post], shell=True)
+        print(call)
         print ("callback end")        
 
 
@@ -2128,14 +2123,14 @@ class Adapter:
         print (status)
 
 
-        callback_msg = {
-            'Message':'The function descriptor ' + service_id + ' is in status: ' + status + ''
-        }
-        print (callback_msg)
-        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
+        callback_msg='{\"Message\":\"The function descriptor ' + service_id + ' is in status: ' + status + '\"}'
+
+
+        print (callback_msg)       
+        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
         print (callback_post)
-        #call = subprocess.check_output([callback_post], shell=True)
-        #print(call)
+        call = subprocess.check_output([callback_post], shell=True)
+        print(call)
         print ("callback end")        
 
 
@@ -2178,13 +2173,10 @@ class Adapter:
      
         print (status)
 
-
-        callback_msg = {
-            'Message':'The function descriptor ' + service_id + ' is in status: ' + status + ''
-        }
+        callback_msg='{\"Message\":\"The function descriptor ' + service_id + ' is in status: ' + status + '\"}'
         print (callback_msg)
-        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
+        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
         print (callback_post)
-        #call = subprocess.check_output([callback_post], shell=True)
-        #print(call)
+        call = subprocess.check_output([callback_post], shell=True)
+        print(call)
         print ("callback end")                

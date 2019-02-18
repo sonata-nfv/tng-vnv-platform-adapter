@@ -268,7 +268,14 @@ def adapter_delete_service(service_platform,id_to_delete):
     ad = adapter.Adapter(service_platform)  
     return ad.deleteOSMService(id_to_delete)  
 
+@app.route('/callback_tests', methods=['POST'])
+def adapter_callback_tests():      
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    return content.__str__()
 
+    
 
 
 
