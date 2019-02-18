@@ -1151,10 +1151,10 @@ class Adapter:
             
             #upload = requests.post(url, files=files)
             #instantiate = requests.post(url,data,headers=JSON_CONTENT_HEADER)
-            instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER) 
-            
+            instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER)           
             print (instantiate)
-
+            #if data['callback']:
+            #    _thread.start_new_thread(self.SonataInstantiateCallback, (url,data['callback'],instantiate))
             if request.method == 'POST':
                 return instantiate.text
 
@@ -1352,21 +1352,20 @@ class Adapter:
             print (ns_id)
 
             
-            delete_ns = "curl -X DELETE --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            #delete_ns = "curl -X DELETE --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             delete_ns_2 = delete_ns +token + "\" "
             delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
             print (delete_ns_3)
 
             terminate = subprocess.check_output([delete_ns_3], shell=True)
+
+            if content['callback']:
+                _thread.start_new_thread(self.OSMTerminateCallback, (token,url_2,content['callback'],content['ns_id']))
+
             return (terminate)            
 
-            
-            
-            
-            #delete_ns = "osm --hostname " + sp_host_3 + " ns-delete " + data['ns_name']
-            #print (delete_ns)
-            #delete = subprocess.check_output([delete_ns], shell=True)
-            #return (delete)                            
+                        
 
 
     def getOSMToken(self,request):            
@@ -1966,3 +1965,117 @@ class Adapter:
         #call = subprocess.check_output([callback_post], shell=True)
         #print(call)
         print ("callback end")
+
+
+
+    def SonataInstantiateCallback(self,url_2,callback_url,inst_resp_json):
+        print ("callback start")
+        print("aaaa")
+        print (inst_resp_json)
+        print("aaaa")
+        response = json.load(inst_resp_json)
+        service_id = response['id']
+        print(service_id)
+
+        status_url = "curl --insecure " + url_2 + "/" + service_id + " > /app/temp.file"
+        print(status_url)
+        status_curl = subprocess.check_output([status_url], shell=True)
+        print (status_curl)
+        status_cut = "tail -n 1 /app/temp.file > /app/temp1.file"
+        status_cutted = subprocess.check_output([status_cut], shell=True)
+        #status_json = json.dumps(status_curl)
+        #status_json = status_curl.get_json()
+
+        with open('/app/temp1.file') as f:
+            data = json.load(f)
+
+        status = 'my_status'
+        is_active = 'not'
+
+        while status != 'READY':    
+            while is_active == 'not':
+                try:
+                    status = data['status'] 
+                    is_active = 'yes'
+                    status = 'READY'
+                except:
+                    is_active = 'not'
+                    status = 'my_status'
+                    print("Retraying in 3 sec")
+                    print(status)
+                    time.sleep(3)
+                    status_curl = subprocess.check_output([status_url], shell=True)
+                    print (status_curl)
+                    status_cut = "tail -n 1 /app/temp.file > /app/temp1.file"
+                    status_cutted = subprocess.check_output([status_cut], shell=True)                    
+                    with open('/app/temp1.file') as f:
+                        data = json.load(f)
+                                   
+
+        #status = data['admin']['deployed']['RO']['nsr_status']        
+        print (status)
+
+
+        callback_msg = {
+            'Message':'The service ' + service_id + ' is in status: ' + status + ''
+        }
+        print (callback_msg)
+        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
+        print (callback_post)
+        #call = subprocess.check_output([callback_post], shell=True)
+        #print(call)
+        print ("callback end")
+
+
+
+    def OSMTerminateCallback(self,token,url_2,callback_url,ns_id):
+        print ("callback start")
+                
+        #response = yaml.load(inst_resp_yaml)
+        service_id = ns_id
+        print(service_id)
+
+        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        print(status_url)
+        status_curl = subprocess.check_output([status_url], shell=True)
+        print (status_curl)
+        #status_json = json.dumps(status_curl)
+        #status_json = status_curl.get_json()
+
+        with open('/app/temp.file') as f:
+            data = json.load(f)
+
+        status = 'my_status'
+        is_active = 'not'
+
+        while status != '404':    
+            while is_active == 'not':
+                try:
+                    status = data['admin']['deployed']['RO']['nsr_status'] 
+                    is_active = 'yes'
+                    status = '404'
+                except:
+                    is_active = 'not'
+                    status = 'my_status'
+                    print("Retraying in 3 sec")
+                    print(status)
+                    time.sleep(3)
+                    status_curl = subprocess.check_output([status_url], shell=True)
+                    print (status_curl)
+                    with open('/app/temp.file') as f:
+                        data = json.load(f)
+                                   
+
+        #status = data['admin']['deployed']['RO']['nsr_status']        
+        print (status)
+
+
+        callback_msg = {
+            'Message':'The service ' + service_id + ' was terminated.'
+        }
+        print (callback_msg)
+        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
+        print (callback_post)
+        #call = subprocess.check_output([callback_post], shell=True)
+        #print(call)
+        print ("callback end")        
