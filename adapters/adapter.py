@@ -557,15 +557,17 @@ class Adapter:
             url_2 = url.replace("http","https")
             print (url_2)
             
-
-            #upload_nsddddd = "osm --hostname " + sp_host_3 + " vnfd-create " + url_2
-            upload_nsd = "curl -X POST --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            #upload_nsd = "curl -X POST --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            upload_nsd = "curl -X POST --insecure -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
             print (upload_nsd_4)
             upload = subprocess.check_output([upload_nsd_4], shell=True)
-            #return jsonify(upload_nsd_4) 
+
+            if content['callback']:
+                _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,content['callback'],upload))
+
             return (upload)
 
       
@@ -600,13 +602,17 @@ class Adapter:
             url_2 = url.replace("http","https")
             print (url_2)
             
-            upload_nsd = "curl -X POST --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            upload_nsd = "curl -X POST --insecure -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
             print (upload_nsd_4)
             upload = subprocess.check_output([upload_nsd_4], shell=True)
             #return jsonify(upload_nsd_4) 
+
+            if content['callback']:
+                _thread.start_new_thread(self.OSMUploadFunctionCallback, (token,url_2,content['callback'],upload))
+
             return (upload) 
 
 
@@ -2079,3 +2085,106 @@ class Adapter:
         #call = subprocess.check_output([callback_post], shell=True)
         #print(call)
         print ("callback end")        
+
+
+
+    def OSMUploadFunctionCallback(self,token,url_2,callback_url,inst_resp_yaml):
+        print ("callback start")
+                
+        response = yaml.load(inst_resp_yaml)
+        service_id = response['id']
+        print(service_id)
+
+        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        print(status_url)
+        status_curl = subprocess.check_output([status_url], shell=True)
+        print (status_curl)
+        #status_json = json.dumps(status_curl)
+        #status_json = status_curl.get_json()
+
+        with open('/app/temp.file') as f:
+            data = json.load(f)
+
+        print (data)
+        status = 'my_status'
+        #status = data['_admin']['onboardingState']
+
+        while status == 'my_status': 
+            print (" ")                               
+            status = data['_admin']['onboardingState']
+            if status != 'ONBOARDED':
+                print ("Retrying in 3 sec")
+                print (status)
+                time.sleep(3)
+                status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+                print(status_url)            
+                status_curl = subprocess.check_output([status_url], shell=True)
+                print (status_curl)
+                with open('/app/temp.file') as f:
+                    data = json.load(f)
+                    print("data content:")
+                    print (data)
+     
+        print (status)
+
+
+        callback_msg = {
+            'Message':'The function descriptor ' + service_id + ' is in status: ' + status + ''
+        }
+        print (callback_msg)
+        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
+        print (callback_post)
+        #call = subprocess.check_output([callback_post], shell=True)
+        #print(call)
+        print ("callback end")        
+
+
+    def OSMUploadServiceCallback(self,token,url_2,callback_url,inst_resp_yaml):
+        print ("callback start")
+                
+        response = yaml.load(inst_resp_yaml)
+        service_id = response['id']
+        print(service_id)
+
+        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        print(status_url)
+        status_curl = subprocess.check_output([status_url], shell=True)
+        print (status_curl)
+        #status_json = json.dumps(status_curl)
+        #status_json = status_curl.get_json()
+
+        with open('/app/temp.file') as f:
+            data = json.load(f)
+
+        print (data)
+        status = 'my_status'
+        #status = data['_admin']['onboardingState']
+
+        while status == 'my_status': 
+            print (" ")                               
+            status = data['_admin']['onboardingState']
+            if status != 'ONBOARDED':
+                print ("Retrying in 3 sec")
+                print (status)
+                time.sleep(3)
+                status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+                print(status_url)            
+                status_curl = subprocess.check_output([status_url], shell=True)
+                print (status_curl)
+                with open('/app/temp.file') as f:
+                    data = json.load(f)
+                    print("data content:")
+                    print (data)
+     
+        print (status)
+
+
+        callback_msg = {
+            'Message':'The function descriptor ' + service_id + ' is in status: ' + status + ''
+        }
+        print (callback_msg)
+        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
+        print (callback_post)
+        #call = subprocess.check_output([callback_post], shell=True)
+        #print(call)
+        print ("callback end")                
