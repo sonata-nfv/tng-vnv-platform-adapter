@@ -228,9 +228,31 @@ class ServicePlatform:
                                         database = "gatekeeper")
             cursor = connection.cursor()   
             print ( connection.get_dsn_parameters(),"\n")
-            cursor.execute("SELECT * FROM service_platforms;")
+            #cursor.execute("SELECT * FROM service_platforms")
+            #cursor.execute("SELECT to_json(row) FROM (SELECT * FROM service_platforms) row")
+            sql = "SELECT row_to_json(row) FROM (SELECT * FROM service_platforms) row"
+            cursor.execute(sql)
             all = cursor.fetchall()
-            return jsonify(all), 200
+
+            print (all)
+
+            #print (json.dumps(all))
+
+            data_json = []
+
+            for i in all:
+                data_json.append(i)
+                print (i)
+
+            response0 = json.dumps(data_json).__str__()
+            response1 = response0.replace("[{","{")
+            response2 = response1.replace("}]","}")
+            response3 = response2.replace("[[","[")
+            response4 = response3.replace("]]","]")
+            
+
+            return response4, 200 
+            #return json.dumps(list(all)), 200
         except (Exception, psycopg2.Error) as error :
             print ("Error while connecting to PostgreSQL", error)
         finally:
