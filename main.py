@@ -15,6 +15,8 @@ from models import utils
 from models import users
 
 
+
+
 import psycopg2
 
 
@@ -275,6 +277,18 @@ def adapter_callback_tests():
     print (content)
     return content.__str__()
 
+@app.route('/adapters/<service_platform>/monitoring', methods=['GET'])
+def monitoring_tests(service_platform):        
+    ad = adapter.Adapter(service_platform)  
+    return ad.monitoringTests("cpu_utilization")  
+
+@app.route('/adapters/<service_platform>/monitoring', methods=['POST'])
+def monitoring(service_platform):  
+    print (request.is_json)
+    content = request.get_json()
+    print (content)      
+    ad = adapter.Adapter(service_platform)  
+    return ad.monitoringTests(content['metric'])
     
 
 

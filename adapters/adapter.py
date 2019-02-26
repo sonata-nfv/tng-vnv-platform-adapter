@@ -2179,4 +2179,73 @@ class Adapter:
         print (callback_post)
         call = subprocess.check_output([callback_post], shell=True)
         print(call)
-        print ("callback end")                
+        print ("callback end")     
+
+    def monitoringTests(self,monitoring_type):
+        JSON_CONTENT_HEADER = {'Accept':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            print('this SP is a Sonata')
+
+        if my_type == 'osm':
+            print('this SP is a OSM')
+
+            current_string="date -u +\"%Y-%m-%dT%H:%M:%S.%3N\""
+            
+
+            current_date = subprocess.check_output([current_string], shell=True)
+            print (current_date)
+            current_date_1 = current_date.__str__()
+            print (current_date_1)
+            current_date_2 = current_date_1.__str__()[2:25]
+            print (current_date_2)
+            print ("aaaaaa")
+
+            yesterday_string="date -d \"1 days ago\" -u +\"%Y-%m-%dT%H:%M:%S.%3N\""
+
+            yesterday_date = subprocess.check_output([yesterday_string], shell=True)
+            yesterday_date_1 = yesterday_date.__str__()
+            print (yesterday_date_1)
+            yesterday_date_2 = yesterday_date_1.__str__()[2:25]
+            print (yesterday_date_2)
+            print ("aaaaaa")    
+
+
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            sp_host_3 = sp_host_2[7:]
+            print ("sp3 es: ")
+            print (sp_host_3)            
+
+            url = sp_host_3
+
+            #token = self.getOSMTokenForDelete()
+            #print (token)
+           
+            url = sp_host_2 + ':9091/api/v1/query_range?query=osm_'
+            url_2 = url.replace("http","https")
+            print (url_2) 
+
+
+            monitoring_string = "curl \"" + url + monitoring_type + "&start="  + yesterday_date_2 + "Z&end=" + current_date_2 + "Z&step=15s\""
+            #+ "&start=" + yesterday_date_1 + "Z&end=" + current_date_1 + "Z&step=15s"
+            print (monitoring_string)
+
+            monitoring_curl = subprocess.check_output([monitoring_string], shell=True)
+            print (monitoring_curl)
+
+            return monitoring_curl
+
+            
+                   
