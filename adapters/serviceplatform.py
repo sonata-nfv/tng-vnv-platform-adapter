@@ -304,3 +304,31 @@ class ServicePlatform:
                     cursor.close()
                     connection.close()
                     print("PostgreSQL connection is closed")                            
+
+
+    def deleteServicePlatform(self):
+        try:
+            connection = psycopg2.connect(user = "sonatatest",
+                                        password = "sonata",
+                                        host = "son-postgres",
+                                        port = "5432",
+                                        database = "gatekeeper")
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            delete_sp = "DELETE FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (delete_sp)
+            cursor.execute(delete_sp)
+            connection.commit()
+            create_text = "Service platform deleted"
+            return jsonify(create_text), 200   
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")                     

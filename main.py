@@ -44,7 +44,12 @@ def get_sps():
 @app.route('/service_platforms/<service_platform>', methods=['GET'])
 def get_sp(service_platform):
     sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","service_token","monitoring_urls")
-    return sp.getServicePlatform()    
+    return sp.getServicePlatform()   
+
+@app.route('/service_platforms/<service_platform>', methods=['DELETE'])
+def delete_sp(service_platform):
+    sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","service_token","monitoring_urls")
+    return sp.deleteServicePlatform()
 
 @app.route('/service_platforms', methods=['POST'])
 def register_sp():
