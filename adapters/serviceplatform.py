@@ -134,7 +134,7 @@ class ServicePlatform:
 
 
 
-    def getServicePlatflorm(self):
+    def getServicePlatformOLD(self):
         try:
             connection = psycopg2.connect(user = "sonatatest",
                                         password = "sonata",
@@ -261,4 +261,46 @@ class ServicePlatform:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed")          
+                    print("PostgreSQL connection is closed")   
+
+
+
+
+    def getServicePlatform(self):
+        try:
+            connection = psycopg2.connect(user = "sonatatest",
+                                        password = "sonata",
+                                        host = "son-postgres",
+                                        port = "5432",
+                                        database = "gatekeeper")
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            get_sp_string = "SELECT * FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            get_sp = "SELECT row_to_json(row) FROM (" + get_sp_string + ") row"
+            print (get_sp)
+            cursor.execute(get_sp)
+            all = cursor.fetchall()
+            #return jsonify(all), 200 
+
+            data_json = []
+            for i in all:
+                data_json.append(i)
+                print (i)
+            response0 = json.dumps(data_json).__str__()
+            response1 = response0.replace("[{","{")
+            response2 = response1.replace("}]","}")
+            response3 = response2.replace("[{","{")
+            response4 = response3.replace("}]","}")            
+            return response4, 200                
+
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")                            
