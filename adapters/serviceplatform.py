@@ -12,7 +12,7 @@ from configparser import ConfigParser
 
 class ServicePlatform:
 
-    def __init__(self, name, host, type, username, password, project_name,service_token):
+    def __init__(self, name, host, type, username, password, project_name,service_token,monitoring_urls):
         self.name = name
         self.host = host
         self.type = type
@@ -20,6 +20,7 @@ class ServicePlatform:
         self.password = password
         self.project_name = project_name
         self.service_token = service_token
+        self.monitoring_urls = monitoring_urls
 
 
 
@@ -169,7 +170,7 @@ class ServicePlatform:
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")            
             print (self.name)
-            new_sp = "INSERT INTO service_platforms (name, host, type, username, password, project_name, service_token) VALUES (\'" +self.name+ "\',\'" +self.host+ "\',\'" +self.type+ "\',\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.project_name+ "\',\'" +self.service_token+ "\')"
+            new_sp = "INSERT INTO service_platforms (name, host, type, username, password, project_name, service_token,monitoring_urls) VALUES (\'" +self.name+ "\',\'" +self.host+ "\',\'" +self.type+ "\',\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.project_name+ "\',\'" +self.service_token+ "\',\'" +self.monitoring_urls+ "\')"
             print (new_sp)                    
             cursor.execute(new_sp)
             connection.commit()

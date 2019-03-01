@@ -37,7 +37,7 @@ def login():
 ##### SERVICE PLATFORMS ROUTES #####
 @app.route('/service_platforms', methods=['GET'])
 def get_sps():
-    sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","service_token")
+    sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","service_token","monitoring_urls")
     return sp.getServicePlatforms()
 
 @app.route('/service_platforms', methods=['POST'])
@@ -45,9 +45,16 @@ def register_sp():
     #sp = serviceplatform.ServicePlatform("name","host","type","service_token")   
     print (request.is_json)
     content = request.get_json()
-    print (content)
-    sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],content['service_token'])
-    return sp.registerServicePlatform()    
+    print (content)  
+    try:      
+        mon_urls = content['monitoring_urls']
+        print ("mon_url exists")
+        sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token",content['monitoring_urls'])
+        return sp.registerServicePlatform()
+    except:
+        print ("mon_url does not exists")
+        sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token","monitoring_urls")
+        return sp.registerServicePlatform()       
 
 
 
