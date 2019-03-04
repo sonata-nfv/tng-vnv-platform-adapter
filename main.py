@@ -254,9 +254,17 @@ def getVimInfo(service_platform,vim_name):
 def adapter_osm_get_token(service_platform):
     print (request.is_json)
     content = request.get_json()
-    print (content)    
-    ad = adapter.Adapter(service_platform)        
-    return ad.getOSMToken(request)        
+    print (content) 
+    ad = adapter.Adapter(service_platform)   
+    my_type = ad.getDBType()
+    if my_type == 'sonata':
+        print("illllooo")
+        print ("this SP is a sonata")
+        print("illllooo")
+        return ad.getSonataToken(request)    
+    if my_type == 'osm':
+        return ad.getOSMToken(request)   
+       
 
 
 @app.route('/adapters/<service_platform>/services', methods=['POST'])

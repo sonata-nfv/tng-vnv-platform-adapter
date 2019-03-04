@@ -198,7 +198,7 @@ class Adapter:
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")
             #create table Service Platforms
-            get_password= "SELECT username FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            get_password= "SELECT password FROM service_platforms WHERE name=\'" +self.name+ "\'"
             print (get_password)
             cursor.execute(get_password)
             all = cursor.fetchall()
@@ -2249,3 +2249,57 @@ class Adapter:
 
             
                    
+
+
+    def getSonataToken(self,request):            
+
+        JSON_CONTENT_HEADER = {'Content-type':'application/json'}   
+        print('this SP is a Sonata')
+        sp_host_0 = self.getDBHost()
+        print (sp_host_0)
+        sp_host = sp_host_0.__str__()
+        print (sp_host)
+        #print (self.getDBHost())
+        sp_host_1 = sp_host[4:]
+        print ("sp1 es: ")
+        print (sp_host_1)
+        sp_host_2 = sp_host_1[:-10]
+        print ("sp2 es: ")
+        print (sp_host_2)
+        #url = sp_host_2 + '/requests'
+        url = sp_host_2 + ':4567/login'
+        url_2 = url.replace("http","https")
+
+        print (url_2)
+
+        username_for_token = self.getDBUserName()
+        password_for_token = self.getDBPassword()        
+        data_for_token= "{\"username\": \"" +username_for_token+ "\", \"password\": \"" +password_for_token+ "\"}"
+
+        print ("Data for token:")
+        print (data_for_token)    
+
+        #get_token = requests.post(url,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
+
+        get_token = "curl -i -X POST -H Content-type: application/json -d '" + data_for_token + "' " + url 
+
+        print (get_token)
+
+        token_curl = subprocess.check_output([get_token], shell=True)
+
+        print (token_curl)
+
+        string = token_curl.__str__()
+        start = string.find('{')
+        end = string.find('}', start)
+        tok = string[start:end+1]
+        print (tok)
+
+
+        #return token_curl
+
+        token_id_json = json.loads(tok)
+        print (token_id_json['token'])
+
+        return token_id_json['token']                   
+        #return tok['token']
