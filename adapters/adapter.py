@@ -2303,3 +2303,20 @@ class Adapter:
 
         return token_id_json['token']                   
         #return tok['token']
+
+
+
+    def downloadPackageTGO(self,package_id):
+
+        get_package_curl = 'curl -H \'Content-type: application/json\' http://tng-cat:4011/api/catalogues/v2/packages/' + package_id
+        package_json = subprocess.check_output([get_package_curl], shell=True)
+        package_json_loaded = json.loads(package_json)
+
+        package_file_uuid = package_json_loaded['pd']['package_file_uuid']       
+        print (package_file_uuid)
+
+        get_tgo_curl = 'curl -H \'Content-type: application/zip\' http://tng-cat:4011/api/catalogues/v2/tgo-packages/' + package_file_uuid + ' --output /app/packages' + package_file_uuid + '.tgo'            
+        package_tgo = subprocess.check_output([get_tgo_curl], shell=True)
+
+        msg = "The package " + package_id + " with id " + package_file_uuid +"was downloaded to: /app/packages/" + package_file_uuid + '.tgo' 
+        return (msg)
