@@ -2412,25 +2412,12 @@ class Adapter:
         response = requests.get(url,headers=JSON_CONTENT_HEADER)
         response_json = response.content
         jjson = json.loads(response_json)
-        pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+        for x in jjson:
+            print(x)
+            if ( x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version ) :
+                print("same name")
+                uuid = x['uuid']
+                print(uuid)  
         
-        if pkg:
-
-            print(pkg)
-            #uuid_to_delete = pkg['pd']['uuid']
-            #uuid_to_delete_1 = [uuid for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
-            uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]            
-            print(uuid_to_delete_1)
-            uuid_0 = uuid_to_delete_1.__str__()
-            uuid_to_delete_2 = uuid_0[2:]
-            print(uuid_to_delete_2)
-            uuid_to_delete_3 = uuid_to_delete_2[:-2]
-            print(uuid_to_delete_3)
-
-            url_for_delete = url + '/' + uuid_to_delete_3
-            print (url_for_delete)
-            delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
-
-        if response.ok:                 
-                return (delete.text, delete.status_code, delete.headers.items())                      
+        return uuid                   
     
