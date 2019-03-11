@@ -161,7 +161,7 @@ def adapter_get_vnv_packages():
     return ad.getVnVPackages()   
 
 @app.route('/adapters/packages/<name>/<vendor>/<version>/id', methods=['GET'])
-def adapter_get_vnv_package_by_id(service_platform,name,vendor, version):
+def adapter_get_vnv_package_by_id(name,vendor, version):
     ad = adapter.Adapter("service_platform")
     return ad.getVnVPackagebyId(name,vendor,version)  
 
