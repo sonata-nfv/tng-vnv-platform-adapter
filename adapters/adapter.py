@@ -2296,6 +2296,7 @@ class Adapter:
         print (package_file_uuid)
 
         get_tgo_curl = 'curl -H \'Content-type: application/zip\' http://tng-cat:4011/api/catalogues/v2/tgo-packages/' + package_file_uuid + ' --output /app/packages/' + package_file_uuid + '.tgo'            
+        print (get_tgo_curl)    
         package_tgo = subprocess.check_output([get_tgo_curl], shell=True)
 
         msg = "The package " + package_id + " with id " + package_file_uuid +"was downloaded to: /app/packages/" + package_file_uuid + '.tgo' 
@@ -2399,4 +2400,37 @@ class Adapter:
         response = requests.get(url, headers=JSON_CONTENT_HEADER)    
         if response.ok:        
                 return (response.text, response.status_code, response.headers.items()) 
+
+
+
+    def getVnVPackagebyId(self,name,vendor,version):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'} 
+        
+        url = 'http://tng-cat:4011/api/catalogues/v2/packages'  
+        print (name,vendor,version)
+        response = requests.get(url,headers=JSON_CONTENT_HEADER)
+        response_json = response.content
+        jjson = json.loads(response_json)
+        pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+        
+        if pkg:
+
+            print(pkg)
+            #uuid_to_delete = pkg['pd']['uuid']
+            #uuid_to_delete_1 = [uuid for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
+            uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]            
+            print(uuid_to_delete_1)
+            uuid_0 = uuid_to_delete_1.__str__()
+            uuid_to_delete_2 = uuid_0[2:]
+            print(uuid_to_delete_2)
+            uuid_to_delete_3 = uuid_to_delete_2[:-2]
+            print(uuid_to_delete_3)
+
+            url_for_delete = url + '/' + uuid_to_delete_3
+            print (url_for_delete)
+            delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
+
+        if response.ok:                 
+                return (delete.text, delete.status_code, delete.headers.items())                      
     
