@@ -2389,3 +2389,24 @@ class Adapter:
         #response_3 = response_2[:-1] 
         response_3 = response_2 + "]}"
         return response_3
+
+
+
+    def getVnVPackages(self):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}
+        print (sp_host_0)
+        sp_host = sp_host_0.__str__()
+        print (sp_host)
+        #print (self.getDBHost())
+        sp_host_1 = sp_host[4:]
+        print ("sp1 es: ")
+        print (sp_host_1)
+        sp_host_2 = sp_host_1[:-10]
+        print ("sp2 es: ")
+        print (sp_host_2)
+        url = 'http://tng-cat:4011/api/catalogues/v2/packages'
+        response = requests.get(url, headers=JSON_CONTENT_HEADER)    
+        if response.ok:        
+                return (response.text, response.status_code, response.headers.items()) 
+    
