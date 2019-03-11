@@ -786,7 +786,6 @@ class Adapter:
             print (sp_host_0)
             sp_host = sp_host_0.__str__()
             print (sp_host)
-            #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
             print ("sp1 es: ")
             print (sp_host_1)
@@ -798,29 +797,17 @@ class Adapter:
             print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
-            #response_json = response.text
+
             print (response_json)
-            #json_str = json.dumps(response._content)
-            #jjson = json.loads(response.text.__str__())
-            #jjson = json.loads(response_json)
+
             jjson = json.loads(response.content)
             print (jjson)
-            #services = [x for x in jjson if x['service']['name'] == name and x['service']['vendor'] == vendor and x['service']['version'] == version]
 
-            #print (jjson['service']['name'])
-            #print (obj for obj in jjson if(obj['service']['vendor'] == 'eu.5gtango'))
-            #illo = [obj for obj in jjson if(obj['service'] == '11111')]
-            
-            print ("illo")
-            #idd = print ([obj for obj in jjson[0]['service']['uuid']])
             idd = print (jjson[0]['service']['uuid'])
             idd = print (jjson[0]['service']['name'])
             idd = print (jjson[1]['service']['uuid'])
             idd = print (jjson[1]['service']['name'])            
-   
-            #idd = [obj.service['name'] for obj in jjson]
-            print ("illo")
-            
+
             
             N = 0
             for N in range(10000):
@@ -830,14 +817,8 @@ class Adapter:
                 print (N)
 
 
-            
-
-            
-
-
-            if response.ok:        
-                #return (response.text, response.status_code, response.headers.items())      
-                    return jsonify("no")
+            if response.ok:            
+                return jsonify("no")
                             
 
 
@@ -995,7 +976,6 @@ class Adapter:
 
         if my_type == 'osm':
             print('this SP is a OSM')   
-            print('this SP is a OSM')
             sp_host_0 = self.getDBHost()
             print (sp_host_0)
             sp_host = sp_host_0.__str__()
@@ -1025,7 +1005,7 @@ class Adapter:
             print (url_2)
 
             
-            status_ns = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            status_ns = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             status_ns_2 = status_ns +token + "\" "
             status_ns_3 = status_ns_2 + " " + url_2 + "/" + ns_id          
             print (status_ns_3)
@@ -1091,7 +1071,7 @@ class Adapter:
             url_2 = url.replace("http","https")
             print (url_2)
             
-            instances_1 = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            instances_1 = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             instances_2 = instances_1 +token + "\" "  + url_2
             print (instances_2)
             ns_instances = subprocess.check_output([instances_2], shell=True)
@@ -2320,3 +2300,92 @@ class Adapter:
 
         msg = "The package " + package_id + " with id " + package_file_uuid +"was downloaded to: /app/packages/" + package_file_uuid + '.tgo' 
         return (msg)
+
+
+
+
+    def osmInstantiationIPs(self,request):    
+
+        print('this SP is a OSM')   
+        sp_host_0 = self.getDBHost()
+        print (sp_host_0)
+        sp_host = sp_host_0.__str__()
+        print (sp_host)
+        sp_host_1 = sp_host[4:]
+        print ("sp1 es: ")
+        print (sp_host_1)
+        sp_host_2 = sp_host_1[:-10]
+        print ("sp2 es: ")
+        print (sp_host_2)
+        sp_host_3 = sp_host_2[7:]
+        print ("sp3 es: ")
+        print (sp_host_3)            
+        url = sp_host_3    
+
+
+        token = self.getOSMToken(request)
+        print (token)
+
+        #content = request.get_json()
+        #ns_id = content['ns_id']
+        ns_id = request
+        print (ns_id)            
+        
+        url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances'
+        url_2 = url.replace("http","https")
+        print (url_2)
+
+        
+        status_ns = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        status_ns_2 = status_ns +token + "\" "
+        status_ns_3 = status_ns_2 + " " + url_2 + "/" + ns_id          
+        print (status_ns_3)
+
+        status = subprocess.check_output([status_ns_3], shell=True)
+
+        print (json.loads(status))
+        ns_instance_json = json.loads(status)
+
+        vnfs_array_json = ns_instance_json['constituent-vnfr-ref']
+        url_3 = url_2.replace("ns_instances","vnf_instances")
+
+        #response = "{\"NSI id\": \"" + ns_instance_json['id'] + "\"}"
+        response = "{\"NSI id\": \"" + ns_instance_json['id'] + "\", \"vnf_instances\": ["
+
+        for vnf_id in vnfs_array_json:
+            print (vnf_id)
+            url_4 = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\"  " + url_3+ "/" + vnf_id
+            vnf_instance_curl= subprocess.check_output([url_4], shell=True)
+            vnf_instance_json = json.loads(vnf_instance_curl)
+            print ("This is an VNF instance:")
+            print (vnf_instance_json)
+
+            vdur_arrays = vnf_instance_json['vdur']
+            
+            for x in vdur_arrays:
+                print (x)
+                vdur_name = x['name']
+                #response = response + "{\"instance_name\": \"" + x['name'] +"\","
+
+                response = response + "{\"instance_name\": \"" + x['name'] +"\",\"instance_id\": \"" + x['_id']+"\","
+
+
+                print (vdur_name)    
+                vdur_interfaces = x['interfaces']	
+                print (vdur_interfaces)
+                response = response + "\"interfaces\":{"
+                for y in vdur_interfaces:
+                    print (y)
+                    interface_name = y['name']
+                    interface_ip_addresss = y['ip-address']
+                    print (interface_name)
+                    print (interface_ip_addresss) 
+                    response = response + "\"" + interface_name + "\": \"" + interface_ip_addresss + "\"}}," 
+                    print (response)
+                      
+                response_2 = response[:-1]
+                #response_2 =  response_2 + "}" 
+
+        #response_3 = response_2[:-1] 
+        response_3 = response_2 + "]}"
+        return response_3
