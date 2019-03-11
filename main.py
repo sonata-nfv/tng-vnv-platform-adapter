@@ -60,12 +60,26 @@ def register_sp():
     try:      
         mon_urls = content['monitoring_urls']
         print ("mon_url exists")
-        sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token",content['monitoring_urls'])
-        return sp.registerServicePlatform()
+        try:
+            pr = content['project_name']
+            print ("project name exists")
+            sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token",content['monitoring_urls'])
+            return sp.registerServicePlatform()
+        except:
+            sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name","service_token",content['monitoring_urls'])
+            return sp.registerServicePlatform()
     except:
         print ("mon_url does not exists")
-        sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token","monitoring_urls")
-        return sp.registerServicePlatform()       
+        try:
+            pr = content['project_name']
+            print ("project name exists")
+            sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token","monitoring_urls")
+            return sp.registerServicePlatform() 
+        except:
+            print ("project name does not exists")
+            sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name","service_token","monitoring_urls")
+            return sp.registerServicePlatform() 
+      
 
 
 
