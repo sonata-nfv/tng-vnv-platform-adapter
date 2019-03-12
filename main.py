@@ -46,6 +46,10 @@ def get_sp(service_platform):
     sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","service_token","monitoring_urls")
     return sp.getServicePlatform()   
 
+@app.route('/service_platforms/<service_platform>', methods=['OPTIONS'])
+def options_sp(service_platform):    
+    return "Options", 200
+
 @app.route('/service_platforms/<service_platform>', methods=['DELETE'])
 def delete_sp(service_platform):
     sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","service_token","monitoring_urls")
