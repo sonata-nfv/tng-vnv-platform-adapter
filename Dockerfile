@@ -5,7 +5,7 @@ COPY . /app
 COPY ./requirements.txt /app/requirements.txt
 WORKDIR /app
 RUN pip3 install -r requirements.txt
-RUN pip3 install -U flask_cors
+RUN pip3 install -U Flask_Cors
 #ENTRYPOINT ["python"]
 #CMD ["main.py"]
 
