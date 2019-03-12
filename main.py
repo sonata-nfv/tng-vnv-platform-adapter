@@ -378,6 +378,21 @@ def monitoring(service_platform):
 
 
 
+
+from flask_cors import CORS
+#app = Flask(__name__)
+CORS(app)
+
+
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH')
+  return response
+
+
+
 #MAIN FUNCTION OF THE SERVER
 
 if __name__ == '__main__':
