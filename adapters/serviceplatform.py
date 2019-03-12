@@ -190,6 +190,39 @@ class ServicePlatform:
                     print("PostgreSQL connection is closed")     
 
 
+    def patchServicePlatform(self):
+        try:
+            connection = psycopg2.connect(user = "sonatatest",
+                                        password = "sonata",
+                                        host = "son-postgres",
+                                        port = "5432",
+                                        database = "gatekeeper")
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")            
+            print (self.name)
+            #new_sp = "INSERT INTO service_platforms (name, host, type, username, password, project_name, service_token,monitoring_urls) VALUES (\'" +self.name+ "\',\'" +self.host+ "\',\'" +self.type+ "\',\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.project_name+ "\',\'" +self.service_token+ "\',\'" +self.monitoring_urls+ "\')"
+            new_sp = "UPDATE service_platforms SET host=\'" +self.host+ "\',type=\'" +self.type+ "\',username=\'" +self.username+ "\',password=\'" +self.password+ "\',project_name=\'" +self.project_name+ "\',service_token=\'" +self.service_token+ "\',monitoring_urls=\'" +self.monitoring_urls+ "\' WHERE name=\'" +self.name+ "\'"                
+            print ("patch_string")
+            print (new_sp)                    
+            cursor.execute(new_sp)
+            connection.commit()
+            create_text = "Service platform info updated"
+            return jsonify(create_text), 200
+
+        except (Exception, psycopg2.Error) as error :
+            #print ("Error while connecting to PostgreSQL", error)
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")   
+
+
+
 
     def getServicePlatflormsByType(self):
         try:

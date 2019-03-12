@@ -81,6 +81,35 @@ def register_sp():
             return sp.registerServicePlatform() 
       
 
+@app.route('/service_platforms', methods=['PATCH'])
+def patch_sp():
+    #sp = serviceplatform.ServicePlatform("name","host","type","service_token")   
+    print (request.is_json)
+    content = request.get_json()
+    print (content)  
+    try:      
+        mon_urls = content['monitoring_urls']
+        print ("mon_url exists")
+        try:
+            pr = content['project_name']
+            print ("project name exists")
+            sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token",content['monitoring_urls'])
+            return sp.patchServicePlatform()
+        except:
+            sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name","service_token",content['monitoring_urls'])
+            return sp.patchServicePlatform()
+    except:
+        print ("mon_url does not exists")
+        try:
+            pr = content['project_name']
+            print ("project name exists")
+            sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token","monitoring_urls")
+            return sp.patchServicePlatform() 
+        except:
+            print ("project name does not exists")
+            sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name","service_token","monitoring_urls")
+            return sp.patchServicePlatform() 
+
 
 
 ##### ADAPTER GENERIC ROUTES #####
