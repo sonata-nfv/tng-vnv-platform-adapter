@@ -103,16 +103,41 @@ def sps():
 
 
 
-@app.route('/service_platforms/<service_platform>', methods=['GET'])
-def get_sp(service_platform):
-    sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","service_token","monitoring_urls")
-    return sp.getServicePlatform()   
+@app.route('/service_platforms/<service_platform>', methods=['GET','DELETE','PATCH'])
+def sp(service_platform):
+    if request.method == 'GET':
+        sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","service_token","monitoring_urls")
+        return sp.getServicePlatform() 
+    if request.method == 'DELETE':          
+        sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","service_token","monitoring_urls")
+        return sp.deleteServicePlatform()
+    if request.method == 'PATCH':    
+        print (request.is_json)
+        content = request.get_json()
+        print (content)  
+        try:      
+            mon_urls = content['monitoring_urls']
+            print ("mon_url exists")
+            try:
+                pr = content['project_name']
+                print ("project name exists")
+                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token",content['monitoring_urls'])
+                return sp.patchServicePlatform()
+            except:
+                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name","service_token",content['monitoring_urls'])
+                return sp.patchServicePlatform()
+        except:
+            print ("mon_url does not exists")
+            try:
+                pr = content['project_name']
+                print ("project name exists")
+                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],"service_token","monitoring_urls")
+                return sp.patchServicePlatform() 
+            except:
+                print ("project name does not exists")
+                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name","service_token","monitoring_urls")
+                return sp.patchServicePlatform()           
 
-
-@app.route('/service_platforms/<service_platform>', methods=['DELETE'])
-def delete_sp(service_platform):
-    sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","service_token","monitoring_urls")
-    return sp.deleteServicePlatform()
 
 
 
