@@ -971,7 +971,8 @@ class Adapter:
             print (response_json)
             #return response_json
             if response.ok:        
-                return (response.text, response.status_code, response.headers.items()) 
+                #return (response.text, response.status_code, response.headers.items()) 
+                return (response.text)
 
 
         if my_type == 'osm':
@@ -2421,3 +2422,91 @@ class Adapter:
         
         return uuid                   
     
+
+    def getHostIp(self):
+        sp_host_0 = self.getDBHost()
+        print (sp_host_0)
+        sp_host = sp_host_0.__str__()
+        print (sp_host)
+        #print (self.getDBHost())
+        sp_host_1 = sp_host[4:]
+        print ("sp1 es: ")
+        print (sp_host_1)
+        sp_host_2 = sp_host_1[:-10]
+        print ("sp2 es: ")
+        print (sp_host_2)
+        #url = sp_host_2 + '/requests'
+        url = sp_host_2
+        return url
+
+
+
+    def instantiationInfoMonitoring(self,id):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            #response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            #response_json = response.content
+            #print (response_json) 
+            instance_request = self.instantiationStatus(id) 
+            print (instance_request)               
+            instance_request_json = json.loads(instance_request)
+            instance_uuid = instance_request_json['instance_uuid']
+            print (instance_uuid)
+
+            url = self.getHostIp()
+            print (url)
+
+            response = "{\"instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
+
+            url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
+            service_record = requests.get(url_records_services,headers=JSON_CONTENT_HEADER)
+            print (service_record.text)
+            service_record_json = json.loads(service_record.text)
+            vnfr_array = service_record_json['network_functions']
+            print (vnfr_array)
+            for vnf in vnfr_array:
+                function_record_uuid = vnf['vnfr_id']
+                print(function_record_uuid)
+
+                response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
+
+                url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
+                function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
+                function_record_json = json.loads(function_record.text)
+                print("bbbb")
+                print(function_record_json)
+                print("bbbb")
+                try:
+                    function_vdu_array = function_record_json['cloudnative_deployment_units']
+                    print("cccccccccc")
+                    print (function_vdu_array)
+                    print("cccccccccc")
+
+                    for vdu in function_vdu_array:
+                        print(vdu['vim_id'])
+                        function_vim = vdu['vim_id']
+                        print (function_vim)
+
+                        response = response + "\"vim_id\": \"" + function_vim + "\"" + "},"
+                    
+                    #response = response + "},"
+
+                except:                    
+                    function_vdu_array = function_record_json['virtual_deployment_units']
+                    print("aaaaaa")
+                    print (function_vdu_array)
+                    print("aaaaaa")
+                    for vdu in function_vdu_array:
+                        print(vdu['vnfc_instance']['vim_id'])
+                        function_vim = vdu['vnfc_instance']['vim_id']
+                        print(function_vim)
+
+                response_2 = response[:-1]
+                response_2 = response_2 + "]"
+
+            #return instance_request
+            response_2 = response_2 + "}"
+            return response_2

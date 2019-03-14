@@ -284,6 +284,11 @@ def serviceInstantiationGetStatus(service_platform,id):
     ad = adapter.Adapter(service_platform)
     return ad.instantiationStatus(id)
 
+@app.route('/adapters/<service_platform>/instantiations/<id>/monitoring', methods=['GET'])
+def serviceInstantiationInfoMonitoring(service_platform,id):
+    ad = adapter.Adapter(service_platform)
+    return ad.instantiationInfoMonitoring(id)    
+
 @app.route('/adapters/<service_platform>/instantiations/<id>/ips', methods=['GET'])
 def OSMInstantiationGetIPs(service_platform,id):
     ad = adapter.Adapter(service_platform)
