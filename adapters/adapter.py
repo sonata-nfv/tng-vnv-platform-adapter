@@ -2470,9 +2470,16 @@ class Adapter:
                         function_vim = vdu['vim_id']
                         print (function_vim)
 
-                        response = response + "\"vim_id\": \"" + function_vim + "\"" + "},"
+                        #response = response + "\"vim_id\": \"" + function_vim + "\"" + "},"
+                        response = response + "\"vim_id\": \"" + function_vim + "\","
+
+                        vim_object= self.getVim(function_vim)
+                        vim_json = json.loads(vim_object)
+                        vim_endpoint = vim_json['endpoint']
+                        response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"
+
                     
-                    #response = response + "},"
+
 
                 except:                    
                     function_vdu_array = function_record_json['virtual_deployment_units']
