@@ -1443,22 +1443,12 @@ class Adapter:
         my_type =  self.getDBType()
 
         if my_type == 'sonata':
-            print('this SP is a Sonata')
-            sp_host_0 = self.getDBHost()
-            print (sp_host_0)
-            sp_host = sp_host_0.__str__()
-            print (sp_host)
-            #print (self.getDBHost())
-            sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
-
-            url = sp_host_2 + ':32002/api/v3/requests'  
+            url = self.getHostIp()  
             print (url)
-            return url
+            curl_vims = 'curl ' + url + ':32002/api/v3/settings/vims'
+            print (curl_vims)
+            vims = subprocess.check_output([curl_vims], shell=True)
+            return vims
 
         if my_type == 'osm':
             print('this SP is a OSM')
@@ -1497,22 +1487,12 @@ class Adapter:
         my_type =  self.getDBType()
 
         if my_type == 'sonata':
-            print('this SP is a Sonata')
-            sp_host_0 = self.getDBHost()
-            print (sp_host_0)
-            sp_host = sp_host_0.__str__()
-            print (sp_host)
-            #print (self.getDBHost())
-            sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
-
-            url = sp_host_2 + ':32002/api/v3/requests'  
+            url = self.getHostIp()  
             print (url)
-            return url
+            curl_vim = 'curl ' + url + ':32002/api/v3/settings/vims/' + vim
+            print (curl_vim)
+            vim = subprocess.check_output([curl_vim], shell=True)
+            return vim
 
         if my_type == 'osm':
             print('this SP is a OSM')
@@ -2503,6 +2483,7 @@ class Adapter:
                         print(vdu['vnfc_instance']['vim_id'])
                         function_vim = vdu['vnfc_instance']['vim_id']
                         print(function_vim)
+                        response = response + "\"vim_id\": \"" + function_vim + "\"" + "},"
 
                 response_2 = response[:-1]
                 response_2 = response_2 + "]"
