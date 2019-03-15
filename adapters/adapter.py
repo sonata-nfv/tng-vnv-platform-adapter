@@ -2463,7 +2463,9 @@ class Adapter:
                     for vdu in function_vdu_array:
                         print(vdu['vim_id'])
                         function_vim = vdu['vim_id']
+                        cdu_reference = vdu['cdu_reference']
                         print (function_vim)
+                        response = response + "\"pod_name\": \"" + cdu_reference + "\","
                         response = response + "\"vim_id\": \"" + function_vim + "\","
                         vim_object= self.getVim(function_vim)
                         vim_json = json.loads(vim_object)
