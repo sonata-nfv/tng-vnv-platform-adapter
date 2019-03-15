@@ -2493,8 +2493,9 @@ class Adapter:
 
 
 
-                response_2 = response[:-1]
+                response_2 = response[:-1]                
                 response_2 = response_2 + "]"
+                response_2 = response_2 + ",\"test_id\": \"null\""
 
             #return instance_request
             response_2 = response_2 + "}"
