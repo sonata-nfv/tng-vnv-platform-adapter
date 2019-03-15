@@ -2439,7 +2439,7 @@ class Adapter:
             url = self.getHostIp()
             print (url)
 
-            response = "{\"instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
+            response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
 
             url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
             service_record = requests.get(url_records_services,headers=JSON_CONTENT_HEADER)
@@ -2456,41 +2456,40 @@ class Adapter:
                 url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
                 function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
                 function_record_json = json.loads(function_record.text)
-                print("bbbb")
                 print(function_record_json)
-                print("bbbb")
                 try:
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
-                    print("cccccccccc")
                     print (function_vdu_array)
-                    print("cccccccccc")
-
                     for vdu in function_vdu_array:
                         print(vdu['vim_id'])
                         function_vim = vdu['vim_id']
                         print (function_vim)
-
-                        #response = response + "\"vim_id\": \"" + function_vim + "\"" + "},"
                         response = response + "\"vim_id\": \"" + function_vim + "\","
-
                         vim_object= self.getVim(function_vim)
                         vim_json = json.loads(vim_object)
                         vim_endpoint = vim_json['endpoint']
-                        response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"
-
-                    
-
-
+                        response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
                 except:                    
                     function_vdu_array = function_record_json['virtual_deployment_units']
-                    print("aaaaaa")
                     print (function_vdu_array)
-                    print("aaaaaa")
-                    for vdu in function_vdu_array:
-                        print(vdu['vnfc_instance']['vim_id'])
-                        function_vim = vdu['vnfc_instance']['vim_id']
-                        print(function_vim)
-                        response = response + "\"vim_id\": \"" + function_vim + "\"" + "},"
+                    for x in function_vdu_array:
+                        print (x)
+                        vi = x['vnfc_instance']
+                        print (vi)
+                        for y in vi:  
+                            print (y)                                                                       
+                            function_vim = y['vim_id']
+                            function_vc = y['vc_id']
+                            print(function_vim)
+                            print (function_vc)
+                            response = response + "\"vc_id\": \"" + function_vc + "\","
+                            response = response + "\"vim_id\": \"" + function_vim + "\","
+                            vim_object= self.getVim(function_vim)
+                            vim_json = json.loads(vim_object)
+                            vim_endpoint = vim_json['endpoint']
+                            response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"
+
+
 
                 response_2 = response[:-1]
                 response_2 = response_2 + "]"
