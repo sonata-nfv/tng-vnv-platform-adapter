@@ -182,15 +182,13 @@ def adapter_get_Functions(service_platform):
     ad = adapter.Adapter(service_platform)
     return ad.getFunctions()  
 
-#@app.route('/adapters/<service_platform>/functions', methods=['POST'])
-#def adapter_upload_function(service_platform):
-    #print (request.is_json)
-    #content = request.get_json()
-    #print (content)
-    #ad = adapter.Adapter(service_platform)  
-    #print (ad.name)         
-    #return ad.uploadOSMFunction(content['function'])    
 
+@app.route('/adapters/packages/unzip-package', methods=['POST'])
+def adapter_unzip_package():
+    content = request.get_json()
+    print (content)
+    ad = adapter.Adapter("service_platform")   
+    return ad.unzipPackage(content['package']) 
 
 
 

@@ -2500,3 +2500,16 @@ class Adapter:
             #return instance_request
             response_2 = response_2 + "}"
             return response_2
+
+
+    def unzipPackage(self,package):
+        import zipfile
+        package_string = package.__str__()
+        package_string_2 = package_string[:-4]
+        print (package_string_2)
+
+        with zipfile.ZipFile(package,"r") as zip_ref:        
+            zip_ref.extractall(package_string_2)
+        
+        msg_response = "the package " + package + " was unzipped to: " + package_string_2
+        return msg_response
