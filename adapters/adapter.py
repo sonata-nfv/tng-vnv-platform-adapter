@@ -566,8 +566,14 @@ class Adapter:
             print (upload_nsd_4)
             upload = subprocess.check_output([upload_nsd_4], shell=True)
 
-            if content['callback']:
-                _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,content['callback'],upload))
+            #if content['callback']:
+            #    _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,content['callback'],upload))
+            try:
+                callback_url = content['callback']
+                print ("Callback url specified")
+                _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,upload))
+            except:
+                print ("No callback url specified")
 
             return (upload)
 
@@ -612,8 +618,14 @@ class Adapter:
             upload = subprocess.check_output([upload_nsd_4], shell=True)
             #return jsonify(upload_nsd_4) 
 
-            if content['callback']:
-                _thread.start_new_thread(self.OSMUploadFunctionCallback, (token,url_2,content['callback'],upload))
+            #if content['callback']:
+            #    _thread.start_new_thread(self.OSMUploadFunctionCallback, (token,url_2,content['callback'],upload))
+            try:
+                callback_url = content['callback']
+                print ("Callback url specified")
+                _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,upload))
+            except:
+                print ("No callback url specified")                
 
             return (upload) 
 
@@ -1218,8 +1230,14 @@ class Adapter:
 
             inst = subprocess.check_output([instantiate_nsd_4], shell=True)
 
-            if content['callback']:
-                _thread.start_new_thread(self.OSMInstantiateCallback, (token,url_2,content['callback'],inst))
+            #if content['callback']:
+            #    _thread.start_new_thread(self.OSMInstantiateCallback, (token,url_2,content['callback'],inst))
+            try:
+                callback_url = content['callback']
+                print ("Callback url specified")
+                _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,inst))
+            except:
+                print ("No callback url specified")                
 
             #inst = subprocess.check_output([instantiate_nsd_4], shell=True)
             return (inst)
@@ -1349,8 +1367,15 @@ class Adapter:
 
             terminate = subprocess.check_output([delete_ns_3], shell=True)
 
-            if content['callback']:
-                _thread.start_new_thread(self.OSMTerminateCallback, (token,url_2,content['callback'],content['ns_id']))
+            #if content['callback']:
+            #    _thread.start_new_thread(self.OSMTerminateCallback, (token,url_2,content['callback'],content['ns_id']))
+            try:
+                callback_url = content['callback']
+                print ("Callback url specified")
+                _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,content['ns_id']))
+            except:
+                print ("No callback url specified")                 
+                
 
             return (terminate)            
 
