@@ -553,12 +553,13 @@ class Adapter:
             }
             print (HEADERS)
 
-            url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
+            #url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
+            url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors'
             url_2 = url.replace("http","https")
             print (url_2)
             
             #upload_nsd = "curl -X POST --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
-            upload_nsd = "curl -X POST --insecure -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            upload_nsd = "curl -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
@@ -598,11 +599,12 @@ class Adapter:
             print (token)
             content = request.get_json()
             file_to_upload = content['function']
-            url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages_content'
+            #url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages_content'
+            url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages'
             url_2 = url.replace("http","https")
             print (url_2)
             
-            upload_nsd = "curl -X POST --insecure -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            upload_nsd = "curl -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
@@ -2511,5 +2513,5 @@ class Adapter:
         with zipfile.ZipFile(package,"r") as zip_ref:        
             zip_ref.extractall(package_string_2)
         
-        msg_response = "the package " + package + " was unzipped to: " + package_string_2
+        msg_response = "The package " + package + " was unzipped to: " + package_string_2
         return msg_response
