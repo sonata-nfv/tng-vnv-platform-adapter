@@ -1463,6 +1463,20 @@ class Adapter:
 
 
 
+    def getWims(self):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            url = self.getHostIp()  
+            print (url)
+            curl_vims = 'curl ' + url + ':32002/api/v3/settings/wims'
+            print (curl_vims)
+            vims = subprocess.check_output([curl_vims], shell=True)
+            return vims
+
+
 
     def getVims(self):    
 
@@ -1507,7 +1521,23 @@ class Adapter:
             #return jsonify(upload_nsd_4) 
             return (vims)              
 
-             
+
+    def getWim(self,vim):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            url = self.getHostIp()  
+            print (url)
+            curl_vim = 'curl ' + url + ':32002/api/v3/settings/wims/' + vim
+            print (curl_vim)
+            vim = subprocess.check_output([curl_vim], shell=True)
+            return vim
+
+
+
+
     def getVim(self,vim):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   

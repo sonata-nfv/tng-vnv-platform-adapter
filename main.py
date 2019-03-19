@@ -334,6 +334,16 @@ def getVimInfo(service_platform,vim_name):
     ad = adapter.Adapter(service_platform)      
     return ad.getVim(vim_name)    
 
+@app.route('/adapters/<service_platform>/vims', methods=['GET'])
+def getWims(service_platform):
+    ad = adapter.Adapter(service_platform)      
+    return ad.getWims()  
+
+@app.route('/adapters/<service_platform>/vims/<wim_name>', methods=['GET'])
+def getWimInfo(service_platform,wim_name):
+    ad = adapter.Adapter(service_platform)      
+    return ad.getWim(wim_name)      
+
     
 ##### OSM specific endpoints ####
 @app.route('/adapters/<service_platform>/get_token', methods=['POST'])
