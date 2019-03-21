@@ -413,7 +413,14 @@ def monitoring(service_platform):
     return ad.monitoringTests(content['metric'])
     
 
-
+@app.route('/adapters/instantiate_service', methods=['POST'])
+def adapter_instatiate_service():
+    print (request.is_json)
+    content = request.get_json()
+    sp = content['service_platform']
+    ad = adapter.Adapter(sp) 
+    print (content) 
+    return ad.instantiateService(request)  
 
 
 

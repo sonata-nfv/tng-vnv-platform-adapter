@@ -1097,7 +1097,12 @@ class Adapter:
 
     def instantiation(self,request):    
 
-        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        print ("INSTANTIATION FUNCTION BEGINS")
+        print (request)
+        request_str = request.__str__()
+        #print (request['service_uuid'])
+        #print (request['name'])
+        print (request_str)
         JSON_CONTENT_HEADER = {'content-Type':'application/json'}   
         my_type =  self.getDBType()
 
@@ -1118,8 +1123,10 @@ class Adapter:
             url = sp_host_2 + '}/serviceInstances/v4'
             print (url)
 
-            print(request.get_json())
-            data = request.get_json()
+            #print(request.get_json())
+            #data = request.get_json()
+            print(request_str.get_json())
+            data = request_str.get_json()
             print(url)
             print (data)
             instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER)            
@@ -1144,20 +1151,27 @@ class Adapter:
             url = sp_host_2 + ':32002/api/v3/requests'
             print (url)
             
-            print(request.get_json())
-            data = request.get_json()
+            #print(request.get_json())
+            #data = request.get_json()            
+            #data = json.dumps(request)
             print(url)
-            print (data)
+            #print (data)
             #upload = requests.post(url, files=files)
             
             #upload = requests.post(url, files=files)
             #instantiate = requests.post(url,data,headers=JSON_CONTENT_HEADER)
-            instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER)           
+            #instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER)           
+            instantiate = requests.post( url, data=request, headers=JSON_CONTENT_HEADER)           
+            
+            print ("THIS IS THE INSTANTIATE RESPONSE:")
             print (instantiate)
+            print (" - ")
             #if data['callback']:
             #    _thread.start_new_thread(self.SonataInstantiateCallback, (url,data['callback'],instantiate))
-            if request.method == 'POST':
-                return instantiate.text
+            #if request.method == 'POST':
+            #    return instantiate.text
+            print (instantiate.text)
+            return instantiate.text
 
         if my_type == 'osm':
             print('this SP is a OSM')  
@@ -2337,7 +2351,8 @@ class Adapter:
         print (get_tgo_curl)    
         package_tgo = subprocess.check_output([get_tgo_curl], shell=True)
 
-        msg = "The package " + package_id + " with id " + package_file_uuid +"was downloaded to: /app/packages/" + package_file_uuid + '.tgo' 
+        #msg = "The package " + package_id + " with id " + package_file_uuid +"was downloaded to: /app/packages/" + package_file_uuid + '.tgo' 
+        msg = "{\"package\": \"/app/packages/" + package_file_uuid + ".tgo\"}" 
         return (msg)
 
 
@@ -2570,3 +2585,242 @@ class Adapter:
         
         msg_response = "The package " + package + " was unzipped to: " + package_string_2
         return msg_response
+
+
+
+
+
+
+
+
+    def instantiationInfoCurator(self,id):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            #response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            #response_json = response.content
+            #print (response_json) 
+            instance_request = self.instantiationStatus(id) 
+            print (instance_request)               
+            instance_request_json = json.loads(instance_request)
+            instance_uuid = instance_request_json['instance_uuid']
+            print (instance_uuid)
+
+            url = self.getHostIp()
+            print (url)
+
+            response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
+
+            url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
+            service_record = requests.get(url_records_services,headers=JSON_CONTENT_HEADER)
+            print (service_record.text)
+            service_record_json = json.loads(service_record.text)
+            vnfr_array = service_record_json['network_functions']
+            print (vnfr_array)
+            for vnf in vnfr_array:
+                function_record_uuid = vnf['vnfr_id']
+                print(function_record_uuid)
+
+                response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
+
+                url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
+                function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
+                function_record_json = json.loads(function_record.text)
+                print(function_record_json)
+                try:
+                    function_vdu_array = function_record_json['cloudnative_deployment_units']
+                    print (function_vdu_array)
+                    for vdu in function_vdu_array:
+                        print(vdu['vim_id'])
+                        function_vim = vdu['vim_id']
+                        cdu_reference = vdu['cdu_reference']
+                        print (function_vim)
+                        response = response + "\"pod_name\": \"" + cdu_reference + "\","
+                        response = response + "\"vim_id\": \"" + function_vim + "\","
+                        vim_object= self.getVim(function_vim)
+                        vim_json = json.loads(vim_object)
+                        vim_endpoint = vim_json['endpoint']
+                        response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
+                except:                    
+                    function_vdu_array = function_record_json['virtual_deployment_units']
+                    print (function_vdu_array)
+                    for x in function_vdu_array:
+                        print (x)
+                        vi = x['vnfc_instance']
+                        print (vi)
+                        for y in vi:  
+                            print (y)                                                                       
+                            function_vim = y['vim_id']
+                            function_vc = y['vc_id']
+                            print(function_vim)
+                            print (function_vc)
+                            response = response + "\"vc_id\": \"" + function_vc + "\","
+                            response = response + "\"vim_id\": \"" + function_vim + "\","
+                            vim_object= self.getVim(function_vim)
+                            vim_json = json.loads(vim_object)
+                            vim_endpoint = vim_json['endpoint']
+                            response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"
+
+
+
+                response_2 = response[:-1]                
+                response_2 = response_2 + "]"
+                response_2 = response_2 + ",\"test_id\": \"null\""
+
+            #return instance_request
+            response_2 = response_2 + "}"
+            return response_2
+
+
+
+
+
+
+
+
+
+
+    def instantiateService(self,request): 
+        content = request.get_json()
+        print ("request content:")
+        print (content)
+        print (" - ")
+        print ("0000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+        print (" - ")
+        name = content['service_name']
+        vendor = content['service_vendor']
+        version = content['service_version']        
+        callback = content['callback']
+
+
+        my_type =  self.getDBType()      
+        if my_type == 'sonata':
+            print('this SP is a Sonata')  
+            
+            ### package operations
+
+            #package_id = self.getServiceInstantiations(name,vendor,version)
+            #download_pkg = self.downloadPackageTGO(package_id)
+            #download_pkg_json = download_pkg.get_json()
+            #upload_pkg = self.uploadPackage(download_pkg_json['package'])
+
+            
+            ### service operations
+
+            service_id = self.getServiceId(name,vendor,version)
+            try:
+                instance_name = content['instance_name']
+            except:
+                #iname = download_pkg_json['package']
+                #instance_name = iname[:-4]
+                print ("hi")
+
+            instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
+            print (instantiate_str)
+            instantiate_str_replaced = instantiate_str.replace("'","\"")  
+            instantiate_json = json.loads(instantiate_str_replaced)
+            print (" - ")
+            print ("545454545454545454444444444444444444444444444444444444444444444444444444444")
+            print (" - ")
+            #instantiate_json_replaced = instantiate_json.replace("'","\"")            
+            print (instantiate_json)
+            instantiation_call = self.instantiation(instantiate_str)
+
+            print (instantiation_call)
+            print (" - ")
+            print ("111111111111111111111111111111111111111111111111111111")
+            print (" - ")
+            instantiation_request_json_dumps = json.dumps(instantiation_call)
+            print (instantiation_request_json_dumps)
+            #print (instantiation_request_json_dumps['id'])
+            print (" - ")
+            print ("222222222222222222222222222222222222222222222222222")
+            print (" - ")
+            #instantiation_request_json = json.loads(instantiation_request_json_dumps)
+            instantiation_request_json = json.loads(instantiation_call)
+            print (instantiation_request_json)
+            print (instantiation_request_json['id'])
+            #print (instantiation_request_json[0][0])
+            
+            #request_json_loaded = instantiation_request_json.get_json()
+            instantiation_request_id = instantiation_request_json['id']
+            #instantiation_request_id = instantiation_call['id']
+            print (instantiation_request_id)
+            print (" - ")
+            print ("3333333333333333333333333333333333333333333333333333333")
+            print (" - ")
+
+            instance_status = self.wait_for_instantiation(instantiation_request_id)
+            print (instance_status)
+
+            print (" - ")
+            print ("444444444444444444444444444444444444444444444444444444444")
+            print (" - ")
+
+            #instance_id = self.getRequestInstanceId(instantiation_request_id)
+            #print (instance_id)
+
+
+            if instance_status == 'READY':
+                instantiation_info = self.instantiationInfoCurator(instantiation_request_id)
+                print (instantiation_info)                         
+            if instance_status == 'ERROR':
+                instantiation_info = "Instantiation error"
+                print (instantiation_info)              
+
+            print (" - ")
+            print ("666666666666666666666666666666666666666666666666666666666666")
+            print (" - ")
+
+        return instantiation_info
+            
+
+
+
+    def wait_for_instantiation(self,id):
+        status = None
+        while status == None:
+            status =  self.getRequestStatus(id)
+            print (status)
+            if status == None:
+                time.sleep(5)
+        while status == 'NEW':
+            status =  self.getRequestStatus(id)
+            print (status)
+            if status == 'NEW':
+                time.sleep(5)                
+        return status
+        
+
+
+
+    def getRequestStatus(self,id):
+        print ("getRequestStatus begins")
+        status_call = self.instantiationStatus(id)
+        print(status_call)
+
+        instantiation_request_json_dumps = json.dumps(status_call)
+        print (instantiation_request_json_dumps)
+        #print (instantiation_request_json_dumps['id'])
+        print (" - ")
+        print ("afafafafafafafaffafafafafafafafafafafafafafafafafafafa")
+        print (" - ")
+        #instantiation_request_json = json.loads(instantiation_request_json_dumps)
+        instantiation_request_json = json.loads(status_call)
+        print (instantiation_request_json)
+        print (instantiation_request_json['id'])
+        print (instantiation_request_json['status'])
+
+
+
+        #request_json = request.get_json()
+
+        status = instantiation_request_json['status']
+        return (status)
+
+    def getRequestInstanceId(self,id):
+        request = self.instantiationStatus(id)
+        request_json = request.get_json()
+        return (request_json['instance_uuid'])
