@@ -2719,6 +2719,8 @@ class Adapter:
                     print ("function_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_array")
                     for x in function_vdu_array:
                         print (x)
+                        vdu_reference = x['vdu_reference']
+                        response = response + "\"vdu_reference\": \"" + vdu_reference + "\","
                         vi = x['vnfc_instance']
                         print (vi)
                         for y in vi:  
