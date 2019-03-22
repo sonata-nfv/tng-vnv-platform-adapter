@@ -2595,6 +2595,9 @@ class Adapter:
 
     def instantiationInfoCurator(self,id):    
 
+        k8s = None
+        response_k8s = None
+        response_k8s_2 = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
@@ -2621,6 +2624,7 @@ class Adapter:
             print (vnfr_array)
             for vnf in vnfr_array:
                 function_record_uuid = vnf['vnfr_id']
+                
                 print(function_record_uuid)
 
                 response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
@@ -2630,22 +2634,89 @@ class Adapter:
                 function_record_json = json.loads(function_record.text)
                 print(function_record_json)
                 try:
+                    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
+                    k8s = "k8s"
+                    print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
                     print (function_vdu_array)
+                    response = response + "\"pods\": ["
+                    print ("function_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_array")
                     for vdu in function_vdu_array:
-                        print(vdu['vim_id'])
-                        function_vim = vdu['vim_id']
+                        #print(vdu['vim_id'])
+                        #function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
-                        print (function_vim)
-                        response = response + "\"pod_name\": \"" + cdu_reference + "\","
-                        response = response + "\"vim_id\": \"" + function_vim + "\","
-                        vim_object= self.getVim(function_vim)
-                        vim_json = json.loads(vim_object)
-                        vim_endpoint = vim_json['endpoint']
-                        response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
+                        #print (function_vim)
+                        response = response + "{\"pod_name\": \"" + cdu_reference + "\","
+                        print(response)
+                        print("responseresponseresponseresponseresponse")
+                        connection_points = vdu['connection_points']
+                        print (connection_points)
+                        print ("ccccccccccccccccccccccccccccccccccccccccccc")
+                        response = response + "\"endpoints\": ["
+                        for c in connection_points:
+                            print (c)
+                            port_id = c['id']
+                            print (port_id)
+                            port_port = c['port']
+                            print (port_port)
+                            port_type = c['type']
+                            print (port_type)
+                            #response = response + "{\"id\": \"" + port_id + "\","
+                            response = response + "{\"id\": \"" + port_id + "\",\"port\": \""
+                            print(response)
+                            print ("okkookookkokookokookokokokokokokokokokokokokokok")
+                            response = response + port_port.__str__() + "\","
+                            #response = response + "\"port\": \"" + port_port + "\","
+                            print(response)  
+                            print ("huhuhuhuhuhuhuuuuuuuuuuuuuuuuuuuu")                              
+                            response = response + "\"type\": \"" + port_type + "\"},"
+                            print(response)
+
+                        response_port = response[:-1]
+                        response = response_port + "]},"
+                        #response = response_port + "]}"
+                        print(response)
+
+                        #response = response + "\"endpoints\": " + connection_points.__str__()
+                        print ("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                        print(response)
+
+                        #try:
+                        #    load_balancer_ip = vdu['load_balancer_ip']
+                        #    print (load_balancer_ip)                                
+                        #    for l in load_balancer_ip:
+                        #        floating_ip = l['floating_ip']
+                        #        internal_ip = l['internal_ip']
+                        #        response = response + "{\"floating_ip\": \"" + floating_ip + "\","
+                        #        response = response + "\"internal_ip\": \"" + internal_ip + "\"}"
+                        #except:
+                        #    print ("no load balancer")
+
+                    #response = response + "]"   
+                    response_k8s = response
+                    
+                
+
+                    #response_pods = response[:-1]
+                    #response = response_pods + "]}]}"
+                    #response_2 = 
+
+                    #return response
+                
+
+                        #response_port = response[:-1]
+                        #response = response + "]"
+
+
+                        #response = response + "\"vim_id\": \"" + function_vim + "\","
+                        #vim_object= self.getVim(function_vim)
+                        #vim_json = json.loads(vim_object)
+                        #vim_endpoint = vim_json['endpoint']
+                        #response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
                 except:                    
                     function_vdu_array = function_record_json['virtual_deployment_units']
                     print (function_vdu_array)
+                    print ("function_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_array")
                     for x in function_vdu_array:
                         print (x)
                         vi = x['vnfc_instance']
@@ -2656,20 +2727,48 @@ class Adapter:
                             function_vc = y['vc_id']
                             print(function_vim)
                             print (function_vc)
-                            response = response + "\"vc_id\": \"" + function_vc + "\","
-                            response = response + "\"vim_id\": \"" + function_vim + "\","
-                            vim_object= self.getVim(function_vim)
-                            vim_json = json.loads(vim_object)
-                            vim_endpoint = vim_json['endpoint']
-                            response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"
+
+                            connection_points = y['connection_points']
+                            print (connection_points)
+                            response = response + "\"endpoints\": ["
+
+                            for z in connection_points:
+                                print (z)
+                                port_id = z['id']
+                                port_type = z['type']
+                                port_interface = z['interface']
+                                port_ip = port_interface['address']
+
+                                response = response + "{\"port_id\": \"" + port_id + "\","
+                                response = response + "\"port_type\": \"" + port_type + "\","
+                                response = response + "\"port_ip\": \"" + port_ip + "\"},"
+                            response_port = response[:-1]
+                            response = response_port + "]"
+                            #response = response_port + "],"
+
+                            #response = response + "\"vc_id\": \"" + function_vc + "\","
+                            #response = response + "\"vim_id\": \"" + function_vim + "\","
+                            #vim_object= self.getVim(function_vim)
+                            #vim_json = json.loads(vim_object)
+                            #vim_endpoint = vim_json['endpoint']
+                            #response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"
 
 
-
+                
                 response_2 = response[:-1]                
-                response_2 = response_2 + "]"
-                response_2 = response_2 + ",\"test_id\": \"null\""
+                response_2 = response_2 + "]}]"
+                #response_2 = response_2 + ",\"test_id\": \"null\""
 
-            #return instance_request
+            
+            if k8s == "k8s":
+                print (k8s)
+                response_k8s_2 = response_k8s[:-1]
+                #response_2 = response[:-1]
+                response_2 = response_k8s[:-1]
+                response = response_2 + "]}]}]}"
+                return response
+
+
             response_2 = response_2 + "}"
             return response_2
 
