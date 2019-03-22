@@ -2647,6 +2647,21 @@ class Adapter:
                         cdu_reference = vdu['cdu_reference']
                         #print (function_vim)
                         response = response + "{\"pod_name\": \"" + cdu_reference + "\","
+
+
+                        try:
+                            load_balancer_ip = vdu['load_balancer_ip']
+                            print (load_balancer_ip)  
+                            load_balancer_ip_str =  load_balancer_ip.__str__()
+                            load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")                            
+                            print ("lplplplppllpplplpplplplplpllpplpl")
+                            response = response + "\"load_balance_ip\": " + load_balancer_ip_str_replaced + ","
+                        except:
+                            print ("no load balancer")
+
+
+
+
                         print(response)
                         print("responseresponseresponseresponseresponse")
                         connection_points = vdu['connection_points']
@@ -2681,16 +2696,7 @@ class Adapter:
                         print ("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         print(response)
 
-                        #try:
-                        #    load_balancer_ip = vdu['load_balancer_ip']
-                        #    print (load_balancer_ip)                                
-                        #    for l in load_balancer_ip:
-                        #        floating_ip = l['floating_ip']
-                        #        internal_ip = l['internal_ip']
-                        #        response = response + "{\"floating_ip\": \"" + floating_ip + "\","
-                        #        response = response + "\"internal_ip\": \"" + internal_ip + "\"}"
-                        #except:
-                        #    print ("no load balancer")
+
 
                     #response = response + "]"   
                     response_k8s = response
