@@ -3016,9 +3016,14 @@ class Adapter:
         callback = content['callback']
 
         package_id = self.getVnVPackagebyId(name,vendor,version)
+        print ("11111111111111111111111111111111111111111111111111111111")
         download_pkg = self.downloadPackageTGO(package_id)
-        download_pkg_json = download_pkg.get_json()
+        print ("2222222222222222222222222222222222222222222222222222222")
+        #download_pkg_json = download_pkg.get_json()
+        download_pkg_json = json.loads(download_pkg)
+        print ("33333333333333333333333333333333333333333333333333333")
         package_path = download_pkg_json['package']
+        print ("44444444444444444444444444444444444444444444444444444")
         upload_pkg = self.uploadPackage(package_path)   
 
         return upload_pkg          
