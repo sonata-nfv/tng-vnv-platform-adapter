@@ -2870,10 +2870,10 @@ class Adapter:
             
             ### package operations
 
-            #package_id = self.getServiceInstantiations(name,vendor,version)
-            #download_pkg = self.downloadPackageTGO(package_id)
-            #download_pkg_json = download_pkg.get_json()
-            #upload_pkg = self.uploadPackage(download_pkg_json['package'])
+            package_id = self.getServiceInstantiations(name,vendor,version)
+            download_pkg = self.downloadPackageTGO(package_id)
+            download_pkg_json = download_pkg.get_json()
+            upload_pkg = self.uploadPackage(download_pkg_json['package'])
 
             
             ### service operations
