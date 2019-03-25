@@ -2599,6 +2599,7 @@ class Adapter:
         response_k8s = None
         response_k8s_2 = None
         response_3 = None
+        function_record_uuid = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
@@ -2629,7 +2630,8 @@ class Adapter:
                 print(function_record_uuid)
 
                 #response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
-                response = response + ",{\"id\": \"" + function_record_uuid + "\","
+                #response = response + ",{\"id\": \"" + function_record_uuid + "\","
+                response = response + ",{"
 
                 url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
                 function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
@@ -2637,6 +2639,8 @@ class Adapter:
                 print(function_record_json)
                 try:
                     print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    function_type = "cnf" 
+                    response = response + "\"id\": \"" + function_record_uuid + "\","
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
                     k8s = "k8s"
                     print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
@@ -2647,8 +2651,11 @@ class Adapter:
                         #print(vdu['vim_id'])
                         #function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
+                        cdu_name = vdu['id']
                         #print (function_vim)
                         response = response + "{\"pod_name\": \"" + cdu_reference + "\","
+                        response = response + "\"name\": \"" + cdu_name + "\","
+                        response = response + "\"function_type\": \"" + function_type + "\","
 
 
                         try:
@@ -2660,9 +2667,6 @@ class Adapter:
                             response = response + "\"load_balance_ip\": " + load_balancer_ip_str_replaced + ","
                         except:
                             print ("no load balancer")
-
-
-
 
                         print(response)
                         print("responseresponseresponseresponseresponse")
@@ -2691,37 +2695,16 @@ class Adapter:
 
                         response_port = response[:-1]
                         response = response_port + "]},"
-                        #response = response_port + "]}"
                         print(response)
-
-                        #response = response + "\"endpoints\": " + connection_points.__str__()
                         print ("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         print(response)
 
+                    response_2 = response[:-1]
+                    response = response_2
 
-
-                    #response = response + "]"   
+                    response = response + "]},"
                     response_k8s = response
-                    
-            #response_3 = response[1:]
-                
-
-                    #response_pods = response[:-1]
-                    #response = response_pods + "]}]}"
-                    #response_2 = 
-
-                    #return response
-                
-
-                        #response_port = response[:-1]
-                        #response = response + "]"
-
-
-                        #response = response + "\"vim_id\": \"" + function_vim + "\","
-                        #vim_object= self.getVim(function_vim)
-                        #vim_json = json.loads(vim_object)
-                        #vim_endpoint = vim_json['endpoint']
-                        #response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
+                                  
                 except:
                     function_type = "vnf"                                        
                     function_vdu_array = function_record_json['virtual_deployment_units']
@@ -2731,7 +2714,7 @@ class Adapter:
                         print (x)
                         vdu_reference = x['vdu_reference']
                         vdu_reference_2 = vdu_reference[0: vdu_reference.find(":") ]
-                        response = response + "\"vdu_reference\": \"" + vdu_reference + "\","
+                        #response = response + "\"vdu_reference\": \"" + vdu_reference + "\","
                         response = response + "\"name\": \"" + vdu_reference_2 + "\","
                         response = response + "\"function_type\": \"" + function_type + "\","
                         vi = x['vnfc_instance']
@@ -2775,7 +2758,8 @@ class Adapter:
 
 
                 response_2 = response[:-1]                
-                response_2 = response_2 + "]}]"
+                #response_2 = response_2 + "]}]"
+                response_2 = response_2 + "]}]}"
                 
                 #response_2 = response_2 + ",\"test_id\": \"null\""
 
@@ -2785,8 +2769,16 @@ class Adapter:
                 response_k8s_2 = response_k8s[:-1]
                 #response_2 = response[:-1]
                 response_2 = response_k8s[:-1]
-                response = response_2 + "]}]}]}"
-                return response
+                #response = response_2 + "]}]}]}"
+                #response = response_2 + "]}]}"
+                response = response_2 + "]}"
+                print (response)
+                #return response
+                response_str_replaced = response.replace("[,","[") 
+                print (response_str_replaced)
+                response_str_replaced_2 = response_str_replaced.replace("},,","},") 
+                print (response_str_replaced_2)
+                return response_str_replaced_2
 
 
             #response_2 = response_2 + "}"
