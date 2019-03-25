@@ -2598,6 +2598,7 @@ class Adapter:
         k8s = None
         response_k8s = None
         response_k8s_2 = None
+        response_3 = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
@@ -2627,7 +2628,8 @@ class Adapter:
                 
                 print(function_record_uuid)
 
-                response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
+                #response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
+                response = response + ",{\"id\": \"" + function_record_uuid + "\","
 
                 url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
                 function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
@@ -2701,6 +2703,7 @@ class Adapter:
                     #response = response + "]"   
                     response_k8s = response
                     
+            #response_3 = response[1:]
                 
 
                     #response_pods = response[:-1]
@@ -2719,14 +2722,18 @@ class Adapter:
                         #vim_json = json.loads(vim_object)
                         #vim_endpoint = vim_json['endpoint']
                         #response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
-                except:                    
+                except:
+                    function_type = "vnf"                                        
                     function_vdu_array = function_record_json['virtual_deployment_units']
                     print (function_vdu_array)
                     print ("function_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_array")
                     for x in function_vdu_array:
                         print (x)
                         vdu_reference = x['vdu_reference']
+                        vdu_reference_2 = vdu_reference[0: vdu_reference.find(":") ]
                         response = response + "\"vdu_reference\": \"" + vdu_reference + "\","
+                        response = response + "\"name\": \"" + vdu_reference_2 + "\","
+                        response = response + "\"function_type\": \"" + function_type + "\","
                         vi = x['vnfc_instance']
                         print (vi)
                         for y in vi:  
@@ -2747,9 +2754,13 @@ class Adapter:
                                 port_interface = z['interface']
                                 port_ip = port_interface['address']
 
-                                response = response + "{\"port_id\": \"" + port_id + "\","
-                                response = response + "\"port_type\": \"" + port_type + "\","
-                                response = response + "\"port_ip\": \"" + port_ip + "\"},"
+                                #response = response + "{\"port_id\": \"" + port_id + "\","
+                                #response = response + "\"port_type\": \"" + port_type + "\","
+                                #response = response + "\"port_ip\": \"" + port_ip + "\"},"
+
+                                response = response + "{\"id\": \"" + port_id + "\","
+                                response = response + "\"type\": \"" + port_type + "\","
+                                response = response + "\"address\": \"" + port_ip + "\"},"                                    
                             response_port = response[:-1]
                             response = response_port + "]"
                             #response = response_port + "],"
@@ -2762,9 +2773,10 @@ class Adapter:
                             #response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"
 
 
-                
+
                 response_2 = response[:-1]                
                 response_2 = response_2 + "]}]"
+                
                 #response_2 = response_2 + ",\"test_id\": \"null\""
 
             
@@ -2777,8 +2789,16 @@ class Adapter:
                 return response
 
 
-            response_2 = response_2 + "}"
-            return response_2
+            #response_2 = response_2 + "}"
+            #return response_2
+
+            response_str_replaced = response_2.replace("[,","[") 
+            response_str_replaced_2 = response_str_replaced.replace("],","]},") 
+            response_str_replaced_2 = response_str_replaced_2 + "}"
+            return response_str_replaced_2
+            #response_4 = response_3[1:]
+            #return response_4
+
 
 
 
