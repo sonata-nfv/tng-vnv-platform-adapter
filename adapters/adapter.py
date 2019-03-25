@@ -2875,11 +2875,12 @@ class Adapter:
             #download_pkg_json = download_pkg.get_json()
             #upload_pkg = self.uploadPackage(download_pkg_json['package'])
             upload_pkg = self.uploadPackage("/app/packages/basic_package.tgo")
-
+            time.sleep(15)
             
             ### service operations
 
             service_id = self.getServiceId(name,vendor,version)
+            time.sleep(5)
             try:
                 instance_name = content['instance_name']
             except:
