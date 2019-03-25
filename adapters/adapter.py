@@ -3000,3 +3000,25 @@ class Adapter:
         request = self.instantiationStatus(id)
         request_json = request.get_json()
         return (request_json['instance_uuid'])
+
+
+
+    def DownloadUploadTest(self,request):
+        content = request.get_json()
+        print ("request content:")
+        print (content)
+        print (" - ")
+        print ("0000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+        print (" - ")
+        name = content['service_name']
+        vendor = content['service_vendor']
+        version = content['service_version']        
+        callback = content['callback']
+
+        package_id = self.getPackageId(name,vendor,version)
+        download_pkg = self.downloadPackageTGO(package_id)
+        download_pkg_json = download_pkg.get_json()
+        package_path = download_pkg_json['package']
+        upload_pkg = self.uploadPackage(package_path)   
+
+        return upload_pkg          
