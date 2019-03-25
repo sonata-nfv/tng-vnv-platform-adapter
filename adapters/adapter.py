@@ -2644,12 +2644,12 @@ class Adapter:
                 print(function_record_json)
                 try:
                     print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    #response = response + "\"platform_type\": \"" + my_type + "\","
+                    function_vdu_array = function_record_json['cloudnative_deployment_units']
                     function_type = "cnf" 
                     cnf_name = None
                     response = response + "\"id\": \"" + function_record_uuid + "\","
-                    response = response + "\"function_type\": \"" + function_type + "\","
-                    #response = response + "\"platform_type\": \"" + my_type + "\","
-                    function_vdu_array = function_record_json['cloudnative_deployment_units']
+                    response = response + "\"function_type\": \"" + function_type + "\","                    
                     k8s = "k8s"
                     print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
                     print (function_vdu_array)
@@ -2764,9 +2764,9 @@ class Adapter:
                         print (x)
                         vdu_reference = x['vdu_reference']
                         vdu_reference_2 = vdu_reference[0: vdu_reference.find(":") ]
-                        #response = response + "\"vdu_reference\": \"" + vdu_reference + "\","
-                        response = response + "\"name\": \"" + vdu_reference_2 + "\","
+                        #response = response + "\"vdu_reference\": \"" + vdu_reference + "\","                        
                         response = response + "\"function_type\": \"" + function_type + "\","
+                        response = response + "\"name\": \"" + vdu_reference_2 + "\","
                         vi = x['vnfc_instance']
                         print (vi)
                         for y in vi:  
@@ -2836,7 +2836,7 @@ class Adapter:
 
             response_str_replaced = response_2.replace("[,","[") 
             response_str_replaced_2 = response_str_replaced.replace("],","]},") 
-            response_str_replaced_2 = response_str_replaced_2 + "}"
+            #response_str_replaced_2 = response_str_replaced_2 + "}"
             return response_str_replaced_2
             #response_4 = response_3[1:]
             #return response_4
