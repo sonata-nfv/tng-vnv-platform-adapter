@@ -2618,7 +2618,10 @@ class Adapter:
             url = self.getHostIp()
             print (url)
 
-            response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
+            #response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
+            response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\","                
+            response = response + "\"platform_type\": \"" + my_type + "\","
+            response = response + "\"functions\":["    
 
             url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
             service_record = requests.get(url_records_services,headers=JSON_CONTENT_HEADER)
@@ -2645,7 +2648,7 @@ class Adapter:
                     cnf_name = None
                     response = response + "\"id\": \"" + function_record_uuid + "\","
                     response = response + "\"function_type\": \"" + function_type + "\","
-                    response = response + "\"platform_type\": \"" + my_type + "\","
+                    #response = response + "\"platform_type\": \"" + my_type + "\","
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
                     k8s = "k8s"
                     print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
@@ -2740,7 +2743,11 @@ class Adapter:
  
                     response = response + "\"name\": \"" + cnf_name + "\","
                     response = response + "\"endpoints\": [{"
-                    response = response + fip + ","
+                    response = response + "\"id\": \"" + "floating_ip" + "\"," 
+                    response = response + "\"type\": \"" + "floating_ip" + "\","    
+                    #response = response + fip + ","
+                    fip_ip = fip.replace("floating_ip","address")
+                    response = response + fip_ip + ","
                     response = response + ports + "}]}"
                     response_2 = response[:-1]
                     response = response_2
