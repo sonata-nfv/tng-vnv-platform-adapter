@@ -2959,7 +2959,12 @@ class Adapter:
             status =  self.getRequestStatus(id)
             print (status)
             if status == 'NEW':
-                time.sleep(5)                
+                time.sleep(5)        
+        while status == 'INSTANTIATING':
+            status =  self.getRequestStatus(id)
+            print (status)
+            if status == 'INSTANTIATING':
+                time.sleep(5)                             
         return status
         
 
