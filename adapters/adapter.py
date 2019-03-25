@@ -3015,7 +3015,7 @@ class Adapter:
         version = content['service_version']        
         callback = content['callback']
 
-        package_id = self.getPackageId(name,vendor,version)
+        package_id = self.getVnVPackagebyId(name,vendor,version)
         download_pkg = self.downloadPackageTGO(package_id)
         download_pkg_json = download_pkg.get_json()
         package_path = download_pkg_json['package']
