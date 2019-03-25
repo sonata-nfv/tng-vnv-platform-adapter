@@ -11,6 +11,9 @@ RUN pip3 install -U Flask_Cors
 
 RUN pip install git+https://osm.etsi.org/gerrit/osm/osmclient
 
+RUN export LC_ALL="en_US.UTF-8"
+RUN export LC_CTYPE="en_US.UTF-8"
+
 EXPOSE 5001
 CMD ["python3", "/app/main.py"]
 #CMD ["python3", "/app/main.py"]
