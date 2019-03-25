@@ -2601,6 +2601,7 @@ class Adapter:
         response_3 = None
         function_record_uuid = None
         ports = None
+        fip = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
@@ -2710,11 +2711,19 @@ class Adapter:
 
                         try:
                             load_balancer_ip = vdu['load_balancer_ip']
+                            print ("11")
                             print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
+                            print ("12")
                             print (load_balancer_ip)  
-                            for ll in load_balancer_ip:
-                                print(ll)
-                                floating_ip = ll['floating_ip']
+                            print ("13")
+                            load_balancer_ip_str =  load_balancer_ip.__str__()
+                            load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")
+                            print (load_balancer_ip_str_replaced)
+                            print ("14")
+                            lb_1 = load_balancer_ip_str_replaced[0: load_balancer_ip_str_replaced.find(",") ]
+                            lb_2 = lb_1[1:]
+                            fip = lb_2
+                            print (fip)
                             
                             #load_balancer_ip_str =  load_balancer_ip.__str__()
                             #load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"") 
@@ -2731,11 +2740,12 @@ class Adapter:
  
                     response = response + "\"name\": \"" + cnf_name + "\","
                     response = response + "\"endpoints\": [{"
+                    response = response + fip + ","
                     response = response + ports + "}]}"
                     response_2 = response[:-1]
                     response = response_2
 
-                    response = response + "]},"
+                    response = response + "},"
                     response_k8s = response
                                   
                 except:
