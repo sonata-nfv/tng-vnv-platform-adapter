@@ -2600,6 +2600,7 @@ class Adapter:
         response_k8s_2 = None
         response_3 = None
         function_record_uuid = None
+        ports = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
@@ -2640,40 +2641,44 @@ class Adapter:
                 try:
                     print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
                     function_type = "cnf" 
+                    cnf_name = None
                     response = response + "\"id\": \"" + function_record_uuid + "\","
+                    response = response + "\"function_type\": \"" + function_type + "\","
+                    response = response + "\"platform_type\": \"" + my_type + "\","
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
                     k8s = "k8s"
                     print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
                     print (function_vdu_array)
-                    response = response + "\"pods\": ["
+                    floating_ip = None
+                    #response = response + "\"endpoints\": ["
                     print ("function_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_array")
                     for vdu in function_vdu_array:
                         #print(vdu['vim_id'])
+                        print (vdu)
+                        print ("1")
                         #function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
-                        cdu_name = vdu['id']
+                        print ("2")                      
+                        
+                        #response = response + "\"vdu_reference\": \"" + vdu_reference + "\","
+                        #response = response + "\"name\": \"" + cdu_reference_2 + "\","
+                        cnf_name = cdu_reference[0: cdu_reference.find(":") ]
+
+                        print (cnf_name)
+                        print (response)
+                        print ("3")   
                         #print (function_vim)
-                        response = response + "{\"pod_name\": \"" + cdu_reference + "\","
-                        response = response + "\"name\": \"" + cdu_name + "\","
-                        response = response + "\"function_type\": \"" + function_type + "\","
+                        #response = response + "{\"container_name\": \"" + cdu_reference + "\","
+                        #response = response + "\"name\": \"" + cdu_name + "\","
+                        print ("4")   
+                        print (response)
 
 
-                        try:
-                            load_balancer_ip = vdu['load_balancer_ip']
-                            print (load_balancer_ip)  
-                            load_balancer_ip_str =  load_balancer_ip.__str__()
-                            load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")                            
-                            print ("lplplplppllpplplpplplplplpllpplpl")
-                            response = response + "\"load_balance_ip\": " + load_balancer_ip_str_replaced + ","
-                        except:
-                            print ("no load balancer")
-
-                        print(response)
-                        print("responseresponseresponseresponseresponse")
                         connection_points = vdu['connection_points']
                         print (connection_points)
                         print ("ccccccccccccccccccccccccccccccccccccccccccc")
-                        response = response + "\"endpoints\": ["
+                        #response = response + "\"endpoints\": [{"
+                        ports = "\"ports\": ["
                         for c in connection_points:
                             print (c)
                             port_id = c['id']
@@ -2683,22 +2688,50 @@ class Adapter:
                             port_type = c['type']
                             print (port_type)
                             #response = response + "{\"id\": \"" + port_id + "\","
-                            response = response + "{\"id\": \"" + port_id + "\",\"port\": \""
+                            #response = response + "{\"id\": \"" + port_id + "\",\"port\": \""
+                            ports = ports + "{\"id\": \"" + port_id + "\",\"port\": \""
                             print(response)
                             print ("okkookookkokookokookokokokokokokokokokokokokokok")
-                            response = response + port_port.__str__() + "\","
+                            #response = response + port_port.__str__() + "\","
+                            ports = ports + port_port.__str__() + "\"},"
                             #response = response + "\"port\": \"" + port_port + "\","
-                            print(response)  
+                            #print(response)  
                             print ("huhuhuhuhuhuhuuuuuuuuuuuuuuuuuuuu")                              
-                            response = response + "\"type\": \"" + port_type + "\"},"
-                            print(response)
+                            #response = response + "\"type\": \"" + port_type + "\"},"
+                            #print(response)
 
-                        response_port = response[:-1]
-                        response = response_port + "]},"
+                        response_ports = ports[:-1]
+                        ports = response_ports + "]"
+                        #response_port = response[:-1]
+                        #response = response + ports + "}]}"
                         print(response)
                         print ("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                         print(response)
 
+                        try:
+                            load_balancer_ip = vdu['load_balancer_ip']
+                            print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
+                            print (load_balancer_ip)  
+                            for ll in load_balancer_ip:
+                                print(ll)
+                                floating_ip = ll['floating_ip']
+                            
+                            #load_balancer_ip_str =  load_balancer_ip.__str__()
+                            #load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"") 
+                            
+                            #load_balancer_ip_json = json.loads(load_balancer_ip_str_replaced)           
+                            #print (load_balancer_ip_json['floating_ip'])
+                            #print ("lplplplppllpplplpplplplplpllpplpl")
+                            #response = response + "\"load_balance_ip\": " + load_balancer_ip_str_replaced + ","
+                        except:
+                            print ("no load balancer")
+
+                        print(response)
+                        print("responseresponseresponseresponseresponse")
+ 
+                    response = response + "\"name\": \"" + cnf_name + "\","
+                    response = response + "\"endpoints\": [{"
+                    response = response + ports + "}]}"
                     response_2 = response[:-1]
                     response = response_2
 
