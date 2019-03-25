@@ -2870,11 +2870,22 @@ class Adapter:
             
             ### package operations
 
+            package_id = self.getVnVPackagebyId(name,vendor,version)
+            print (package_id)
+            download_pkg = self.downloadPackageTGO(package_id)
+            print (download_pkg)            
+            download_pkg_json = json.loads(download_pkg)
+            print (download_pkg_json)
+            package_path = download_pkg_json['package']
+            print (package_path)
+            upload_pkg = self.uploadPackage(package_path)
+            print (upload_pkg)
+
             #package_id = self.getServiceInstantiations(name,vendor,version)
             #download_pkg = self.downloadPackageTGO(package_id)
             #download_pkg_json = download_pkg.get_json()
             #upload_pkg = self.uploadPackage(download_pkg_json['package'])
-            upload_pkg = self.uploadPackage("/app/packages/basic_package.tgo")
+            #upload_pkg = self.uploadPackage("/app/packages/basic_package.tgo")
             time.sleep(15)
             
             ### service operations
