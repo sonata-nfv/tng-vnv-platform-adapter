@@ -311,7 +311,8 @@ def serviceInstantiation(service_platform):
         print ("Termination request")
         return ad.instantiationDelete(request)
     except:
-        return ad.instantiation(request)
+        print ("Instantiation request")        
+        return ad.instantiation(content)
     
 
 @app.route('/adapters/<service_platform>/instantiations/<service_id>', methods=['GET'])
