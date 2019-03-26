@@ -1998,63 +1998,7 @@ class Adapter:
 
 
 
-    def SonataInstantiateCallback(self,url_2,callback_url,inst_resp_json):
-        print ("callback start")
-        print("aaaa")
-        print (inst_resp_json)
-        print("aaaa")
-        response = json.load(inst_resp_json)
-        service_id = response['id']
-        print(service_id)
 
-        status_url = "curl --insecure " + url_2 + "/" + service_id + " > /app/temp.file"
-        print(status_url)
-        status_curl = subprocess.check_output([status_url], shell=True)
-        print (status_curl)
-        status_cut = "tail -n 1 /app/temp.file > /app/temp1.file"
-        status_cutted = subprocess.check_output([status_cut], shell=True)
-        #status_json = json.dumps(status_curl)
-        #status_json = status_curl.get_json()
-
-        with open('/app/temp1.file') as f:
-            data = json.load(f)
-
-        status = 'my_status'
-        is_active = 'not'
-
-        while status != 'READY':    
-            while is_active == 'not':
-                try:
-                    status = data['status'] 
-                    is_active = 'yes'
-                    status = 'READY'
-                except:
-                    is_active = 'not'
-                    status = 'my_status'
-                    print("Retraying in 3 sec")
-                    print(status)
-                    time.sleep(3)
-                    status_curl = subprocess.check_output([status_url], shell=True)
-                    print (status_curl)
-                    status_cut = "tail -n 1 /app/temp.file > /app/temp1.file"
-                    status_cutted = subprocess.check_output([status_cut], shell=True)                    
-                    with open('/app/temp1.file') as f:
-                        data = json.load(f)
-                                   
-
-        #status = data['admin']['deployed']['RO']['nsr_status']        
-        print (status)
-
-
-        callback_msg = {
-            'Message':'The service ' + service_id + ' is in status: ' + status + ''
-        }
-        print (callback_msg)
-        callback_post = "curl -X POST --insecure " + " --data \"" + str(callback_msg) + "\"" + " " + callback_url
-        print (callback_post)
-        #call = subprocess.check_output([callback_post], shell=True)
-        #print(call)
-        print ("callback end")
 
 
 
@@ -2846,7 +2790,7 @@ class Adapter:
 
 
 
-    def instantiateService(self,request): 
+    def instantiateServiceNoCallback(self,request): 
         content = request.get_json()
         print ("request content:")
         print (content)
@@ -3033,3 +2977,131 @@ class Adapter:
         upload_pkg = self.uploadPackage(package_path)   
 
         return upload_pkg          
+
+
+
+
+    def instantiateService(self,request): 
+        content = request.get_json()
+        print ("request content:")
+        print (content)
+        print (" - ")
+        print ("0000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+        print (" - ")
+        name = content['service_name']
+        vendor = content['service_vendor']
+        version = content['service_version']        
+        callback = content['callback']
+
+
+        my_type =  self.getDBType()      
+        if my_type == 'sonata':
+            print('this SP is a Sonata')  
+            
+            ### package operations
+
+            package_id = self.getVnVPackagebyId(name,vendor,version)
+            print (package_id)
+            download_pkg = self.downloadPackageTGO(package_id)
+            print (download_pkg)            
+            download_pkg_json = json.loads(download_pkg)
+            print (download_pkg_json)
+            package_path = download_pkg_json['package']
+            print (package_path)
+            upload_pkg = self.uploadPackage(package_path)
+            print (upload_pkg)
+
+            time.sleep(15)
+            
+            ### service operations
+
+            service_id = self.getServiceId(name,vendor,version)
+            time.sleep(5)
+            try:
+                instance_name = content['instance_name']
+            except:
+                #iname = download_pkg_json['package']
+                #instance_name = iname[:-4]
+                print ("hi")
+
+            instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
+            print (instantiate_str)
+            instantiate_str_replaced = instantiate_str.replace("'","\"")  
+            instantiate_json = json.loads(instantiate_str_replaced)
+            print (" - ")
+            print ("545454545454545454444444444444444444444444444444444444444444444444444444444")
+            print (" - ")
+            #instantiate_json_replaced = instantiate_json.replace("'","\"")            
+            print (instantiate_json)
+            instantiation_call = self.instantiation(instantiate_str)       
+
+            #try:
+            #    _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            #    print ("callback init")
+            #    return (instantiation_call)	        
+            #except:
+            #    print ("callback init error")
+            #    return (instantiation_call)
+
+            _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            
+            return (instantiation_call)	
+
+		    
+
+
+    def SonataInstantiateCallback(self,callback,instantiation_call):
+        print ("sonata instantiate callback start")
+                
+        print (instantiation_call)
+        print (" - ")
+        print ("111111111111111111111111111111111111111111111111111111")
+        print (" - ")
+        instantiation_request_json_dumps = json.dumps(instantiation_call)
+        print (instantiation_request_json_dumps)
+        #print (instantiation_request_json_dumps['id'])
+        print (" - ")
+        print ("222222222222222222222222222222222222222222222222222")
+        print (" - ")
+        #instantiation_request_json = json.loads(instantiation_request_json_dumps)
+        instantiation_request_json = json.loads(instantiation_call)
+        print (instantiation_request_json)
+        print (instantiation_request_json['id'])
+        #print (instantiation_request_json[0][0])
+        
+        #request_json_loaded = instantiation_request_json.get_json()
+        instantiation_request_id = instantiation_request_json['id']
+        #instantiation_request_id = instantiation_call['id']
+        print (instantiation_request_id)
+        print (" - ")
+        print ("3333333333333333333333333333333333333333333333333333333")
+        print (" - ")
+
+        instance_status = self.wait_for_instantiation(instantiation_request_id)
+        print (instance_status)
+
+        print (" - ")
+        print ("444444444444444444444444444444444444444444444444444444444")
+        print (" - ")
+
+        #instance_id = self.getRequestInstanceId(instantiation_request_id)
+        #print (instance_id)
+
+
+        if instance_status == 'READY':
+            instantiation_info = self.instantiationInfoCurator(instantiation_request_id)
+            print (instantiation_info)                         
+        if instance_status == 'ERROR':
+            instantiation_info = "Instantiation error"
+            print (instantiation_info)              
+
+        print (" - ")
+        print ("666666666666666666666666666666666666666666666666666666666666")
+        print (" - ")
+
+        callback_post = "curl -X POST --insecure " + " --data \"" + str(instantiation_info) + "\"" + " " + callback
+        print (callback_post)		
+        call = subprocess.check_output([callback_post], shell=True)
+        print(call)		
+        
+        print ("sonata instantiate callback ends")        
