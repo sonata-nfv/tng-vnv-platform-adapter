@@ -1315,14 +1315,17 @@ class Adapter:
             print (sp_host_2)
             url = sp_host_2 + ':32002/api/v3/requests'
             
-            print(request.get_json())
-            data = request.get_json()
+            #print(request.get_json())
+            #data = request.get_json()
             print(url)
+            print (request)
+            #print (data)
+            print ("datadatadatadatadata")
 
-            terminate = requests.post(url,data,headers=JSON_CONTENT_HEADER) 
-
-            if request.method == 'POST':
-                return terminate.text
+            terminate = requests.post(url,data=request,headers=JSON_CONTENT_HEADER) 
+            print (terminate)
+            print (terminate.text)
+            return terminate.text
 
         if my_type == 'osm':
             print('this SP is a OSM')  

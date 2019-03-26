@@ -302,18 +302,34 @@ def OSMInstantiationGetIPs(service_platform,id):
 @app.route('/adapters/<service_platform>/instantiations', methods=['POST'])
 def serviceInstantiation(service_platform):
     print (request.is_json)
+    print (request)
     content = request.get_json()
-    print (content)    
+    print (request.get_json())    
+    print (content)
+    print (content['service_uuid'])
+    service_uuid = content['service_uuid']
+    print (service_uuid)
+    instantiate_str = "{\"service_uuid\": \"" + service_uuid + "\"}" 
     ad = adapter.Adapter(service_platform)      
-    try:
-        request_type = content['request_type']
-        print (request_type)
-        print ("Termination request")
-        return ad.instantiationDelete(request)
-    except:
-        print ("Instantiation request")        
-        return ad.instantiation(content)
-    
+    return ad.instantiation(instantiate_str)
+
+@app.route('/adapters/<service_platform>/instantiations/terminate', methods=['POST'])
+def serviceterminate(service_platform):   
+    print (request.is_json)
+    print (request)
+    content = request.get_json()
+    print (request.get_json())    
+    print (content)
+    print (content['instance_uuid'])
+    instance_uuid = content['instance_uuid']
+    print (instance_uuid)
+    terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"request_type\":\"TERMINATE_SERVICE\"}"
+    ad = adapter.Adapter(service_platform)  
+    return ad.instantiationDelete(terminate_str)
+
+
+
+
 
 @app.route('/adapters/<service_platform>/instantiations/<service_id>', methods=['GET'])
 def serviceInstantiationStatus(service_platform,service_id):
