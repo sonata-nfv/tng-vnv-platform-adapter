@@ -1302,8 +1302,6 @@ class Adapter:
 
         if my_type == 'sonata':
             print('this SP is a Sonata')
-
-            print('this SP is a Sonata')
             sp_host_0 = self.getDBHost()
             print (sp_host_0)
             sp_host = sp_host_0.__str__()
@@ -1320,13 +1318,7 @@ class Adapter:
             print(request.get_json())
             data = request.get_json()
             print(url)
-            #upload = requests.post(url, files=files)
 
-            print (content['ns_id'])
-            ns_id = content['ns_id']
-            print (ns_id)            
-            
-            #upload = requests.post(url, files=files)
             terminate = requests.post(url,data,headers=JSON_CONTENT_HEADER) 
 
             if request.method == 'POST':

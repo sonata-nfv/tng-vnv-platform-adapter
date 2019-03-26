@@ -304,9 +304,14 @@ def serviceInstantiation(service_platform):
     print (request.is_json)
     content = request.get_json()
     print (content)    
-    ad = adapter.Adapter(service_platform)
-    #print (content['service_uuid'])         
-    return ad.instantiation(request)    
+    ad = adapter.Adapter(service_platform)      
+    try:
+        request_type = content['request_type']
+        print (request_type)
+        print ("Termination request")
+        return ad.instantiationDelete(request)
+    except:
+        return ad.instantiation(request)
     
 
 @app.route('/adapters/<service_platform>/instantiations/<service_id>', methods=['GET'])
