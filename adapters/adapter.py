@@ -3049,7 +3049,16 @@ class Adapter:
 
             _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
             
-            return (instantiation_call)	
+            instantiation_call_str = instantiation_call.__str__()
+            instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
+            instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
+
+            string_inicial = "{\"package_id\": \"" + package_id + "\","
+            request_response = string_inicial + instantiation_call_str_replaced_2
+            
+            return (request_response)	
+
+            #return (instantiation_call)	
 
 		    
 
