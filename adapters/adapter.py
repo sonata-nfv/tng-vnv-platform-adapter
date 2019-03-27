@@ -2391,7 +2391,8 @@ class Adapter:
         url = 'http://tng-cat:4011/api/catalogues/v2/packages'
         response = requests.get(url, headers=JSON_CONTENT_HEADER)    
         if response.ok:        
-                return (response.text, response.status_code, response.headers.items()) 
+            #return (response.text, response.status_code, response.headers.items()) 
+            return (response.text)
 
 
 
@@ -3000,7 +3001,10 @@ class Adapter:
             
             ### package operations
 
-            package_id = self.getVnVPackagebyId(name,vendor,version)
+
+            vnv_service_id = self.getVnVServiceId(name,vendor,version)
+            package_id = self.getPackageIdfromServiceId(vnv_service_id)
+            #package_id = self.getVnVPackagebyId(name,vendor,version)
             print (package_id)
             download_pkg = self.downloadPackageTGO(package_id)
             print (download_pkg)            
@@ -3105,3 +3109,139 @@ class Adapter:
         print(call)		
         
         print ("sonata instantiate callback ends")        
+
+
+
+
+
+    def instantiateServiceTest(self,request): 
+        content = request.get_json()
+        print ("request content:")
+        print (content)
+        print (" - ")
+        print ("0000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+        print (" - ")
+        name = content['service_name']
+        vendor = content['service_vendor']
+        version = content['service_version']        
+        callback = content['callback']
+
+
+        my_type =  self.getDBType()      
+        if my_type == 'sonata':
+            print('this SP is a Sonata')  
+            
+            ### package operations
+            service_id = self.getServiceId(name,vendor,version)
+            package_id = self.getPackageIdfromServiceId(service_id)
+            #package_id = self.getVnVPackagebyId(name,vendor,version)
+            print (package_id)
+            #download_pkg = self.downloadPackageTGO(package_id)
+            #print (download_pkg)            
+            #download_pkg_json = json.loads(download_pkg)
+            #print (download_pkg_json)
+            #package_path = download_pkg_json['package']
+            #print (package_path)
+            #upload_pkg = self.uploadPackage(package_path)
+            #print (upload_pkg)
+
+            time.sleep(15)
+            
+            ### service operations
+
+            #service_id = self.getServiceId(name,vendor,version)
+            time.sleep(5)
+            try:
+                instance_name = content['instance_name']
+            except:
+                #iname = download_pkg_json['package']
+                #instance_name = iname[:-4]
+                print ("hi")
+
+            #instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
+            #print (instantiate_str)
+            #instantiate_str_replaced = instantiate_str.replace("'","\"")  
+            #instantiate_json = json.loads(instantiate_str_replaced)
+            #print (" - ")
+            #print ("545454545454545454444444444444444444444444444444444444444444444444444444444")
+            #print (" - ")
+            #instantiate_json_replaced = instantiate_json.replace("'","\"")            
+            #print (instantiate_json)
+            #instantiation_call = self.instantiation(instantiate_str)       
+
+            #try:
+            #    _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            #    print ("callback init")
+            #    return (instantiation_call)	        
+            #except:
+            #    print ("callback init error")
+            #    return (instantiation_call)
+
+            #_thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            
+            return (package_id)
+            #return (instantiation_call)	
+
+    def getPackageIdfromServiceId (self,service_id):
+        package_id = None
+        correct_package = None
+
+        vnv_packages = self.getVnVPackages()
+        #vnv_packages = self.getPreIntPackages()
+        print (vnv_packages)
+        vnv_packages_json = json.loads(vnv_packages)
+        print (vnv_packages_json)
+        
+
+        for package in vnv_packages_json:
+            print (package)
+            package_pd = package['pd']
+            print (package_pd)
+            print ("111111111111111111111111111111111111111111111111111111111111111")
+            package_content = package_pd['package_content']
+            print (package_content)
+            #package_content_json = json.loads(package_content)
+            print ("22222222222222222222222222222222222222222222222222222222222222")
+            for pc in package_content:
+                nsd_uuid = pc['uuid']
+                print (nsd_uuid)
+                print ("333333333333333333333333333333333333333333333333333333333333")
+                if nsd_uuid == service_id:
+                    correct_package = package
+
+        
+        package_id = correct_package['uuid']
+        print (package_id)
+        return package_id
+
+
+    def getPreIntPackages (self):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}
+        url = 'http://pre-int-sp-ath.5gtango.eu:32002/api/v3/packages'
+        response = requests.get(url, headers=JSON_CONTENT_HEADER)    
+        if response.ok:        
+            #return (response.text, response.status_code, response.headers.items()) 
+            return (response.text)
+
+
+    def getVnVServiceId(self,name,vendor,version):    
+
+        uuid = None
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+        my_type =  self.getDBType()
+        if my_type == 'sonata':                
+
+            url = 'http://tng-cat:4011/api/catalogues/v2/network-services'  
+            print (name,vendor,version)
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            jjson = json.loads(response_json)
+            for x in jjson:
+                print(x)
+                if ( x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version ) :
+                    print("same name")
+                    uuid = x['uuid']
+                    print(uuid)  
+
+        return uuid           

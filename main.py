@@ -460,6 +460,16 @@ def adapter_instatiate_service_no_callback():
     print (content) 
     return ad.instantiateServiceNoCallback(request)      
 
+
+@app.route('/adapters/instantiate_service/tests', methods=['POST'])
+def adapter_instatiate_service_tests():
+    print (request.is_json)
+    content = request.get_json()
+    sp = content['service_platform']
+    ad = adapter.Adapter(sp) 
+    print (content) 
+    return ad.instantiateServiceTest(request)      
+
 @app.route('/adapters/download-upload-test', methods=['POST'])
 def adapterDownloadUploadTest():
     print (request.is_json)
