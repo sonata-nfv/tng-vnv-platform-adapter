@@ -3112,7 +3112,10 @@ class Adapter:
         print ("666666666666666666666666666666666666666666666666666666666666")
         print (" - ")
 
-        callback_post = "curl -X POST --insecure " + " --data \"" + str(instantiation_info) + "\"" + " " + callback
+        instantiation_info_str = instantiation_info.__str__()
+        string_replaced = instantiation_info_str.replace("'","\"")        
+        callback_post = "curl -X POST --insecure " + " --data '" +  string_replaced  +  "' " + callback
+        #callback_post = "curl -X POST --insecure " + " --data " +  "'" +  str(instantiation_info) +  "'" +  + " " + callback
         print (callback_post)		
         call = subprocess.check_output([callback_post], shell=True)
         print(call)		
