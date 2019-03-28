@@ -2,7 +2,7 @@
 
 from flask import Flask, request, jsonify, render_template
 import os, sys, logging, uuid, json
-from werkzeug import secure_filename
+#from werkzeug import secure_filename
 
 #import serviceplatform
 import psycopg2
@@ -904,7 +904,7 @@ class Adapter:
             response_json = response.content
             print (response_json)
             jjson = json.loads(response_json)
-            pkg = [x for x in jjson if x['pd']['name'] == name and x['pdd']['vendor'] == vendor and x['pd']['version'] == version]
+            pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
             
             if pkg:
 
@@ -1645,13 +1645,12 @@ class Adapter:
 
             print(s)
             print (type(s))                 
-            
-            print ("ILLO")
+
             start = s.find('_id')
             end = s.find('\\\" ', start)
             print (s[start+20:end])
             vim_id = s[start+20:end]
-            print ("ILLO")
+
             return vim_id
 
 
@@ -1690,19 +1689,14 @@ class Adapter:
             s = json.dumps(str(nsd_info))
 
             print(s)
-            print (type(s))   
-                
+            print (type(s))                             
             
-            print ("ILLO")
             start = s.find('_id')
             end = s.find('\\\" ', start)
             #print (s[start+21:end])
             #vim_id = s[start+21:end]
             print (s[start+21:end])
-            vim_id = s[start+21:end]
-            print ("ILLO")
-
-
+            vim_id = s[start+21:end]         
 
             return vim_id            
 
@@ -1878,7 +1872,7 @@ class Adapter:
             if not pr_name:
                 #data = request.get_json()
                 #project_id_for_token = data['project_id']
-                project_id_for_token = self.getDBProject(self)
+                project_id_for_token = self.getDBProject()
                 print ("project name from json body:")
                 print (pr_name)
 
@@ -2583,7 +2577,7 @@ class Adapter:
                 function_record_json = json.loads(function_record.text)
                 print(function_record_json)
                 try:
-                    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    
                     #response = response + "\"platform_type\": \"" + my_type + "\","
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
                     function_type = "cnf" 
@@ -2591,11 +2585,11 @@ class Adapter:
                     response = response + "\"id\": \"" + function_record_uuid + "\","
                     response = response + "\"function_type\": \"" + function_type + "\","                    
                     k8s = "k8s"
-                    print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+                    
                     print (function_vdu_array)
                     floating_ip = None
                     #response = response + "\"endpoints\": ["
-                    print ("function_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_array")
+                    
                     for vdu in function_vdu_array:
                         #print(vdu['vim_id'])
                         print (vdu)
@@ -2620,7 +2614,7 @@ class Adapter:
 
                         connection_points = vdu['connection_points']
                         print (connection_points)
-                        print ("ccccccccccccccccccccccccccccccccccccccccccc")
+                        
                         #response = response + "\"endpoints\": [{"
                         ports = "\"ports\": ["
                         for c in connection_points:
@@ -2635,12 +2629,12 @@ class Adapter:
                             #response = response + "{\"id\": \"" + port_id + "\",\"port\": \""
                             ports = ports + "{\"id\": \"" + port_id + "\",\"port\": \""
                             print(response)
-                            print ("okkookookkokookokookokokokokokokokokokokokokokok")
+                            
                             #response = response + port_port.__str__() + "\","
                             ports = ports + port_port.__str__() + "\"},"
                             #response = response + "\"port\": \"" + port_port + "\","
                             #print(response)  
-                            print ("huhuhuhuhuhuhuuuuuuuuuuuuuuuuuuuu")                              
+                                                       
                             #response = response + "\"type\": \"" + port_type + "\"},"
                             #print(response)
 
@@ -2649,20 +2643,20 @@ class Adapter:
                         #response_port = response[:-1]
                         #response = response + ports + "}]}"
                         print(response)
-                        print ("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                        
                         print(response)
 
                         try:
                             load_balancer_ip = vdu['load_balancer_ip']
-                            print ("11")
-                            print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
-                            print ("12")
+                            
+                            
+                            
                             print (load_balancer_ip)  
-                            print ("13")
+                            
                             load_balancer_ip_str =  load_balancer_ip.__str__()
                             load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")
                             print (load_balancer_ip_str_replaced)
-                            print ("14")
+                            
                             lb_1 = load_balancer_ip_str_replaced[0: load_balancer_ip_str_replaced.find(",") ]
                             lb_2 = lb_1[1:]
                             fip = lb_2
@@ -2679,7 +2673,7 @@ class Adapter:
                             print ("no load balancer")
 
                         print(response)
-                        print("responseresponseresponseresponseresponse")
+                        
  
                     response = response + "\"name\": \"" + cnf_name + "\","
                     response = response + "\"endpoints\": [{"
@@ -2699,7 +2693,7 @@ class Adapter:
                     function_type = "vnf"                                        
                     function_vdu_array = function_record_json['virtual_deployment_units']
                     print (function_vdu_array)
-                    print ("function_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_arrayfunction_vdu_array")
+                    
                     for x in function_vdu_array:
                         print (x)
                         vdu_reference = x['vdu_reference']
@@ -2795,9 +2789,7 @@ class Adapter:
         content = request.get_json()
         print ("request content:")
         print (content)
-        print (" - ")
-        print ("0000000000000000000000000000000000000000000000000000000000000000000000000000000000")
-        print (" - ")
+
         name = content['service_name']
         vendor = content['service_vendor']
         version = content['service_version']        
@@ -2843,23 +2835,17 @@ class Adapter:
             print (instantiate_str)
             instantiate_str_replaced = instantiate_str.replace("'","\"")  
             instantiate_json = json.loads(instantiate_str_replaced)
-            print (" - ")
-            print ("545454545454545454444444444444444444444444444444444444444444444444444444444")
-            print (" - ")
+
             #instantiate_json_replaced = instantiate_json.replace("'","\"")            
             print (instantiate_json)
             instantiation_call = self.instantiation(instantiate_str)
 
             print (instantiation_call)
-            print (" - ")
-            print ("111111111111111111111111111111111111111111111111111111")
-            print (" - ")
+
             instantiation_request_json_dumps = json.dumps(instantiation_call)
             print (instantiation_request_json_dumps)
             #print (instantiation_request_json_dumps['id'])
-            print (" - ")
-            print ("222222222222222222222222222222222222222222222222222")
-            print (" - ")
+
             #instantiation_request_json = json.loads(instantiation_request_json_dumps)
             instantiation_request_json = json.loads(instantiation_call)
             print (instantiation_request_json)
@@ -2870,16 +2856,12 @@ class Adapter:
             instantiation_request_id = instantiation_request_json['id']
             #instantiation_request_id = instantiation_call['id']
             print (instantiation_request_id)
-            print (" - ")
-            print ("3333333333333333333333333333333333333333333333333333333")
-            print (" - ")
+
 
             instance_status = self.wait_for_instantiation(instantiation_request_id)
             print (instance_status)
 
-            print (" - ")
-            print ("444444444444444444444444444444444444444444444444444444444")
-            print (" - ")
+
 
             #instance_id = self.getRequestInstanceId(instantiation_request_id)
             #print (instance_id)
@@ -2892,9 +2874,7 @@ class Adapter:
                 instantiation_info = "Instantiation error"
                 print (instantiation_info)              
 
-            print (" - ")
-            print ("666666666666666666666666666666666666666666666666666666666666")
-            print (" - ")
+
 
         return instantiation_info
             
@@ -2931,9 +2911,7 @@ class Adapter:
         instantiation_request_json_dumps = json.dumps(status_call)
         print (instantiation_request_json_dumps)
         #print (instantiation_request_json_dumps['id'])
-        print (" - ")
-        print ("afafafafafafafaffafafafafafafafafafafafafafafafafafafa")
-        print (" - ")
+
         #instantiation_request_json = json.loads(instantiation_request_json_dumps)
         instantiation_request_json = json.loads(status_call)
         print (instantiation_request_json)
@@ -2958,23 +2936,21 @@ class Adapter:
         content = request.get_json()
         print ("request content:")
         print (content)
-        print (" - ")
-        print ("0000000000000000000000000000000000000000000000000000000000000000000000000000000000")
-        print (" - ")
+
         name = content['service_name']
         vendor = content['service_vendor']
         version = content['service_version']        
         callback = content['callback']
 
         package_id = self.getVnVPackagebyId(name,vendor,version)
-        print ("11111111111111111111111111111111111111111111111111111111")
+        
         download_pkg = self.downloadPackageTGO(package_id)
-        print ("2222222222222222222222222222222222222222222222222222222")
+        
         #download_pkg_json = download_pkg.get_json()
         download_pkg_json = json.loads(download_pkg)
-        print ("33333333333333333333333333333333333333333333333333333")
+        
         package_path = download_pkg_json['package']
-        print ("44444444444444444444444444444444444444444444444444444")
+        
         upload_pkg = self.uploadPackage(package_path)   
 
         return upload_pkg          
@@ -2986,9 +2962,6 @@ class Adapter:
         content = request.get_json()
         print ("request content:")
         print (content)
-        print (" - ")
-        print ("0000000000000000000000000000000000000000000000000000000000000000000000000000000000")
-        print (" - ")
         name = content['service_name']
         vendor = content['service_vendor']
         version = content['service_version']        
@@ -3032,9 +3005,6 @@ class Adapter:
             print (instantiate_str)
             instantiate_str_replaced = instantiate_str.replace("'","\"")  
             instantiate_json = json.loads(instantiate_str_replaced)
-            print (" - ")
-            print ("545454545454545454444444444444444444444444444444444444444444444444444444444")
-            print (" - ")
             #instantiate_json_replaced = instantiate_json.replace("'","\"")            
             print (instantiate_json)
             instantiation_call = self.instantiation(instantiate_str)       
@@ -3067,15 +3037,11 @@ class Adapter:
         print ("sonata instantiate callback start")
                 
         print (instantiation_call)
-        print (" - ")
-        print ("111111111111111111111111111111111111111111111111111111")
-        print (" - ")
+
         instantiation_request_json_dumps = json.dumps(instantiation_call)
         print (instantiation_request_json_dumps)
         #print (instantiation_request_json_dumps['id'])
-        print (" - ")
-        print ("222222222222222222222222222222222222222222222222222")
-        print (" - ")
+
         #instantiation_request_json = json.loads(instantiation_request_json_dumps)
         instantiation_request_json = json.loads(instantiation_call)
         print (instantiation_request_json)
@@ -3086,16 +3052,11 @@ class Adapter:
         instantiation_request_id = instantiation_request_json['id']
         #instantiation_request_id = instantiation_call['id']
         print (instantiation_request_id)
-        print (" - ")
-        print ("3333333333333333333333333333333333333333333333333333333")
-        print (" - ")
+
 
         instance_status = self.wait_for_instantiation(instantiation_request_id)
         print (instance_status)
 
-        print (" - ")
-        print ("444444444444444444444444444444444444444444444444444444444")
-        print (" - ")
 
         #instance_id = self.getRequestInstanceId(instantiation_request_id)
         #print (instance_id)
@@ -3118,10 +3079,6 @@ class Adapter:
             call = subprocess.check_output([callback_post], shell=True)
             print(call)		                        
 
-        print (" - ")
-        print ("666666666666666666666666666666666666666666666666666666666666")
-        print (" - ")
-
         #instantiation_info_str = instantiation_info.__str__()
         #string_replaced = instantiation_info_str.replace("'","\"")        
         #callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '" +  string_replaced  +  "' " + callback        
@@ -3139,8 +3096,7 @@ class Adapter:
         content = request.get_json()
         print ("request content:")
         print (content)
-        print (" - ")
-        print ("0000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+        print (" - ")    
         print (" - ")
         name = content['service_name']
         vendor = content['service_vendor']
@@ -3218,15 +3174,15 @@ class Adapter:
             print (package)
             package_pd = package['pd']
             print (package_pd)
-            print ("111111111111111111111111111111111111111111111111111111111111111")
+            
             package_content = package_pd['package_content']
             print (package_content)
             #package_content_json = json.loads(package_content)
-            print ("22222222222222222222222222222222222222222222222222222222222222")
+            
             for pc in package_content:
                 nsd_uuid = pc['uuid']
                 print (nsd_uuid)
-                print ("333333333333333333333333333333333333333333333333333333333333")
+
                 if nsd_uuid == service_id:
                     correct_package = package
 
