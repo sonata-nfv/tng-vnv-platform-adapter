@@ -3113,7 +3113,7 @@ class Adapter:
 
 
         if instance_status == 'ERROR':     
-            callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '{\"Error\": \"Instantiation error\"}'" + callback        
+            callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '{\"Error\": \"Instantiation error\"}' " + callback        
             print (callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
             print(call)		                        
