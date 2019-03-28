@@ -3103,22 +3103,31 @@ class Adapter:
 
         if instance_status == 'READY':
             instantiation_info = self.instantiationInfoCurator(instantiation_request_id)
-            print (instantiation_info)                         
-        if instance_status == 'ERROR':
-            instantiation_info = "Instantiation error"
-            print (instantiation_info)              
+            print (instantiation_info) 
+            instantiation_info_str = instantiation_info.__str__()
+            string_replaced = instantiation_info_str.replace("'","\"")        
+            callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '" +  string_replaced  +  "' " + callback        
+            print (callback_post)		
+            call = subprocess.check_output([callback_post], shell=True)
+            print(call)		
+
+
+        if instance_status == 'ERROR':     
+            callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '{\"Error\": \"Instantiation error\"}'" + callback        
+            print (callback_post)		
+            call = subprocess.check_output([callback_post], shell=True)
+            print(call)		                        
 
         print (" - ")
         print ("666666666666666666666666666666666666666666666666666666666666")
         print (" - ")
 
-        instantiation_info_str = instantiation_info.__str__()
-        string_replaced = instantiation_info_str.replace("'","\"")        
-        callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '" +  string_replaced  +  "' " + callback
-        #callback_post = "curl -X POST --insecure " + " --data " +  "'" +  str(instantiation_info) +  "'" +  + " " + callback
-        print (callback_post)		
-        call = subprocess.check_output([callback_post], shell=True)
-        print(call)		
+        #instantiation_info_str = instantiation_info.__str__()
+        #string_replaced = instantiation_info_str.replace("'","\"")        
+        #callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '" +  string_replaced  +  "' " + callback        
+        #print (callback_post)		
+        #call = subprocess.check_output([callback_post], shell=True)
+        #print(call)		
         
         print ("sonata instantiate callback ends")        
 
