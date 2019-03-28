@@ -148,6 +148,11 @@ def sp(service_platform):
 def adapter_get_username(service_platform):
     ad = adapter.Adapter(service_platform)
     return ad.getDBUserName()
+
+@app.route('/adapters/<service_platform>/get_monitoring_urls')
+def adapter_get_monitoring_urls(service_platform):
+    ad = adapter.Adapter(service_platform)
+    return ad.getMonitoringURLs()    
  
 @app.route('/adapters/<service_platform>/get_password')
 def adapter_get_password(service_platform):

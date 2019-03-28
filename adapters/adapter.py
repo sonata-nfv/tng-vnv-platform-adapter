@@ -289,6 +289,41 @@ class Adapter:
                     print("PostgreSQL connection is closed") 
 
 
+    def getMonitoringURLs(self):
+        try:
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            get_type = "SELECT monitoring_urls FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (get_type)
+            cursor.execute(get_type)
+            all = cursor.fetchall()
+            #return jsonify(all), 200 
+            type_0 = all.__str__()
+            print(type_0)
+            type_1 = type_0[3:]            
+            print(type_1)            
+            type_2 = type_1[:-4]            
+            print(type_2)                  
+            return type_2
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")                     
+
+
     def getPackages(self):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
@@ -3067,14 +3102,14 @@ class Adapter:
             print (instantiation_info) 
             instantiation_info_str = instantiation_info.__str__()
             string_replaced = instantiation_info_str.replace("'","\"")        
-            callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '" +  string_replaced  +  "' " + callback        
+            callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  string_replaced  +  "' " + callback        
             print (callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
             print(call)		
 
 
         if instance_status == 'ERROR':     
-            callback_post = "curl -X POST --insecure -H Content-type: application/json" + " --data '{\"Error\": \"Instantiation error\"}' " + callback        
+            callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"Error\": \"Instantiation error\"}' " + callback        
             print (callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
             print(call)		                        
