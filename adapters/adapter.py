@@ -2716,6 +2716,8 @@ class Adapter:
                     response = response + "\"type\": \"" + "floating_ip" + "\","    
                     #response = response + fip + ","
                     fip_ip = fip.replace("floating_ip","address")
+                    
+                    fip_ip = fip.replace("internal_ip","address")
                     response = response + fip_ip + ","
                     response = response + ports + "}]}"
                     response_2 = response[:-1]
