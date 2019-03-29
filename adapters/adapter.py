@@ -3134,6 +3134,8 @@ class Adapter:
 
             monitoring_callback = self.getMonitoringURLs()
             monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
+            print (monitoring_callback_post)		
+            call_mon = subprocess.check_output([monitoring_callback_post], shell=True)   
 
         #instantiation_info_str = instantiation_info.__str__()
         #string_replaced = instantiation_info_str.replace("'","\"")        
