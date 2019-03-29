@@ -2685,17 +2685,24 @@ class Adapter:
                             load_balancer_ip = vdu['load_balancer_ip']
                             
                             
-                            
+                            print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
                             print (load_balancer_ip)  
                             
                             load_balancer_ip_str =  load_balancer_ip.__str__()
                             load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")
                             print (load_balancer_ip_str_replaced)
                             
-                            lb_1 = load_balancer_ip_str_replaced[0: load_balancer_ip_str_replaced.find(",") ]
-                            lb_2 = lb_1[1:]
-                            fip = lb_2
+                            #lb_1 = load_balancer_ip_str_replaced[0: load_balancer_ip_str_replaced.find(",") ]
+                            #lb_2 = lb_1[1:]
+                            lb_1 = load_balancer_ip_str_replaced.split(",")
+                            lb_2 = lb_1[1]
+
+                            
+                            
+
+                            fip = lb_2[:-1]
                             print (fip)
+                            print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
                             
                             #load_balancer_ip_str =  load_balancer_ip.__str__()
                             #load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"") 
