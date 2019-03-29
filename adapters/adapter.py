@@ -3107,7 +3107,16 @@ class Adapter:
             callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  string_replaced  +  "' " + callback        
             print (callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
-            print(call)		
+            print(call)	
+
+            monitoring_callback = self.getMonitoringURLs()
+            info_monitoring =self.instantiationInfoMonitoring(instantiation_request_id)	
+            print (info_monitoring) 
+            info_monitoring_str = info_monitoring.__str__()
+            monitoring_string_replaced = info_monitoring_str.replace("'","\"")        
+            monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
+            print (monitoring_callback_post)		
+            call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
 
 
         if instance_status == 'ERROR': 
@@ -3121,7 +3130,10 @@ class Adapter:
             callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
             print (callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
-            print(call)		                        
+            print(call)
+
+            monitoring_callback = self.getMonitoringURLs()
+            monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
 
         #instantiation_info_str = instantiation_info.__str__()
         #string_replaced = instantiation_info_str.replace("'","\"")        
