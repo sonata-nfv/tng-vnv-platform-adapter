@@ -2689,6 +2689,21 @@ class Adapter:
                             print (load_balancer_ip)  
                             
                             load_balancer_ip_str =  load_balancer_ip.__str__()
+                            print("1111")
+                            print("1111")
+                            print("1111")
+                            print("1111")
+                            load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")
+                            lb_json = json.loads(load_balancer_ip_str_replaced)
+                            fip_fip = lb_json['floating_ip']
+                            print (fip_fip)
+                            print(lb_json)
+                            print("1111")
+                            print("1111")
+                            print("1111")
+                            print("1111")
+
+
                             load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")
                             print (load_balancer_ip_str_replaced)
                             
@@ -2700,7 +2715,8 @@ class Adapter:
                             
                             
 
-                            fip = lb_2[:-1]
+                            #fip = lb_2[:-1]
+                            fip = "\"address\": \"" + fip_fip + "\""
                             print (fip)
                             print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
                             
