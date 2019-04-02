@@ -346,7 +346,8 @@ class Adapter:
             #url = sp_url + '/packages'
             response = requests.get(url, headers=JSON_CONTENT_HEADER)    
             if response.ok:        
-                    return (response.text, response.status_code, response.headers.items()) 
+                    #return (response.text, response.status_code, response.headers.items()) 
+                    return response.text
         if my_type == 'osm': 
             return "osm packages"
 
@@ -2423,6 +2424,16 @@ class Adapter:
             #return (response.text, response.status_code, response.headers.items()) 
             return (response.text)
 
+    def getSonataSPPackages(self):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}
+        host  = self.getHostIp()
+        #url = 'http://tng-cat:4011/api/catalogues/v2/packages'
+        url =  'http://' + host + ':32002/api/v3/packages'
+        response = requests.get(url, headers=JSON_CONTENT_HEADER)    
+        if response.ok:        
+            #return (response.text, response.status_code, response.headers.items()) 
+            return (response.text)
 
 
     def getVnVPackagebyId(self,name,vendor,version):    
@@ -3273,6 +3284,39 @@ class Adapter:
         return package_id
 
 
+    def getSPPackageIdfromServiceId (self,service_id):
+        package_id = None
+        correct_package = None
+
+        vnv_packages = self.getPackages()
+        #vnv_packages = self.getPreIntPackages()
+        print (vnv_packages)
+        vnv_packages_json = json.loads(vnv_packages)
+        print (vnv_packages_json)
+        
+
+        for package in vnv_packages_json:
+            print (package)
+            package_pd = package['pd']
+            print (package_pd)
+            
+            package_content = package_pd['package_content']
+            print (package_content)
+            #package_content_json = json.loads(package_content)
+            
+            for pc in package_content:
+                nsd_uuid = pc['uuid']
+                print (nsd_uuid)
+
+                if nsd_uuid == service_id:
+                    correct_package = package
+
+        
+        package_id = correct_package['uuid']
+        print (package_id)
+        return package_id
+
+
     def getPreIntPackages (self):    
 
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}
@@ -3303,3 +3347,36 @@ class Adapter:
                     print(uuid)  
 
         return uuid           
+
+
+    def deletePackagefromService(self,name,vendor,version):    
+
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        response = None
+        print ("deletePackagefromService started")
+
+        my_type =  self.getDBType()
+        if my_type == 'sonata':    
+            sp_host_0 = self.getDBHost()
+            print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            print (sp_host)
+            #print (self.getDBHost())
+            sp_host_1 = sp_host[4:]
+            print ("sp1 es: ")
+            print (sp_host_1)
+            sp_host_2 = sp_host_1[:-10]
+            print ("sp2 es: ")
+            print (sp_host_2)
+
+            service_id = self.getServiceId(name,vendor,version)
+            package_id = self.getSPPackageIdfromServiceId(service_id)            
+            url = sp_host_2 + ':32002/api/v3/packages/' + package_id   
+            print (url)     
+            response = requests.delete(url,headers=JSON_CONTENT_HEADER)
+            print (response)
+    
+        print (response.text)
+        msg = '{\"msg\": \"package deleted\"}'
+        print (msg)
+        return msg

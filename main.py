@@ -246,10 +246,14 @@ def adapter_get_package(service_platform,name,vendor, version):
     ad = adapter.Adapter(service_platform)
     return ad.getPackage(name,vendor,version)    
 
+#@app.route('/adapters/<service_platform>/packages/<name>/<vendor>/<version>', methods=['DELETE'])
+#def adapter_delete_package(service_platform,name,vendor, version):
+#    ad = adapter.Adapter(service_platform)
+#    return ad.deletePackage(name,vendor,version)   
 @app.route('/adapters/<service_platform>/packages/<name>/<vendor>/<version>', methods=['DELETE'])
 def adapter_delete_package(service_platform,name,vendor, version):
-    ad = adapter.Adapter(service_platform)
-    return ad.deletePackage(name,vendor,version)   
+    ad = adapter.Adapter(service_platform)    
+    return ad.deletePackagefromService(name,vendor,version)
 
 @app.route('/adapters/<service_platform>/packages/<name>/<vendor>/<version>/id', methods=['GET'])
 def adapter_get_package_by_id(service_platform,name,vendor, version):
@@ -331,7 +335,6 @@ def serviceterminate(service_platform):
     terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"request_type\":\"TERMINATE_SERVICE\"}"
     ad = adapter.Adapter(service_platform)  
     return ad.instantiationDelete(terminate_str)
-
 
 
 
