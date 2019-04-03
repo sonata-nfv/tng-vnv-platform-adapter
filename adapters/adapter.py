@@ -1346,113 +1346,114 @@ class Adapter:
 
 
         if my_type == 'onap':
-            print('this SP is ONAP')
+            #print('this SP is ONAP')
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
             url = sp_host_2
-            print (url)
+            #print (url)
 
 
             content = request.get_json()
 
-            print (content['ns_instance_id'])
+            #print (content['ns_instance_id'])
             ns_instance_id = content['ns_instance_id']
-            print (ns_instance_id) 
+            logging.debug (ns_instance_id) 
 
 
 
             url_2 = url + '/ns/' + ns_instance_id
-            print (url_2)                    
+            logging.debug (url_2)                    
             
             #upload = requests.post(url, files=files)
             terminate = requests.delete(url_2,headers=JSON_CONTENT_HEADER) 
 
             if request.method == 'POST':
+                logging.debug(terminate.text)
                 return terminate.text
 
 
         if my_type == 'sonata':
-            print('this SP is a Sonata')
+            #print('this SP is a Sonata')
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
             url = sp_host_2 + ':32002/api/v3/requests'
             
             #print(request.get_json())
             #data = request.get_json()
-            print(url)
-            print (request)
+            logging.debug(url)
+            logging.debug (request)
             #print (data)
-            print ("datadatadatadatadata")
+            #print ("datadatadatadatadata")
 
             terminate = requests.post(url,data=request,headers=JSON_CONTENT_HEADER) 
-            print (terminate)
-            print (terminate.text)
+            logging.debug (terminate)
+            logging.debug (terminate.text)
             return terminate.text
 
         if my_type == 'osm':
-            print('this SP is a OSM')  
+            #print('this SP is a OSM')  
 
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
 
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
 
             url = sp_host_3
-            print(request.get_json())
-            print(url)
+            logging.debug(request.get_json())
+            logging.debug(url)
             
 
 
 
             token = self.getOSMToken(request)
-            print (token)
+            logging.debug (token)
             content = request.get_json()
 
 
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
             url_2 = url.replace("http","https")
-            print (url_2)
+            #print (url_2)
 
 
-            print (content['ns_id'])
+            #print (content['ns_id'])
             ns_id = content['ns_id']
-            print (ns_id)
+            logging.debug (ns_id)
 
             
             #delete_ns = "curl -X DELETE --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             delete_ns_2 = delete_ns +token + "\" "
             delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
-            print (delete_ns_3)
+            logging.debug (delete_ns_3)
 
             terminate = subprocess.check_output([delete_ns_3], shell=True)
 
@@ -1460,12 +1461,12 @@ class Adapter:
             #    _thread.start_new_thread(self.OSMTerminateCallback, (token,url_2,content['callback'],content['ns_id']))
             try:
                 callback_url = content['callback']
-                print ("Callback url specified")
+                logging.debug ("Callback url specified")
                 _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,content['ns_id']))
             except:
-                print ("No callback url specified")                 
+                logging.debug ("No callback url specified")                 
                 
-
+            logging.debug(terminate)
             return (terminate)            
 
                         
@@ -1480,26 +1481,26 @@ class Adapter:
         if my_type == 'osm':
             print('this SP is a OSM')
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             print (sp_host_0)
-            sp_host = sp_host_0.__str__()
+            #sp_host = sp_host_0.__str__()
             print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
             #url = sp_host_2 + '/requests'
             url = sp_host_2 + ':9999/osm/admin/v1/tokens'
             url_2 = url.replace("http","https")
 
-            print (url_2)
+            logging.debug (url_2)
 
             #print(request.get_json())
             #data = request.get_json()
-            print(url_2)
+            #print(url_2)
             #print (data)
             #print (data['nsd_name'])
             #print (data['username'])
@@ -1508,8 +1509,8 @@ class Adapter:
 
 
             pr_name = self.getDBProjectName()
-            print ("project name from DB:")
-            print (pr_name)
+            logging.debug ("project name from DB:")
+            logging.debug (pr_name)
 
             if pr_name:
                 project_id_for_token = pr_name
@@ -1517,11 +1518,11 @@ class Adapter:
             if not pr_name:
                 data = request.get_json()
                 project_id_for_token = data['project_id']
-                print ("project name from json body:")
-                print (pr_name)
+                logging.debug ("project name from json body:")
+                logging.debug (pr_name)
 
             #project_id_for_token = data['project_id']
-            print (project_id_for_token)
+            logging.debug (project_id_for_token)
 
             #username_for_token = data['username']
             #password_for_token = data['password']
@@ -1532,7 +1533,7 @@ class Adapter:
             #project_id_for_token = data['project_id']
             
             admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
-            print (admin_data)
+            logging.debug (admin_data)
 
             #update_token = "UPDATE service_platforms SET service_token = \'" +token+ "\' WHERE name = \'" +self.name+ "\'" 
             
@@ -1540,15 +1541,15 @@ class Adapter:
             #print (data)
 
             get_token = requests.post(url_2,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
-            print (get_token.text)
-            print (get_token.content)
+            logging.debug (get_token.text)
+            logging.debug (get_token.content)
             token_id = get_token.json()
-            print (token_id['id'])
+            #print (token_id['id'])
 
             #upd_tok = self.updateToken(token_id['id'])
 
             #print (upd_tok)
-
+            logging.debug(token_id['id'])
             return token_id['id']
 
 
@@ -1561,10 +1562,11 @@ class Adapter:
 
         if my_type == 'sonata':
             url = self.getHostIp()  
-            print (url)
+            logging.debug (url)
             curl_vims = 'curl ' + url + ':32002/api/v3/settings/wims'
-            print (curl_vims)
+            logging.debug (curl_vims)
             vims = subprocess.check_output([curl_vims], shell=True)
+            logging.debug(vims)
             return vims
 
 
@@ -1576,40 +1578,42 @@ class Adapter:
 
         if my_type == 'sonata':
             url = self.getHostIp()  
-            print (url)
+            logging.debug (url)
             curl_vims = 'curl ' + url + ':32002/api/v3/settings/vims'
-            print (curl_vims)
+            logging.debug (curl_vims)
             vims = subprocess.check_output([curl_vims], shell=True)
+            logging.debug(vims)
             return vims
 
         if my_type == 'osm':
-            print('this SP is a OSM')
+            #print('this SP is a OSM')
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
             url = sp_host_3            
             
             token = self.getOSMToken(request)
-            print (token)
+            logging.debug (token)
             url = sp_host_2 + ':9999/osm/admin/v1/vim_accounts'
             url_2 = url.replace("http","https")
-            print (url_2)
+            logging.debug (url_2)
             
             vimss = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             vimss_2 = vimss +token + "\" "  + url_2
-            print (vimss_2)
+            logging.debug (vimss_2)
             vims = subprocess.check_output([vimss_2], shell=True)
             #return jsonify(upload_nsd_4) 
+            logging.debug(vims)
             return (vims)              
 
 
@@ -1620,10 +1624,11 @@ class Adapter:
 
         if my_type == 'sonata':
             url = self.getHostIp()  
-            print (url)
+            logging.debug (url)
             curl_vim = 'curl ' + url + ':32002/api/v3/settings/wims/' + vim
-            print (curl_vim)
+            logging.debug (curl_vim)
             vim = subprocess.check_output([curl_vim], shell=True)
+            logging.debug(vim)
             return vim
 
 
@@ -1636,41 +1641,43 @@ class Adapter:
 
         if my_type == 'sonata':
             url = self.getHostIp()  
-            print (url)
+            logging.debug (url)
             curl_vim = 'curl ' + url + ':32002/api/v3/settings/vims/' + vim
-            print (curl_vim)
+            logging.debug (curl_vim)
             vim = subprocess.check_output([curl_vim], shell=True)
+            logging.debug(vim)
             return vim
 
         if my_type == 'osm':
-            print('this SP is a OSM')
+            #print('this SP is a OSM')
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
             url = sp_host_3            
             
     
             token = self.getOSMToken(request)
-            print (token)
+            logging.debug (token)
             url = sp_host_2 + ':9999/osm/admin/v1/vim_accounts'
             url_2 = url.replace("http","https")
-            print (url_2)
+            logging.debug (url_2)
             
             vimss = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             vimss_2 = vimss +token + "\" "  + url_2 + "/" + vim
-            print (vimss_2)
+            logging.debug (vimss_2)
             vims = subprocess.check_output([vimss_2], shell=True)
             #return jsonify(upload_nsd_4) 
+            logging.debug(vims)
             return (vims) 
    
 
@@ -1681,58 +1688,59 @@ class Adapter:
         my_type =  self.getDBType()
 
         if my_type == 'sonata':
-            print('this SP is a Sonata')
+            #print('this SP is a Sonata')
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
 
             url = sp_host_2 + ':32002/api/v3/requests'  
-            print (url)
+            logging.debug (url)
             return url
 
         if my_type == 'osm':
-            print('this SP is a OSM')
+            #print('this SP is a OSM')
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
             url = sp_host_3            
             
             get_vim = "osm --hostname " + sp_host_3 + " vim-show " + vim
-            print (get_vim)
+            logging.debug (get_vim)
             vim_info = subprocess.check_output([get_vim], shell=True)
-            print (vim_info)
+            logging.debug (vim_info)
             
-            print (type(vim_info))    
+            logging.debug (type(vim_info))    
 
 
             s = json.dumps(str(vim_info))
 
-            print(s)
-            print (type(s))                 
+            logging.debug(s)
+            logging.debug (type(s))                 
 
             start = s.find('_id')
             end = s.find('\\\" ', start)
-            print (s[start+20:end])
+            logging.debug (s[start+20:end])
             vim_id = s[start+20:end]
 
+            logging.debug(vim_id)
             return vim_id
 
 
@@ -1744,42 +1752,43 @@ class Adapter:
         my_type =  self.getDBType()
 
         if my_type == 'osm':
-            print('this SP is a OSM')
+            #print('this SP is a OSM')
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
             url = sp_host_3            
             
             get_nsd = "osm --hostname " + sp_host_3 + "  nsd-show " + nsd_name
-            print (get_nsd)
+            logging.debug (get_nsd)
             nsd_info = subprocess.check_output([get_nsd], shell=True)
-            print (nsd_info)
+            logging.debug (nsd_info)
             
             print (type(nsd_info))    
 
 
             s = json.dumps(str(nsd_info))
 
-            print(s)
-            print (type(s))                             
+            logging.debug(s)
+            logging.debug (type(s))                             
             
             start = s.find('_id')
             end = s.find('\\\" ', start)
             #print (s[start+21:end])
             #vim_id = s[start+21:end]
-            print (s[start+21:end])
+            logging.debug (s[start+21:end])
             vim_id = s[start+21:end]         
 
+            logging.debug(vim_id)
             return vim_id            
 
 
@@ -1790,25 +1799,26 @@ class Adapter:
         logging.info("download package sonata starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}                              
         sp_host_0 = self.getDBHost()
-        print (sp_host_0)
+        #print (sp_host_0)
         sp_host = sp_host_0.__str__()
-        print (sp_host)
+        #print (sp_host)
         #print (self.getDBHost())
         sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
+        #print ("sp1 es: ")
+        #print (sp_host_1)
         sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+        #print ("sp2 es: ")
+        #print (sp_host_2)
         url = sp_host_2 + ':32002/api/v3/packages'
         
         url2 = 'curl ' + url + '/' + package_id + '/package-file --output /app/packages/' + package_id + '.tgo'
         
-        print(url2)
+        logging.debug(url2)
 
         download = subprocess.check_output([url2], shell=True)
         #return (download)    
         msg = "Package downloaded to: " + "/app/packages/" + package_id + '.tgo' 
+        logging.debug(msg)
         return (msg)
 
         
@@ -1821,35 +1831,35 @@ class Adapter:
 
     def deleteOSMService(self,id_to_delete):
             logging.info("delete osm service starts")
-            print('this SP is a OSM')  
+            #print('this SP is a OSM')  
 
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
 
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
 
             url = sp_host_3
 
 
             token = self.getOSMTokenForDelete()
-            print (token)
+            logging.debug (token)
 
            
 
             url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
             url_2 = url.replace("http","https")
-            print (url_2)            
+            logging.debug (url_2)            
 
             
 
@@ -1858,7 +1868,7 @@ class Adapter:
             
             delete_nsd = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             delete_nsd_2 = delete_nsd +token + "\"  " + url_2 + "/" + id_to_delete + " -X DELETE" 
-            print (delete_nsd_2)
+            logging.debug (delete_nsd_2)
 
             deletion = subprocess.check_output([delete_nsd_2], shell=True)
             return (deletion)
@@ -1867,44 +1877,36 @@ class Adapter:
 
     def deleteOSMFunction(self,id_to_delete):
             logging.info("delete osm function starts")
-            print('this SP is a OSM')  
+            #print('this SP is a OSM')  
 
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            ##print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
 
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
 
             url = sp_host_3
 
-
             token = self.getOSMTokenForDelete()
-            print (token)
-
-           
+            logging.debug (token)           
 
             url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages'
             url_2 = url.replace("http","https")
-            print (url_2)            
-
-            
-
-
-      
-            
+            logging.debug (url_2)            
+                              
             delete_nsd = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             delete_nsd_2 = delete_nsd +token + "\"  " + url_2 + "/" + id_to_delete + " -X DELETE" 
-            print (delete_nsd_2)
+            logging.debug (delete_nsd_2)
 
             deletion = subprocess.check_output([delete_nsd_2], shell=True)
             return (deletion)            
@@ -1917,28 +1919,28 @@ class Adapter:
         my_type =  self.getDBType()
 
         if my_type == 'osm':
-            print('this SP is a OSM')
+            #print('this SP is a OSM')
 
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            logging.debug (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            logging.debug (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            logging.debug ("sp1 es: ")
+            logging.debug (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            logging.debug ("sp2 es: ")
+            logging.debug (sp_host_2)
             #url = sp_host_2 + '/requests'
             url = sp_host_2 + ':9999/osm/admin/v1/tokens'
             url_2 = url.replace("http","https")
 
-            print (url_2)
+            logging.debug (url_2)
 
             
             #data = request.get_json()
-            print(url_2)
+            logging.debug(url_2)
             #print (data)
             #print (data['nsd_name'])
             #print (data['username'])
@@ -1947,8 +1949,8 @@ class Adapter:
 
 
             pr_name = self.getDBProjectName()
-            print ("project name from DB:")
-            print (pr_name)
+            logging.debug ("project name from DB:")
+            logging.debug (pr_name)
 
             if pr_name:
                 project_id_for_token = pr_name
@@ -1957,8 +1959,8 @@ class Adapter:
                 #data = request.get_json()
                 #project_id_for_token = data['project_id']
                 project_id_for_token = self.getDBProject()
-                print ("project name from json body:")
-                print (pr_name)
+                logging.debug ("project name from json body:")
+                logging.debug (pr_name)
 
             #project_id_for_token = data['project_id']
             print (project_id_for_token)
@@ -1972,7 +1974,7 @@ class Adapter:
             #project_id_for_token = data['project_id']
             
             admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
-            print (admin_data)
+            logging.debug (admin_data)
 
             #update_token = "UPDATE service_platforms SET service_token = \'" +token+ "\' WHERE name = \'" +self.name+ "\'" 
             
@@ -1980,10 +1982,10 @@ class Adapter:
             #print (data)
 
             get_token = requests.post(url_2,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
-            print (get_token.text)
-            print (get_token.content)
+            logging.debug (get_token.text)
+            logging.debug (get_token.content)
             token_id = get_token.json()
-            print (token_id['id'])
+            logging.debug (token_id['id'])
 
             #upd_tok = self.updateToken(token_id['id'])
 
@@ -1995,49 +1997,49 @@ class Adapter:
     def getOSMInstaceStatus(self,service_id): 
             logging.info("get osm instance status starts")            
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
             url = sp_host_3    
 
 
             token = self.getOSMToken(service_id)
-            print (token)     
+            logging.debug (token)     
             
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances/' + service_id
             url_2 = url.replace("http","https")
-            print (url_2)
+            logging.debug (url_2)
 
             
             status_ns = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             status_ns_2 = status_ns +token + "\" "
             status_ns_3 = status_ns_2 + " " + url_2        
-            print (status_ns_3)
+            logging.debug (status_ns_3)
 
-            status = subprocess.check_output([status_ns_3], shell=True)
+            status = subprocess.check_output([status_ns_3], shell=True)                        
             return (status)     
 
     def OSMInstantiateCallback(self,token,url_2,callback_url,inst_resp_yaml):
         logging.info("osm instantiate callback starts")
-        print ("callback start")
+        logging.debug ("callback start")
                 
         response = yaml.load(inst_resp_yaml)
         service_id = response['id']
-        print(service_id)
+        logging.debug(service_id)
 
         status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
-        print(status_url)
+        logging.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
-        print (status_curl)
+        logging.debug (status_curl)
         #status_json = json.dumps(status_curl)
         #status_json = status_curl.get_json()
 
@@ -2066,19 +2068,15 @@ class Adapter:
                                    
 
         #status = data['admin']['deployed']['RO']['nsr_status']        
-        print (status)
+        logging.debug (status)
 
         callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
-        print (callback_msg)
+        logging.debug (callback_msg)
         callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
 
         call = subprocess.check_output([callback_post], shell=True)
-        print(call)
-        print ("callback end")
-
-
-
-
+        logging.debug(call)
+        logging.debug ("callback end")
 
 
 
@@ -2088,12 +2086,12 @@ class Adapter:
                 
         #response = yaml.load(inst_resp_yaml)
         service_id = ns_id
-        print(service_id)
+        logging.debug(service_id)
 
         status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
-        print(status_url)
+        logging.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
-        print (status_curl)
+        logging.debug (status_curl)
         #status_json = json.dumps(status_curl)
         #status_json = status_curl.get_json()
 
@@ -2112,93 +2110,91 @@ class Adapter:
                 except:
                     is_active = 'not'
                     status = 'my_status'
-                    print("Retraying in 3 sec")
-                    print(status)
+                    logging.debug("Retraying in 3 sec")
+                    logging.debug(status)
                     time.sleep(3)
                     status_curl = subprocess.check_output([status_url], shell=True)
-                    print (status_curl)
+                    logging.debug (status_curl)
                     with open('/app/temp.file') as f:
                         data = json.load(f)
                                    
 
         #status = data['admin']['deployed']['RO']['nsr_status']        
-        print (status)
+        logging.debug (status)
 
 
 
         callback_msg='{\"Message\":\"The service ' + service_id + ' was terminated\"}'
-        print (callback_msg)
+        logging.debug (callback_msg)
         callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
         call = subprocess.check_output([callback_post], shell=True)
-        print(call)
-        print ("callback end")        
+        logging.debug(call)
+        logging.debug ("callback end")        
 
 
 
     def OSMUploadFunctionCallback(self,token,url_2,callback_url,inst_resp_yaml):
-        logging.info("osm upload function callback starts")
-        print ("callback start")
+        logging.info("osm upload function callback starts")        
                 
         response = yaml.load(inst_resp_yaml)
         service_id = response['id']
-        print(service_id)
+        logging.debug(service_id)
 
         status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
-        print(status_url)
+        logging.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
-        print (status_curl)
+        logging.debug (status_curl)
         #status_json = json.dumps(status_curl)
         #status_json = status_curl.get_json()
 
         with open('/app/temp.file') as f:
             data = json.load(f)
 
-        print (data)
+        logging.debug (data)
         status = 'my_status'
         #status = data['_admin']['onboardingState']
 
         while status == 'my_status': 
-            print (" ")                               
+            #print (" ")                               
             status = data['_admin']['onboardingState']
             if status != 'ONBOARDED':
-                print ("Retrying in 3 sec")
-                print (status)
+                logging.debug ("Retrying in 3 sec")
+                logging.debug (status)
                 time.sleep(3)
                 status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
-                print(status_url)            
+                logging.debug(status_url)            
                 status_curl = subprocess.check_output([status_url], shell=True)
-                print (status_curl)
+                logging.debug (status_curl)
                 with open('/app/temp.file') as f:
                     data = json.load(f)
-                    print("data content:")
-                    print (data)
+                    logging.debug("data content:")
+                    logging.debug (data)
      
-        print (status)
+        logging.debug (status)
 
 
         callback_msg='{\"Message\":\"The function descriptor ' + service_id + ' is in status: ' + status + '\"}'
 
 
-        print (callback_msg)       
+        logging.debug (callback_msg)       
         callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
-        print (callback_post)
+        logging.debug (callback_post)
         call = subprocess.check_output([callback_post], shell=True)
-        print(call)
-        print ("callback end")        
+        logging.debug(call)
+        logging.debug ("callback end")        
 
 
     def OSMUploadServiceCallback(self,token,url_2,callback_url,inst_resp_yaml):
-        logging.info("osm upload service callback starts")
-        print ("callback start")
+        logging.info("osm upload service callback starts")       
                 
         response = yaml.load(inst_resp_yaml)
         service_id = response['id']
-        print(service_id)
+        logging.debug(service_id)
 
         status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
-        print(status_url)
+        logging.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
-        print (status_curl)
+        logging.debug (status_curl)
         #status_json = json.dumps(status_curl)
         #status_json = status_curl.get_json()
 
@@ -2210,30 +2206,30 @@ class Adapter:
         #status = data['_admin']['onboardingState']
 
         while status == 'my_status': 
-            print (" ")                               
+            #print (" ")                               
             status = data['_admin']['onboardingState']
             if status != 'ONBOARDED':
-                print ("Retrying in 3 sec")
-                print (status)
+                logging.debug ("Retrying in 3 sec")
+                logging.debug (status)
                 time.sleep(3)
                 status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
-                print(status_url)            
+                logging.debug(status_url)            
                 status_curl = subprocess.check_output([status_url], shell=True)
-                print (status_curl)
+                logging.debug (status_curl)
                 with open('/app/temp.file') as f:
                     data = json.load(f)
-                    print("data content:")
-                    print (data)
+                    #print("data content:")
+                    logging.debug (data)
      
-        print (status)
+        logging.debug (status)
 
         callback_msg='{\"Message\":\"The function descriptor ' + service_id + ' is in status: ' + status + '\"}'
-        print (callback_msg)
+        logging.debug (callback_msg)
         callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
-        print (callback_post)
+        logging.debug (callback_post)
         call = subprocess.check_output([callback_post], shell=True)
-        print(call)
-        print ("callback end")     
+        logging.debug(call)
+        logging.debug ("callback end")     
 
     def monitoringTests(self,monitoring_type):
         logging.info("monitoring tests starts")
@@ -2241,47 +2237,47 @@ class Adapter:
         my_type =  self.getDBType()
 
         if my_type == 'sonata':
-            print('this SP is a Sonata')
+            logging.debug('this SP is a Sonata')
 
         if my_type == 'osm':
-            print('this SP is a OSM')
+            #print('this SP is a OSM')
 
             current_string="date -u +\"%Y-%m-%dT%H:%M:%S.%3N\""
             
 
             current_date = subprocess.check_output([current_string], shell=True)
-            print (current_date)
+            #print (current_date)
             current_date_1 = current_date.__str__()
-            print (current_date_1)
+            #print (current_date_1)
             current_date_2 = current_date_1.__str__()[2:25]
-            print (current_date_2)
-            print ("aaaaaa")
+            #print (current_date_2)
+            #print ("aaaaaa")
 
             yesterday_string="date -d \"1 days ago\" -u +\"%Y-%m-%dT%H:%M:%S.%3N\""
 
             yesterday_date = subprocess.check_output([yesterday_string], shell=True)
             yesterday_date_1 = yesterday_date.__str__()
-            print (yesterday_date_1)
+            #print (yesterday_date_1)
             yesterday_date_2 = yesterday_date_1.__str__()[2:25]
-            print (yesterday_date_2)
-            print ("aaaaaa")    
+            #print (yesterday_date_2)
+            #print ("aaaaaa")    
 
 
             sp_host_0 = self.getDBHost()
-            print (sp_host_0)
+            #print (sp_host_0)
             sp_host = sp_host_0.__str__()
-            print (sp_host)
+            #print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
-            print ("sp1 es: ")
-            print (sp_host_1)
+            #print ("sp1 es: ")
+            #print (sp_host_1)
             sp_host_2 = sp_host_1[:-10]
-            print ("sp2 es: ")
-            print (sp_host_2)
+            #print ("sp2 es: ")
+            #print (sp_host_2)
 
             sp_host_3 = sp_host_2[7:]
-            print ("sp3 es: ")
-            print (sp_host_3)            
+            #print ("sp3 es: ")
+            #print (sp_host_3)            
 
             url = sp_host_3
 
@@ -2290,15 +2286,15 @@ class Adapter:
            
             url = sp_host_2 + ':9091/api/v1/query_range?query=osm_'
             url_2 = url.replace("http","https")
-            print (url_2) 
+            logging.debug (url_2) 
 
 
             monitoring_string = "curl \"" + url + monitoring_type + "&start="  + yesterday_date_2 + "Z&end=" + current_date_2 + "Z&step=15s\""
             #+ "&start=" + yesterday_date_1 + "Z&end=" + current_date_1 + "Z&step=15s"
-            print (monitoring_string)
+            logging.debug (monitoring_string)
 
             monitoring_curl = subprocess.check_output([monitoring_string], shell=True)
-            print (monitoring_curl)
+            logging.debug (monitoring_curl)
 
             return monitoring_curl
 
@@ -2309,52 +2305,52 @@ class Adapter:
     def getSonataToken(self,request):            
         logging.info("get sonata token starts")
         JSON_CONTENT_HEADER = {'Content-type':'application/json'}   
-        print('this SP is a Sonata')
+        #print('this SP is a Sonata')
         sp_host_0 = self.getDBHost()
-        print (sp_host_0)
+        #print (sp_host_0)
         sp_host = sp_host_0.__str__()
-        print (sp_host)
+        #print (sp_host)
         #print (self.getDBHost())
         sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
+        #print ("sp1 es: ")
+        #print (sp_host_1)
         sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+        #print ("sp2 es: ")
+        #print (sp_host_2)
         #url = sp_host_2 + '/requests'
         url = sp_host_2 + ':4567/login'
         url_2 = url.replace("http","https")
 
-        print (url_2)
+        logging.debug (url_2)
 
         username_for_token = self.getDBUserName()
         password_for_token = self.getDBPassword()        
         data_for_token= "{\"username\": \"" +username_for_token+ "\", \"password\": \"" +password_for_token+ "\"}"
 
-        print ("Data for token:")
-        print (data_for_token)    
+        #print ("Data for token:")
+        logging.debug (data_for_token)    
 
         #get_token = requests.post(url,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
 
         get_token = "curl -i -X POST -H Content-type: application/json -d '" + data_for_token + "' " + url 
 
-        print (get_token)
+        logging.debug (get_token)
 
         token_curl = subprocess.check_output([get_token], shell=True)
 
-        print (token_curl)
+        logging.debug (token_curl)
 
         string = token_curl.__str__()
         start = string.find('{')
         end = string.find('}', start)
         tok = string[start:end+1]
-        print (tok)
+        logging.debug (tok)
 
 
         #return token_curl
 
         token_id_json = json.loads(tok)
-        print (token_id_json['token'])
+        logging.debug (token_id_json['token'])
 
         return token_id_json['token']                   
         #return tok['token']
@@ -2368,14 +2364,15 @@ class Adapter:
         package_json_loaded = json.loads(package_json)
 
         package_file_uuid = package_json_loaded['pd']['package_file_uuid']       
-        print (package_file_uuid)
+        logging.debug (package_file_uuid)
 
         get_tgo_curl = 'curl -H \'Content-type: application/zip\' http://tng-cat:4011/api/catalogues/v2/tgo-packages/' + package_file_uuid + ' --output /app/packages/' + package_file_uuid + '.tgo'            
-        print (get_tgo_curl)    
+        logging.debug (get_tgo_curl)    
         package_tgo = subprocess.check_output([get_tgo_curl], shell=True)
 
         #msg = "The package " + package_id + " with id " + package_file_uuid +"was downloaded to: /app/packages/" + package_file_uuid + '.tgo' 
         msg = "{\"package\": \"/app/packages/" + package_file_uuid + ".tgo\"}" 
+        logging.debug(msg)
         return (msg)
 
 
@@ -2383,44 +2380,44 @@ class Adapter:
 
     def osmInstantiationIPs(self,request):    
         logging.info("osm instantiation ips starts")
-        print('this SP is a OSM')   
+        #print('this SP is a OSM')   
         sp_host_0 = self.getDBHost()
-        print (sp_host_0)
+        #print (sp_host_0)
         sp_host = sp_host_0.__str__()
-        print (sp_host)
+        #print (sp_host)
         sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
+        #print ("sp1 es: ")
+        #print (sp_host_1)
         sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+        #print ("sp2 es: ")
+        #print (sp_host_2)
         sp_host_3 = sp_host_2[7:]
-        print ("sp3 es: ")
-        print (sp_host_3)            
+        #print ("sp3 es: ")
+        #print (sp_host_3)            
         url = sp_host_3    
 
 
         token = self.getOSMToken(request)
-        print (token)
+        logging.debug (token)
 
         #content = request.get_json()
         #ns_id = content['ns_id']
         ns_id = request
-        print (ns_id)            
+        logging.debug (ns_id)            
         
         url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances'
         url_2 = url.replace("http","https")
-        print (url_2)
+        logging.debug (url_2)
 
         
         status_ns = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
         status_ns_2 = status_ns +token + "\" "
         status_ns_3 = status_ns_2 + " " + url_2 + "/" + ns_id          
-        print (status_ns_3)
+        logging.debug (status_ns_3)
 
         status = subprocess.check_output([status_ns_3], shell=True)
 
-        print (json.loads(status))
+        logging.debug (json.loads(status))
         ns_instance_json = json.loads(status)
 
         vnfs_array_json = ns_instance_json['constituent-vnfr-ref']
@@ -2430,41 +2427,42 @@ class Adapter:
         response = "{\"NSI id\": \"" + ns_instance_json['id'] + "\", \"vnf_instances\": ["
 
         for vnf_id in vnfs_array_json:
-            print (vnf_id)
+            logging.debug (vnf_id)
             url_4 = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\"  " + url_3+ "/" + vnf_id
             vnf_instance_curl= subprocess.check_output([url_4], shell=True)
             vnf_instance_json = json.loads(vnf_instance_curl)
-            print ("This is an VNF instance:")
-            print (vnf_instance_json)
+            logging.debug ("This is an VNF instance:")
+            logging.debug (vnf_instance_json)
 
             vdur_arrays = vnf_instance_json['vdur']
             
             for x in vdur_arrays:
-                print (x)
+                logging.debug (x)
                 vdur_name = x['name']
                 #response = response + "{\"instance_name\": \"" + x['name'] +"\","
 
                 response = response + "{\"instance_name\": \"" + x['name'] +"\",\"instance_id\": \"" + x['_id']+"\","
 
 
-                print (vdur_name)    
+                logging.debug (vdur_name)    
                 vdur_interfaces = x['interfaces']	
-                print (vdur_interfaces)
+                logging.debug (vdur_interfaces)
                 response = response + "\"interfaces\":{"
                 for y in vdur_interfaces:
-                    print (y)
+                    logging.debug (y)
                     interface_name = y['name']
                     interface_ip_addresss = y['ip-address']
-                    print (interface_name)
-                    print (interface_ip_addresss) 
+                    logging.debug (interface_name)
+                    logging.debug (interface_ip_addresss) 
                     response = response + "\"" + interface_name + "\": \"" + interface_ip_addresss + "\"}}," 
-                    print (response)
+                    logging.debug (response)
                       
                 response_2 = response[:-1]
                 #response_2 =  response_2 + "}" 
 
         #response_3 = response_2[:-1] 
         response_3 = response_2 + "]}"
+        logging.debug(response_3)
         return response_3
 
 
@@ -2475,6 +2473,7 @@ class Adapter:
         url = 'http://tng-cat:4011/api/catalogues/v2/packages'
         response = requests.get(url, headers=JSON_CONTENT_HEADER)    
         if response.ok:        
+            logging.debug(response.text)
             #return (response.text, response.status_code, response.headers.items()) 
             return (response.text)
 
@@ -2486,6 +2485,7 @@ class Adapter:
         url =  'http://' + host + ':32002/api/v3/packages'
         response = requests.get(url, headers=JSON_CONTENT_HEADER)    
         if response.ok:        
+            logging.debug(response.text)
             #return (response.text, response.status_code, response.headers.items()) 
             return (response.text)
 
@@ -2495,35 +2495,37 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'} 
         
         url = 'http://tng-cat:4011/api/catalogues/v2/packages'  
-        print (name,vendor,version)
+        #print (name,vendor,version)
         response = requests.get(url,headers=JSON_CONTENT_HEADER)
         response_json = response.content
         jjson = json.loads(response_json)
         for x in jjson:
-            print(x)
+            #print(x)
             if ( x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version ) :
-                print("same name")
+                #print("same name")
                 uuid = x['uuid']
-                print(uuid)  
+                #print(uuid)  
         
+        logging.debug(uuid)
         return uuid                   
     
 
     def getHostIp(self):
         logging.info("get host ip starts")
         sp_host_0 = self.getDBHost()
-        print (sp_host_0)
+        #print (sp_host_0)
         sp_host = sp_host_0.__str__()
-        print (sp_host)
+        #print (sp_host)
         #print (self.getDBHost())
         sp_host_1 = sp_host[4:]
-        print ("sp1 es: ")
-        print (sp_host_1)
+        #print ("sp1 es: ")
+        #print (sp_host_1)
         sp_host_2 = sp_host_1[:-10]
-        print ("sp2 es: ")
-        print (sp_host_2)
+        #print ("sp2 es: ")
+        #print (sp_host_2)
         #url = sp_host_2 + '/requests'
         url = sp_host_2
+        logging.debug(url)
         return url
 
 
@@ -2538,40 +2540,40 @@ class Adapter:
             #response_json = response.content
             #print (response_json) 
             instance_request = self.instantiationStatus(id) 
-            print (instance_request)               
+            logging.debug (instance_request)               
             instance_request_json = json.loads(instance_request)
             instance_uuid = instance_request_json['instance_uuid']
-            print (instance_uuid)
+            logging.debug (instance_uuid)
 
             url = self.getHostIp()
-            print (url)
+            logging.debug (url)
 
             response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
 
             url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
             service_record = requests.get(url_records_services,headers=JSON_CONTENT_HEADER)
-            print (service_record.text)
+            logging.debug (service_record.text)
             service_record_json = json.loads(service_record.text)
             vnfr_array = service_record_json['network_functions']
-            print (vnfr_array)
+            logging.debug (vnfr_array)
             for vnf in vnfr_array:
                 function_record_uuid = vnf['vnfr_id']
-                print(function_record_uuid)
+                logging.debug(function_record_uuid)
 
                 response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
 
                 url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
                 function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
                 function_record_json = json.loads(function_record.text)
-                print(function_record_json)
+                logging.debug(function_record_json)
                 try:
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
-                    print (function_vdu_array)
+                    logging.debug (function_vdu_array)
                     for vdu in function_vdu_array:
-                        print(vdu['vim_id'])
+                        #print(vdu['vim_id'])
                         function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
-                        print (function_vim)
+                        #print (function_vim)
                         response = response + "\"pod_name\": \"" + cdu_reference + "\","
                         response = response + "\"vim_id\": \"" + function_vim + "\","
                         vim_object= self.getVim(function_vim)
@@ -2580,17 +2582,17 @@ class Adapter:
                         response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
                 except:                    
                     function_vdu_array = function_record_json['virtual_deployment_units']
-                    print (function_vdu_array)
+                    logging.debug (function_vdu_array)
                     for x in function_vdu_array:
-                        print (x)
+                        logging.debug (x)
                         vi = x['vnfc_instance']
-                        print (vi)
+                        logging.debug (vi)
                         for y in vi:  
-                            print (y)                                                                       
+                            logging.debug (y)                                                                       
                             function_vim = y['vim_id']
                             function_vc = y['vc_id']
-                            print(function_vim)
-                            print (function_vc)
+                            logging.debug(function_vim)
+                            logging.debug (function_vc)
                             response = response + "\"vc_id\": \"" + function_vc + "\","
                             response = response + "\"vim_id\": \"" + function_vim + "\","
                             vim_object= self.getVim(function_vim)
@@ -2614,12 +2616,13 @@ class Adapter:
         import zipfile
         package_string = package.__str__()
         package_string_2 = package_string[:-4]
-        print (package_string_2)
+        logging.debug (package_string_2)
 
         with zipfile.ZipFile(package,"r") as zip_ref:        
             zip_ref.extractall(package_string_2)
         
         msg_response = "The package " + package + " was unzipped to: " + package_string_2
+        logging.debug(msg_response)
         return msg_response
 
 
@@ -2640,13 +2643,13 @@ class Adapter:
             #response_json = response.content
             #print (response_json) 
             instance_request = self.instantiationStatus(id) 
-            print (instance_request)               
+            logging.debug (instance_request)               
             instance_request_json = json.loads(instance_request)
             instance_uuid = instance_request_json['instance_uuid']
-            print (instance_uuid)
+            logging.debug (instance_uuid)
 
             url = self.getHostIp()
-            print (url)
+            logging.debug (url)
 
             #response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
             response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\","                
@@ -2655,14 +2658,14 @@ class Adapter:
 
             url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
             service_record = requests.get(url_records_services,headers=JSON_CONTENT_HEADER)
-            print (service_record.text)
+            logging.debug (service_record.text)
             service_record_json = json.loads(service_record.text)
             vnfr_array = service_record_json['network_functions']
-            print (vnfr_array)
+            logging.debug (vnfr_array)
             for vnf in vnfr_array:
                 function_record_uuid = vnf['vnfr_id']
                 
-                print(function_record_uuid)
+                logging.debug(function_record_uuid)
 
                 #response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
                 #response = response + ",{\"id\": \"" + function_record_uuid + "\","
@@ -2671,7 +2674,7 @@ class Adapter:
                 url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
                 function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
                 function_record_json = json.loads(function_record.text)
-                print(function_record_json)
+                logging.debug(function_record_json)
                 try:
                     
                     #response = response + "\"platform_type\": \"" + my_type + "\","
@@ -2682,49 +2685,49 @@ class Adapter:
                     response = response + "\"function_type\": \"" + function_type + "\","                    
                     k8s = "k8s"
                     
-                    print (function_vdu_array)
+                    logging.debug (function_vdu_array)
                     floating_ip = None
                     #response = response + "\"endpoints\": ["
                     
                     for vdu in function_vdu_array:
                         #print(vdu['vim_id'])
-                        print (vdu)
-                        print ("1")
+                        logging.debug (vdu)
+                        #print ("1")
                         #function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
-                        print ("2")                      
+                        #print ("2")                      
                         
                         #response = response + "\"vdu_reference\": \"" + vdu_reference + "\","
                         #response = response + "\"name\": \"" + cdu_reference_2 + "\","
                         cnf_name = cdu_reference[0: cdu_reference.find(":") ]
 
-                        print (cnf_name)
-                        print (response)
-                        print ("3")   
+                        logging.debug (cnf_name)
+                        logging.debug (response)
+                        #print ("3")   
                         #print (function_vim)
                         #response = response + "{\"container_name\": \"" + cdu_reference + "\","
                         #response = response + "\"name\": \"" + cdu_name + "\","
-                        print ("4")   
-                        print (response)
+                        #print ("4")   
+                        logging.debug (response)
 
 
                         connection_points = vdu['connection_points']
-                        print (connection_points)
+                        logging.debug (connection_points)
                         
                         #response = response + "\"endpoints\": [{"
                         ports = "\"ports\": ["
                         for c in connection_points:
-                            print (c)
+                            #print (c)
                             port_id = c['id']
-                            print (port_id)
+                            #print (port_id)
                             port_port = c['port']
-                            print (port_port)
+                            #print (port_port)
                             port_type = c['type']
-                            print (port_type)
+                            #print (port_type)
                             #response = response + "{\"id\": \"" + port_id + "\","
                             #response = response + "{\"id\": \"" + port_id + "\",\"port\": \""
                             ports = ports + "{\"id\": \"" + port_id + "\",\"port\": \""
-                            print(response)
+                            logging.debug(response)
                             
                             #response = response + port_port.__str__() + "\","
                             ports = ports + port_port.__str__() + "\"},"
@@ -2737,36 +2740,34 @@ class Adapter:
                         response_ports = ports[:-1]
                         ports = response_ports + "]"
                         #response_port = response[:-1]
-                        #response = response + ports + "}]}"
-                        print(response)
-                        
-                        print(response)
+                        #response = response + ports + "}]}"                        
+                        logging.debug(response)
 
                         try:
                             load_balancer_ip = vdu['load_balancer_ip']
                             
                             
-                            print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
-                            print (load_balancer_ip)  
+                            #print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
+                            logging.debug (load_balancer_ip)  
                             
                             load_balancer_ip_str =  load_balancer_ip.__str__()
-                            print("1111")
-                            print("1111")
-                            print("1111")
-                            print("1111")
+                            #print("1111")
+                            #print("1111")
+                            #print("1111")
+                            #print("1111")
                             load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")
                             lb_json = json.loads(load_balancer_ip_str_replaced)
                             fip_fip = lb_json['floating_ip']
-                            print (fip_fip)
-                            print(lb_json)
-                            print("1111")
-                            print("1111")
-                            print("1111")
-                            print("1111")
+                            logging.debug (fip_fip)
+                            logging.debug(lb_json)
+                            #print("1111")
+                            #print("1111")
+                            #print("1111")
+                            #print("1111")
 
 
                             load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"")
-                            print (load_balancer_ip_str_replaced)
+                            logging.debug (load_balancer_ip_str_replaced)
                             
                             #lb_1 = load_balancer_ip_str_replaced[0: load_balancer_ip_str_replaced.find(",") ]
                             #lb_2 = lb_1[1:]
@@ -2778,8 +2779,8 @@ class Adapter:
 
                             #fip = lb_2[:-1]
                             fip = "\"address\": \"" + fip_fip + "\""
-                            print (fip)
-                            print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
+                            logging.debug (fip)
+                            #print ("load_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ipload_balancer_ip")
                             
                             #load_balancer_ip_str =  load_balancer_ip.__str__()
                             #load_balancer_ip_str_replaced = load_balancer_ip_str.replace("'","\"") 
@@ -2789,9 +2790,9 @@ class Adapter:
                             #print ("lplplplppllpplplpplplplplpllpplpl")
                             #response = response + "\"load_balance_ip\": " + load_balancer_ip_str_replaced + ","
                         except:
-                            print ("no load balancer")
+                            logging.debug ("no load balancer")
 
-                        print(response)
+                        logging.debug(response)
                         
  
                     response = response + "\"name\": \"" + cnf_name + "\","
@@ -2813,30 +2814,30 @@ class Adapter:
                 except:
                     function_type = "vnf"                                        
                     function_vdu_array = function_record_json['virtual_deployment_units']
-                    print (function_vdu_array)
+                    logging.debug (function_vdu_array)
                     
                     for x in function_vdu_array:
-                        print (x)
+                        logging.debug (x)
                         vdu_reference = x['vdu_reference']
                         vdu_reference_2 = vdu_reference[0: vdu_reference.find(":") ]
                         #response = response + "\"vdu_reference\": \"" + vdu_reference + "\","                        
                         response = response + "\"function_type\": \"" + function_type + "\","
                         response = response + "\"name\": \"" + vdu_reference_2 + "\","
                         vi = x['vnfc_instance']
-                        print (vi)
+                        logging.debug (vi)
                         for y in vi:  
-                            print (y)                                                                       
+                            logging.debug (y)                                                                       
                             function_vim = y['vim_id']
                             function_vc = y['vc_id']
-                            print(function_vim)
-                            print (function_vc)
+                            logging.debug(function_vim)
+                            logging.debug (function_vc)
 
                             connection_points = y['connection_points']
-                            print (connection_points)
+                            logging.debug (connection_points)
                             response = response + "\"endpoints\": ["
 
                             for z in connection_points:
-                                print (z)
+                                logging.debug (z)
                                 port_id = z['id']
                                 port_type = z['type']
                                 port_interface = z['interface']
@@ -2870,19 +2871,19 @@ class Adapter:
 
             
             if k8s == "k8s":
-                print (k8s)
+                logging.debug (k8s)
                 response_k8s_2 = response_k8s[:-1]
                 #response_2 = response[:-1]
                 response_2 = response_k8s[:-1]
                 #response = response_2 + "]}]}]}"
                 #response = response_2 + "]}]}"
                 response = response_2 + "]}"
-                print (response)
+                #print (response)
                 #return response
                 response_str_replaced = response.replace("[,","[") 
-                print (response_str_replaced)
+                #print (response_str_replaced)
                 response_str_replaced_2 = response_str_replaced.replace("},,","},") 
-                print (response_str_replaced_2)
+                logging.debug (response_str_replaced_2)
                 return response_str_replaced_2
 
 
@@ -2892,6 +2893,7 @@ class Adapter:
             response_str_replaced = response_2.replace("[,","[") 
             response_str_replaced_2 = response_str_replaced.replace("],","]},") 
             #response_str_replaced_2 = response_str_replaced_2 + "}"
+            logging.debug (response_str_replaced_2)
             return response_str_replaced_2
             #response_4 = response_3[1:]
             #return response_4
@@ -2902,8 +2904,8 @@ class Adapter:
     def instantiateServiceNoCallback(self,request): 
         logging.info("instantiation service no callback starts")
         content = request.get_json()
-        print ("request content:")
-        print (content)
+        #print ("request content:")
+        logging.debug (content)
 
         name = content['service_name']
         vendor = content['service_vendor']
@@ -2913,20 +2915,20 @@ class Adapter:
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
-            print('this SP is a Sonata')  
+            #print('this SP is a Sonata')  
             
             ### package operations
 
             package_id = self.getVnVPackagebyId(name,vendor,version)
-            print (package_id)
+            logging.debug (package_id)
             download_pkg = self.downloadPackageTGO(package_id)
-            print (download_pkg)            
+            logging.debug (download_pkg)            
             download_pkg_json = json.loads(download_pkg)
-            print (download_pkg_json)
+            logging.debug (download_pkg_json)
             package_path = download_pkg_json['package']
-            print (package_path)
+            logging.debug (package_path)
             upload_pkg = self.uploadPackage(package_path)
-            print (upload_pkg)
+            logging.debug (upload_pkg)
 
             #package_id = self.getServiceInstantiations(name,vendor,version)
             #download_pkg = self.downloadPackageTGO(package_id)
@@ -2944,10 +2946,11 @@ class Adapter:
             except:
                 #iname = download_pkg_json['package']
                 #instance_name = iname[:-4]
-                print ("hi")
+                #print ("hi")
+                logging.debug("Instance name not found")
 
             instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
-            print (instantiate_str)
+            logging.debug (instantiate_str)
             instantiate_str_replaced = instantiate_str.replace("'","\"")  
             instantiate_json = json.loads(instantiate_str_replaced)
 
@@ -2955,26 +2958,26 @@ class Adapter:
             print (instantiate_json)
             instantiation_call = self.instantiation(instantiate_str)
 
-            print (instantiation_call)
+            logging.debug (instantiation_call)
 
             instantiation_request_json_dumps = json.dumps(instantiation_call)
-            print (instantiation_request_json_dumps)
+            #print (instantiation_request_json_dumps)
             #print (instantiation_request_json_dumps['id'])
 
             #instantiation_request_json = json.loads(instantiation_request_json_dumps)
             instantiation_request_json = json.loads(instantiation_call)
-            print (instantiation_request_json)
-            print (instantiation_request_json['id'])
+            #print (instantiation_request_json)
+            #print (instantiation_request_json['id'])
             #print (instantiation_request_json[0][0])
             
             #request_json_loaded = instantiation_request_json.get_json()
             instantiation_request_id = instantiation_request_json['id']
             #instantiation_request_id = instantiation_call['id']
-            print (instantiation_request_id)
+            logging.debug (instantiation_request_id)
 
 
             instance_status = self.wait_for_instantiation(instantiation_request_id)
-            print (instance_status)
+            logging.debug (instance_status)
 
 
 
@@ -2984,13 +2987,13 @@ class Adapter:
 
             if instance_status == 'READY':
                 instantiation_info = self.instantiationInfoCurator(instantiation_request_id)
-                print (instantiation_info)                         
+                logging.debug (instantiation_info)                         
             if instance_status == 'ERROR':
                 instantiation_info = "Instantiation error"
-                print (instantiation_info)              
+                logging.debug (instantiation_info)              
 
 
-
+        logging.debug(instantiation_info)
         return instantiation_info
             
 
@@ -3001,19 +3004,20 @@ class Adapter:
         status = None
         while status == None:
             status =  self.getRequestStatus(id)
-            print (status)
+            logging.debug (status)
             if status == None:
                 time.sleep(5)
         while status == 'NEW':
             status =  self.getRequestStatus(id)
-            print (status)
+            logging.debug (status)
             if status == 'NEW':
                 time.sleep(5)        
         while status == 'INSTANTIATING':
             status =  self.getRequestStatus(id)
-            print (status)
+            logging.debug (status)
             if status == 'INSTANTIATING':
                 time.sleep(5)                             
+        logging.debug(status)
         return status
         
 
@@ -3021,31 +3025,33 @@ class Adapter:
 
     def getRequestStatus(self,id):
         logging.info("get request status starts")
-        print ("getRequestStatus begins")
+        #print ("getRequestStatus begins")
         status_call = self.instantiationStatus(id)
-        print(status_call)
+        logging.debug(status_call)
 
         instantiation_request_json_dumps = json.dumps(status_call)
-        print (instantiation_request_json_dumps)
+        logging.debug (instantiation_request_json_dumps)
         #print (instantiation_request_json_dumps['id'])
 
         #instantiation_request_json = json.loads(instantiation_request_json_dumps)
         instantiation_request_json = json.loads(status_call)
-        print (instantiation_request_json)
-        print (instantiation_request_json['id'])
-        print (instantiation_request_json['status'])
+        #print (instantiation_request_json)
+        #print (instantiation_request_json['id'])
+        #print (instantiation_request_json['status'])
 
 
 
         #request_json = request.get_json()
 
         status = instantiation_request_json['status']
+        logging.debug(status)
         return (status)
 
     def getRequestInstanceId(self,id):
         logging.info("get request if starts")
         request = self.instantiationStatus(id)
         request_json = request.get_json()
+        logging.debug(request_json['instance_uuid'])
         return (request_json['instance_uuid'])
 
 
@@ -3053,8 +3059,8 @@ class Adapter:
     def DownloadUploadTest(self,request):
         logging.info("download upload test starts")
         content = request.get_json()
-        print ("request content:")
-        print (content)
+        #print ("request content:")
+        logging.debug (content)
 
         name = content['service_name']
         vendor = content['service_vendor']
@@ -3072,6 +3078,7 @@ class Adapter:
         
         upload_pkg = self.uploadPackage(package_path)   
 
+        logging.debug(upload_pkg)
         return upload_pkg          
 
 
@@ -3080,8 +3087,8 @@ class Adapter:
     def instantiateService(self,request): 
         logging.info("instantiate service starts")
         content = request.get_json()
-        print ("request content:")
-        print (content)
+        #print ("request content:")
+        logging.debug (content)
         name = content['service_name']
         vendor = content['service_vendor']
         version = content['service_version']        
@@ -3090,7 +3097,7 @@ class Adapter:
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
-            print('this SP is a Sonata')  
+            #print('this SP is a Sonata')  
             
             ### package operations
 
@@ -3098,15 +3105,28 @@ class Adapter:
             vnv_service_id = self.getVnVServiceId(name,vendor,version)
             package_id = self.getPackageIdfromServiceId(vnv_service_id)
             #package_id = self.getVnVPackagebyId(name,vendor,version)
-            print (package_id)
+            logging.debug (package_id)
             download_pkg = self.downloadPackageTGO(package_id)
-            print (download_pkg)            
+            logging.debug (download_pkg)            
             download_pkg_json = json.loads(download_pkg)
-            print (download_pkg_json)
+            logging.debug (download_pkg_json)
             package_path = download_pkg_json['package']
-            print (package_path)
-            upload_pkg = self.uploadPackage(package_path)
-            print (upload_pkg)
+            logging.debug (package_path)
+            
+            ###### commented for try test ffor when the service already exists in the SP
+            #upload_pkg = self.uploadPackage(package_path)            
+            #logging.debug (upload_pkg)
+
+            try:
+                service_id = self.getServiceId(name,vendor,version)
+                if service_id:
+                    logging.debug("The Service is already in the SP")
+
+            except:
+                logging.debug:("The Service is not in the SP  ") 
+                upload_pkg = self.uploadPackage(package_path)  
+                logging.debug (upload_pkg) 
+                
 
             time.sleep(15)
             
@@ -3119,14 +3139,15 @@ class Adapter:
             except:
                 #iname = download_pkg_json['package']
                 #instance_name = iname[:-4]
-                print ("hi")
+                #print ("hi")
+                logging.debug("No instance name found")
 
             instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
-            print (instantiate_str)
+            logging.debug (instantiate_str)
             instantiate_str_replaced = instantiate_str.replace("'","\"")  
             instantiate_json = json.loads(instantiate_str_replaced)
             #instantiate_json_replaced = instantiate_json.replace("'","\"")            
-            print (instantiate_json)
+            logging.debug (instantiate_json)
             instantiation_call = self.instantiation(instantiate_str)       
 
             #try:
@@ -3145,7 +3166,8 @@ class Adapter:
 
             string_inicial = "{\"package_id\": \"" + package_id + "\","
             request_response = string_inicial + instantiation_call_str_replaced_2
-            
+
+            logging.debug(request_response)   
             return (request_response)	
 
             #return (instantiation_call)	
@@ -3155,28 +3177,28 @@ class Adapter:
 
     def SonataInstantiateCallback(self,callback,instantiation_call):
         logging.info("sonata instantiate callback starts")
-        print ("sonata instantiate callback start")
+        #print ("sonata instantiate callback start")
                 
-        print (instantiation_call)
+        logging.debug (instantiation_call)
 
         instantiation_request_json_dumps = json.dumps(instantiation_call)
-        print (instantiation_request_json_dumps)
+        logging.debug (instantiation_request_json_dumps)
         #print (instantiation_request_json_dumps['id'])
 
         #instantiation_request_json = json.loads(instantiation_request_json_dumps)
         instantiation_request_json = json.loads(instantiation_call)
-        print (instantiation_request_json)
-        print (instantiation_request_json['id'])
+        logging.debug (instantiation_request_json)
+        logging.debug (instantiation_request_json['id'])
         #print (instantiation_request_json[0][0])
         
         #request_json_loaded = instantiation_request_json.get_json()
         instantiation_request_id = instantiation_request_json['id']
         #instantiation_request_id = instantiation_call['id']
-        print (instantiation_request_id)
+        logging.debug (instantiation_request_id)
 
 
         instance_status = self.wait_for_instantiation(instantiation_request_id)
-        print (instance_status)
+        logging.debug (instance_status)
 
 
         #instance_id = self.getRequestInstanceId(instantiation_request_id)
@@ -3185,13 +3207,13 @@ class Adapter:
 
         if instance_status == 'READY':
             instantiation_info = self.instantiationInfoCurator(instantiation_request_id)
-            print (instantiation_info) 
+            logging.debug (instantiation_info) 
             instantiation_info_str = instantiation_info.__str__()
             string_replaced = instantiation_info_str.replace("'","\"")        
             callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  string_replaced  +  "' " + callback        
-            print (callback_post)		
+            logging.debug (callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
-            print(call)	
+            logging.debug(call)	
 
             monitoring_callback = self.getMonitoringURLs()
             info_monitoring =self.instantiationInfoMonitoring(instantiation_request_id)	
@@ -3199,7 +3221,7 @@ class Adapter:
             info_monitoring_str = info_monitoring.__str__()
             monitoring_string_replaced = info_monitoring_str.replace("'","\"")        
             monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
-            print (monitoring_callback_post)		
+            logging.debug (monitoring_callback_post)		
             call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
 
 
@@ -3207,18 +3229,18 @@ class Adapter:
 
             instantiation_info_json = json.loads(instantiation_info)
             inst_error = instantiation_info_json['error']
-            print ("This is the instantiation error")
-            print (inst_error)
+            #logging.debug ("This is the instantiation error")
+            logging.error (inst_error)
 
             #callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"Instantiation error\"}' " + callback        
             callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
-            print (callback_post)		
+            logging.debug (callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
-            print(call)
+            logging.debug(call)
 
             monitoring_callback = self.getMonitoringURLs()
             monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
-            print (monitoring_callback_post)		
+            logging.debug (monitoring_callback_post)		
             call_mon = subprocess.check_output([monitoring_callback_post], shell=True)   
 
         #instantiation_info_str = instantiation_info.__str__()
@@ -3228,19 +3250,16 @@ class Adapter:
         #call = subprocess.check_output([callback_post], shell=True)
         #print(call)		
         
-        print ("sonata instantiate callback ends")        
-
-
-
+        logging.info ("sonata instantiate callback ends")        
 
 
     def instantiateServiceTest(self,request): 
         logging.info("instantiate service starts")
         content = request.get_json()
-        print ("request content:")
-        print (content)
-        print (" - ")    
-        print (" - ")
+        #print ("request content:")
+        logging.debug (content)
+        #print (" - ")    
+        #print (" - ")
         name = content['service_name']
         vendor = content['service_vendor']
         version = content['service_version']        
@@ -3249,13 +3268,13 @@ class Adapter:
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
-            print('this SP is a Sonata')  
+            #print('this SP is a Sonata')  
             
             ### package operations
             service_id = self.getServiceId(name,vendor,version)
             package_id = self.getPackageIdfromServiceId(service_id)
             #package_id = self.getVnVPackagebyId(name,vendor,version)
-            print (package_id)
+            logging.debug (package_id)
             #download_pkg = self.downloadPackageTGO(package_id)
             #print (download_pkg)            
             #download_pkg_json = json.loads(download_pkg)
@@ -3276,7 +3295,8 @@ class Adapter:
             except:
                 #iname = download_pkg_json['package']
                 #instance_name = iname[:-4]
-                print ("hi")
+                #print ("hi")
+                logging.error("No instance name found")
 
             #instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
             #print (instantiate_str)
@@ -3298,7 +3318,7 @@ class Adapter:
             #    return (instantiation_call)
 
             #_thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
-            
+            logging.debug(package_id)
             return (package_id)
             #return (instantiation_call)	
 
@@ -3309,30 +3329,30 @@ class Adapter:
 
         vnv_packages = self.getVnVPackages()
         #vnv_packages = self.getPreIntPackages()
-        print (vnv_packages)
+        #print (vnv_packages)
         vnv_packages_json = json.loads(vnv_packages)
-        print (vnv_packages_json)
+        logging.debug (vnv_packages_json)
         
 
         for package in vnv_packages_json:
-            print (package)
+            #logging.debug (package)
             package_pd = package['pd']
-            print (package_pd)
+            #logging.debug (package_pd)
             
             package_content = package_pd['package_content']
-            print (package_content)
+            logging.debug (package_content)
             #package_content_json = json.loads(package_content)
             
             for pc in package_content:
                 nsd_uuid = pc['uuid']
-                print (nsd_uuid)
+                logging.debug (nsd_uuid)
 
                 if nsd_uuid == service_id:
                     correct_package = package
 
         
         package_id = correct_package['uuid']
-        print (package_id)
+        logging.debug (package_id)
         return package_id
 
 
@@ -3343,30 +3363,30 @@ class Adapter:
 
         vnv_packages = self.getPackages()
         #vnv_packages = self.getPreIntPackages()
-        print (vnv_packages)
+        logging.debug (vnv_packages)
         vnv_packages_json = json.loads(vnv_packages)
-        print (vnv_packages_json)
+        logging.debug (vnv_packages_json)
         
 
         for package in vnv_packages_json:
-            print (package)
+            logging.debug (package)
             package_pd = package['pd']
-            print (package_pd)
+            logging.debug (package_pd)
             
             package_content = package_pd['package_content']
-            print (package_content)
+            logging.debug (package_content)
             #package_content_json = json.loads(package_content)
             
             for pc in package_content:
                 nsd_uuid = pc['uuid']
-                print (nsd_uuid)
+                logging.debug (nsd_uuid)
 
                 if nsd_uuid == service_id:
                     correct_package = package
 
         
         package_id = correct_package['uuid']
-        print (package_id)
+        logging.debug (package_id)
         return package_id
 
 
@@ -3376,7 +3396,7 @@ class Adapter:
         url = 'http://pre-int-sp-ath.5gtango.eu:32002/api/v3/packages'
         response = requests.get(url, headers=JSON_CONTENT_HEADER)    
         if response.ok:        
-            #return (response.text, response.status_code, response.headers.items()) 
+            logging.debug(response.text)
             return (response.text)
 
 
@@ -3388,17 +3408,19 @@ class Adapter:
         if my_type == 'sonata':                
 
             url = 'http://tng-cat:4011/api/catalogues/v2/network-services'  
-            print (name,vendor,version)
+            #print (name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
             jjson = json.loads(response_json)
             for x in jjson:
                 print(x)
+                logging.debug(x)
                 if ( x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version ) :
                     print("same name")
                     uuid = x['uuid']
                     print(uuid)  
 
+        logging.debug(uuid)
         return uuid           
 
 
