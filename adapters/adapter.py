@@ -3171,8 +3171,61 @@ class Adapter:
             return (request_response)	
 
             #return (instantiation_call)	
+        if my_type == 'osm':
+            logging.debug("This SP is osm")
+            ### package operations
+            """             
+            vnv_service_id = self.getVnVServiceId(name,vendor,version)
+            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+            logging.debug (package_id)
+            download_pkg = self.downloadPackageTGO(package_id)
+            logging.debug (download_pkg)            
+            download_pkg_json = json.loads(download_pkg)
+            logging.debug (download_pkg_json)
+            package_path = download_pkg_json['package']
+            logging.debug (package_path)            
+            """
 
-		    
+            """
+            try:
+                # comprobamos si el servicio esta en el osm de destino
+                service_id = self.getOSMServiceId(name,vendor,version)
+                if service_id:
+                    logging.debug("The Service is already in the SP")
+
+            except:
+                logging.debug:("The Service is not in the SP  ") 
+                # creamos un array con los path de las funciones de osm que hay en el path donde se ha descargafo el pkg
+                functions_array = self.createFunctionsArray(package_path)
+                
+                for function in functions_array:
+                    function_path = self.getOSMFunctionPath(function)
+                    upload_function = self.uploadOSMFunction(function_path)
+                    logging.debug (upload_function)
+                
+                service_path = self.getOSMServicePath(package_path)
+                upload_service = self.uploadOSMService(service_path) 
+                logging.debug (upload_service) 
+                service_id = self.getUploadedOSMServiceId(upload_service)
+                
+            time.sleep(15)
+            """
+            """
+            ## INSTANCIANDO
+            nsd_name = service_id
+            ns_name = content['ns_name']
+            vim_account = content['vim_account']
+
+            instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": + \"vim_account\" + "}"
+            logging.debug(instantiate_str)
+
+            instantiation_call = self.instantiation(instantiate_str)    
+            loggin.debug (instantiation_call)
+
+            _thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
+            
+            return (instantiation_call)
+            """
 
 
     def SonataInstantiateCallback(self,callback,instantiation_call):
