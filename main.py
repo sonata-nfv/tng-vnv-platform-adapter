@@ -172,7 +172,7 @@ def adapter_get_project_name(service_platform):
 @app.route('/adapters/<service_platform>/get_host')
 def adapter_get_host(service_platform):
     ad = adapter.Adapter(service_platform)
-    return ad.getDBHost()
+    return ad.getHostIp()
   
 
 @app.route('/adapters/<service_platform>/services', methods=['GET'])

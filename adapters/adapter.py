@@ -346,7 +346,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':               
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -354,7 +354,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             logging.info(sp_host_2)
@@ -378,7 +379,7 @@ class Adapter:
 
         my_type =  self.getDBType()
         if my_type == 'sonata':    
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -386,7 +387,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -408,7 +410,7 @@ class Adapter:
 
         my_type =  self.getDBType()
         if my_type == 'sonata':    
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -416,7 +418,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -460,7 +463,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':              
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -468,7 +471,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -512,7 +516,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':               
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -520,7 +524,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             url = sp_host_2 + ':32002/api/v3/packages'
@@ -540,7 +545,7 @@ class Adapter:
 
         if my_type == 'onap':               
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             print (sp_host_0)
             sp_host = sp_host_0.__str__()
             print (sp_host)
@@ -572,7 +577,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'osm':               
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -580,7 +585,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -653,7 +659,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'osm':               
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -661,7 +667,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -708,7 +715,7 @@ class Adapter:
         print (my_type)
         if my_type == 'sonata':                        
  
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -716,7 +723,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -730,14 +738,15 @@ class Adapter:
 
         if my_type == 'osm':                
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -779,7 +788,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':                
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -787,7 +796,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -800,7 +810,7 @@ class Adapter:
 
         if my_type == 'osm':                
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -808,7 +818,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -840,7 +851,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':                
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -848,7 +859,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -871,14 +883,15 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':                
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -917,7 +930,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':                
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -925,7 +938,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -962,7 +976,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':                
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -970,7 +984,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1008,7 +1023,7 @@ class Adapter:
         my_type =  self.getDBType()
         if my_type == 'sonata':                
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1016,7 +1031,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1042,7 +1058,7 @@ class Adapter:
 
         if my_type == 'sonata':
             #print('this SP is a Sonata')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1050,7 +1066,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1069,14 +1086,15 @@ class Adapter:
 
         if my_type == 'osm':
             #print('this SP is a OSM')   
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -1118,7 +1136,7 @@ class Adapter:
 
         if my_type == 'sonata':
             #print('this SP is a Sonata')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1126,7 +1144,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1145,14 +1164,15 @@ class Adapter:
             #return "status"
         if my_type == 'osm':
             #print('this SP is a OSM')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -1193,7 +1213,7 @@ class Adapter:
 
         if my_type == 'onap':
             print('this SP is ONAP')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             print (sp_host_0)
             sp_host = sp_host_0.__str__()
             print (sp_host)
@@ -1201,7 +1221,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             print ("sp1 es: ")
             print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             print ("sp2 es: ")
             print (sp_host_2)
             url = sp_host_2 + '}/serviceInstances/v4'
@@ -1221,7 +1242,7 @@ class Adapter:
 
         if my_type == 'sonata':
             #print('this SP is a Sonata')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1229,7 +1250,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             url = sp_host_2 + ':32002/api/v3/requests'
@@ -1260,7 +1282,7 @@ class Adapter:
         if my_type == 'osm':
             print('this SP is a OSM')  
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1268,7 +1290,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1352,7 +1375,7 @@ class Adapter:
 
         if my_type == 'onap':
             #print('this SP is ONAP')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1360,7 +1383,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             url = sp_host_2
@@ -1388,7 +1412,7 @@ class Adapter:
 
         if my_type == 'sonata':
             #print('this SP is a Sonata')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1396,7 +1420,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             url = sp_host_2 + ':32002/api/v3/requests'
@@ -1416,7 +1441,7 @@ class Adapter:
         if my_type == 'osm':
             #print('this SP is a OSM')  
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1424,7 +1449,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1486,7 +1512,7 @@ class Adapter:
         if my_type == 'osm':
             print('this SP is a OSM')
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1494,7 +1520,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             #url = sp_host_2 + '/requests'
@@ -1593,14 +1620,15 @@ class Adapter:
 
         if my_type == 'osm':
             #print('this SP is a OSM')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -1656,14 +1684,15 @@ class Adapter:
 
         if my_type == 'osm':
             #print('this SP is a OSM')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -1695,7 +1724,7 @@ class Adapter:
 
         if my_type == 'sonata':
             #print('this SP is a Sonata')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1703,7 +1732,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1713,14 +1743,15 @@ class Adapter:
 
         if my_type == 'osm':
             #print('this SP is a OSM')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -1759,14 +1790,15 @@ class Adapter:
 
         if my_type == 'osm':
             #print('this SP is a OSM')
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -1804,7 +1836,7 @@ class Adapter:
     def downloadPackageSonata(self,package_id):
         logging.info("download package sonata starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}                              
-        sp_host_0 = self.getDBHost()
+        #sp_host_0 = self.getDBHost()
         #print (sp_host_0)
         sp_host = sp_host_0.__str__()
         #print (sp_host)
@@ -1812,7 +1844,8 @@ class Adapter:
         sp_host_1 = sp_host[4:]
         #print ("sp1 es: ")
         #print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
+        #sp_host_2 = sp_host_1[:-10]
+        sp_host_2 = self.getHostIp()
         #print ("sp2 es: ")
         #print (sp_host_2)
         url = sp_host_2 + ':32002/api/v3/packages'
@@ -1839,7 +1872,7 @@ class Adapter:
             logging.info("delete osm service starts")
             #print('this SP is a OSM')  
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1847,7 +1880,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1885,7 +1919,7 @@ class Adapter:
             logging.info("delete osm function starts")
             #print('this SP is a OSM')  
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -1893,7 +1927,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             ##print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -1927,7 +1962,7 @@ class Adapter:
         if my_type == 'osm':
             #print('this SP is a OSM')
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             logging.debug (sp_host_0)
             sp_host = sp_host_0.__str__()
             logging.debug (sp_host)
@@ -1935,7 +1970,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             logging.debug ("sp1 es: ")
             logging.debug (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             logging.debug ("sp2 es: ")
             logging.debug (sp_host_2)
             #url = sp_host_2 + '/requests'
@@ -2002,14 +2038,15 @@ class Adapter:
 
     def getOSMInstaceStatus(self,service_id): 
             logging.info("get osm instance status starts")            
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
             sp_host_3 = sp_host_2[7:]
@@ -2269,7 +2306,7 @@ class Adapter:
             #print ("aaaaaa")    
 
 
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -2277,7 +2314,8 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
+            sp_host_2 = self.getHostIp()
             #print ("sp2 es: ")
             #print (sp_host_2)
 
@@ -2312,7 +2350,7 @@ class Adapter:
         logging.info("get sonata token starts")
         JSON_CONTENT_HEADER = {'Content-type':'application/json'}   
         #print('this SP is a Sonata')
-        sp_host_0 = self.getDBHost()
+        #sp_host_0 = self.getDBHost()
         #print (sp_host_0)
         sp_host = sp_host_0.__str__()
         #print (sp_host)
@@ -2320,7 +2358,8 @@ class Adapter:
         sp_host_1 = sp_host[4:]
         #print ("sp1 es: ")
         #print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
+        #sp_host_2 = sp_host_1[:-10]
+        sp_host_2 = self.getHostIp()
         #print ("sp2 es: ")
         #print (sp_host_2)
         #url = sp_host_2 + '/requests'
@@ -2387,14 +2426,15 @@ class Adapter:
     def osmInstantiationIPs(self,request):    
         logging.info("osm instantiation ips starts")
         #print('this SP is a OSM')   
-        sp_host_0 = self.getDBHost()
+        #sp_host_0 = self.getDBHost()
         #print (sp_host_0)
         sp_host = sp_host_0.__str__()
         #print (sp_host)
         sp_host_1 = sp_host[4:]
         #print ("sp1 es: ")
         #print (sp_host_1)
-        sp_host_2 = sp_host_1[:-10]
+        #sp_host_2 = sp_host_1[:-10]
+        sp_host_2 = self.getHostIp()
         #print ("sp2 es: ")
         #print (sp_host_2)
         sp_host_3 = sp_host_2[7:]
@@ -3565,7 +3605,7 @@ class Adapter:
 
         my_type =  self.getDBType()
         if my_type == 'sonata':    
-            sp_host_0 = self.getDBHost()
+            #sp_host_0 = self.getDBHost()
             #print (sp_host_0)
             sp_host = sp_host_0.__str__()
             #print (sp_host)
@@ -3573,9 +3613,10 @@ class Adapter:
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
             #print (sp_host_1)
-            sp_host_2 = sp_host_1[:-10]
+            #sp_host_2 = sp_host_1[:-10]
             #print ("sp2 es: ")
             #print (sp_host_2)
+            sp_host_2 = self.getHostIp()
 
             service_id = self.getServiceId(name,vendor,version)
             package_id = self.getSPPackageIdfromServiceId(service_id)            
