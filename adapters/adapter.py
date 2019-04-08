@@ -1951,40 +1951,51 @@ class Adapter:
         vendor = content['service_vendor']
         version = content['service_version']        
         callback = content['callback']
+        vnv_service_id = None
+        package_id = None
+        download_pkg = None
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
             
             ### package operations
-            vnv_service_id = self.getVnVServiceId(name,vendor,version)
-            package_id = self.getPackageIdfromServiceId(vnv_service_id)
-            #package_id = self.getVnVPackagebyId(name,vendor,version)
-            logging.debug (package_id)
-            download_pkg = self.downloadPackageTGO(package_id)
-            logging.debug (download_pkg)            
-            download_pkg_json = json.loads(download_pkg)
-            logging.debug (download_pkg_json)
-            package_path = download_pkg_json['package']
-            logging.debug (package_path)
+            try:
+                vnv_service_id = self.getVnVServiceId(name,vendor,version)
+            except:
+                msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
+                return msg   
+
+            try: 
+                package_id = self.getPackageIdfromServiceId(vnv_service_id)
+                logging.debug (package_id)
+            except:
+                msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
+                return msg   
+            
+            try:
+                download_pkg = self.downloadPackageTGO(package_id)
+                logging.debug (download_pkg)            
+                download_pkg_json = json.loads(download_pkg)
+                logging.debug (download_pkg_json)
+                package_path = download_pkg_json['package']
+                logging.debug (package_path)
+            except:
+                msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
+                return msg                  
             
             ###### commented for try test ffor when the service already exists in the SP
-            #upload_pkg = self.uploadPackage(package_path)            
-            #logging.debug (upload_pkg)
-
             try:
                 service_id = self.getServiceId(name,vendor,version)
                 if service_id:
                     logging.debug("The Service is already in the SP")
-
             except:
                 logging.debug:("The Service is not in the SP  ") 
                 upload_pkg = self.uploadPackage(package_path)  
-                logging.debug (upload_pkg) 
-                
-            time.sleep(15)
-            
-            ### service operations
+                logging.debug (upload_pkg)                 
+            #sleep for the unpackager to save descriptors
+            time.sleep(15)        
 
+            ### service operations
             service_id = self.getServiceId(name,vendor,version)
             time.sleep(5)
             try:
