@@ -2683,8 +2683,13 @@ class Adapter:
             instance_request = self.instantiationStatus(id) 
             logging.debug (instance_request)               
             instance_request_json = json.loads(instance_request)
-            instance_uuid = instance_request_json['instance_uuid']
-            logging.debug (instance_uuid)
+            try:
+                instance_uuid = instance_request_json['instance_uuid']
+                logging.debug (instance_uuid)
+            except:
+                error = instance_request_json['error']
+                logging.debug (error)
+                return instance_request_json
 
             url = self.getHostIp()
             logging.debug (url)
