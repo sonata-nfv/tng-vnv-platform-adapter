@@ -2903,6 +2903,80 @@ class Adapter:
             return response_str_replaced_2
             #response_4 = response_3[1:]
             #return response_4
+        
+        if my_type == 'osm':
+            instance_request = self.instantiationStatus(id) 
+            logging.debug (instance_request) 
+            instance_request_json =  json.loads(instance_request)
+            ns_id = instance_request_json['ns-instance-config-ref']
+            logging.debug (ns_id)
+
+            response = "{\"ns_instance_uuid\": \"" + ns_id + "\","
+            response = response + "\"platform_type\": \"osm\","
+            response = response + "\"functions\": \"["
+
+            vnfr_array = instance_request_json['constituent-vnfr-ref']
+            print (vnfr_array)
+            for vnfr_id in vnfr_array:
+                print ("FUCNTION")
+                print(vnfr_id)
+                response_function = "{\"id\": \"" + vnfr_id + "\", \"function_type\": " + ",, "
+                
+
+                function_request = self.functionRecordOSM(vnfr_id)
+                function_request_json =  json.loads(function_request)
+                print (function_request_json)
+                vdur = function_request_json['vdur']
+                #vdur_json = json.loads(vdur)
+                print (vdur)
+                for vdu in vdur:
+                    interfaces = vdu['interfaces']
+                    print (interfaces)
+                    for interface in interfaces:                       
+                        print (interface)
+                        address = interface['ip-address']
+                        print (address)
+                        name = interface['name']
+                        print (name)
+
+                response_function = "{ + + },"
+
+            print (response)
+            return response
+
+
+
+
+    def functionRecordOSM(self, vnfr_id):
+
+        url = self.getHostIp()
+        token = self.getOSMToken(vnfr_id)
+        logging.debug (token)
+
+        #content = request.get_json()
+        #ns_id = content['ns_id']
+        #ns_id = request
+        #logging.debug (ns_id)            
+        
+        url = url + ':9999/osm/nslcm/v1/vnf_instances'
+        url_2 = url.replace("http","https")
+        #logging.debug (url_2)
+
+        
+        status_ns = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        status_ns_2 = status_ns +token + "\" "
+        status_ns_3 = status_ns_2 + " " + url_2 + "/" + vnfr_id          
+        logging.debug (status_ns_3)
+
+        vnfr = subprocess.check_output([status_ns_3], shell=True)
+        vnfr = subprocess.check_output([status_ns_3], shell=True)
+        logging.debug (vnfr)
+        return (vnfr)  
+        
+        
+
+
+
 
 
 
