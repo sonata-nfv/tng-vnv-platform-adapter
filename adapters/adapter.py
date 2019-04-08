@@ -2952,14 +2952,19 @@ class Adapter:
             for vnfr_id in vnfr_array:
                 print ("FUCNTION")
                 print(vnfr_id)
-                response_function = "{\"id\": \"" + vnfr_id + "\", \"function_type\": " + ",, "
+                response_function = "{\"id\": \"" + vnfr_id + "\", \"function_type\": " + "osm_function,"
                 
 
                 function_request = self.functionRecordOSM(vnfr_id)
                 function_request_json =  json.loads(function_request)
                 print (function_request_json)
-                vdur = function_request_json['vdur']
-                #vdur_json = json.loads(vdur)
+                vnfd_name = function_request_json['vnfd-ref']
+
+                response_function = response_function + "\"name\": \"" + vnfd_name + "\","
+
+                response_function = response_function + "\"endpoints\": ["
+
+                vdur = function_request_json['vdur']                                
                 print (vdur)
                 for vdu in vdur:
                     interfaces = vdu['interfaces']
@@ -3154,10 +3159,13 @@ class Adapter:
 
 
         #request_json = request.get_json()
-
-        status = instantiation_request_json['status']
-        logging.debug(status)
-        return (status)
+        try:
+            status = instantiation_request_json['status']
+            logging.debug(status)
+            return (status)
+        except:
+            msg = "{\"error\": \"the record's status has no value\"}"
+            return (msg) 
 
     def getRequestInstanceId(self,id):
         logging.info("get request if starts")
