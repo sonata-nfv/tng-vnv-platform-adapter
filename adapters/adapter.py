@@ -2682,14 +2682,16 @@ class Adapter:
             #print (response_json) 
             instance_request = self.instantiationStatus(id) 
             logging.debug (instance_request)               
-            instance_request_json = json.loads(instance_request)
+            
             try:
+                instance_request_json = json.loads(instance_request)
                 instance_uuid = instance_request_json['instance_uuid']
                 logging.debug (instance_uuid)
             except:
-                error = instance_request_json['error']
+                error = "error in the request"
                 logging.debug (error)
-                return instance_request_json
+                msg = "{\"error\": \"error in the request, check the SP\"}"
+                return msg
 
             url = self.getHostIp()
             logging.debug (url)
