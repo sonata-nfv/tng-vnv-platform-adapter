@@ -14,9 +14,6 @@ from adapters import serviceplatform as serviceplatform
 from models import utils
 from models import users
 
-
-
-
 import psycopg2
 
 
