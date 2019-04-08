@@ -382,7 +382,7 @@ def getWimInfo(service_platform,wim_name):
 
     
 ##### OSM specific endpoints ####
-@app.route('/adapters/<service_platform>/get_token', methods=['POST'])
+@app.route('/adapters/<service_platform>/get_token', methods=['GET'])
 def adapter_osm_get_token(service_platform):
     print (request.is_json)
     content = request.get_json()

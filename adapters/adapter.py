@@ -1104,6 +1104,8 @@ class Adapter:
             logging.debug (status_ns_3)
 
             status = subprocess.check_output([status_ns_3], shell=True)
+            status = subprocess.check_output([status_ns_3], shell=True)
+            logging.debug (status)
             return (status)       
 
           
@@ -1165,9 +1167,12 @@ class Adapter:
             url_2 = url.replace("http","https")
             logging.debug (url_2)
             
-            instances_1 = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+            #instances_1 = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+            instances_1 = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "                    
             instances_2 = instances_1 +token + "\" "  + url_2
             logging.debug (instances_2)
+            
+            ns_instances = subprocess.check_output([instances_2], shell=True)
             ns_instances = subprocess.check_output([instances_2], shell=True)
             #return jsonify(upload_nsd_4) 
             return (ns_instances)         
@@ -1481,10 +1486,10 @@ class Adapter:
         if my_type == 'osm':
             print('this SP is a OSM')
 
-            #sp_host_0 = self.getDBHost()
-            print (sp_host_0)
-            #sp_host = sp_host_0.__str__()
-            print (sp_host)
+            sp_host_0 = self.getDBHost()
+            #print (sp_host_0)
+            sp_host = sp_host_0.__str__()
+            #print (sp_host)
             #print (self.getDBHost())
             sp_host_1 = sp_host[4:]
             #print ("sp1 es: ")
@@ -1539,6 +1544,7 @@ class Adapter:
             
             data_for_token= "{username: \'" +username_for_token+ "\', password: \'" +password_for_token+ "\', project_id: \'" +project_id_for_token+ "\'}"
             #print (data)
+            
 
             get_token = requests.post(url_2,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
             logging.debug (get_token.text)
