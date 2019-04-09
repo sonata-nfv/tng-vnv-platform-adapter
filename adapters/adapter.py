@@ -1483,6 +1483,7 @@ class Adapter:
         logging.debug (status_ns_3)
 
         status = subprocess.check_output([status_ns_3], shell=True)
+        status = subprocess.check_output([status_ns_3], shell=True)
         logging.debug (json.loads(status))
         ns_instance_json = json.loads(status)
         vnfs_array_json = ns_instance_json['constituent-vnfr-ref']
@@ -1833,19 +1834,20 @@ class Adapter:
 
             response = "{\"ns_instance_uuid\": \"" + ns_id + "\","
             response = response + "\"platform_type\": \"osm\","
-            response = response + "\"functions\": \"["
+            response = response + "\"functions\": ["
 
             vnfr_array = instance_request_json['constituent-vnfr-ref']
             print (vnfr_array)
+            response_functions = " "
             for vnfr_id in vnfr_array:
-                print ("FUCNTION")
+                print ("FUCNTIONS")
                 print(vnfr_id)
-                response_function = "{\"id\": \"" + vnfr_id + "\", \"function_type\": " + "osm_function,"                
+                response_function = "{\"id\": \"" + vnfr_id + "\", \"function_type\": " + "\"vnf\","                
 
                 function_request = self.functionRecordOSM(vnfr_id)
                 function_request_json =  json.loads(function_request)
                 print (function_request_json)
-                vnfd_name = function_request_json['vnfd-ref']
+                vnfd_name = function_request_json['vnfd-ref']                
                 response_function = response_function + "\"name\": \"" + vnfd_name + "\","
                 response_function = response_function + "\"endpoints\": ["
                 vdur = function_request_json['vdur']                                
@@ -1858,9 +1860,23 @@ class Adapter:
                         address = interface['ip-address']
                         print (address)
                         name = interface['name']
+                        type = interface['name']
                         print (name)
-                response_function = "{ + + },"
+                        response_interface = "{\"name\": \"" + name + "\", \"type\": \"" + type + "\",\"address\":\"" + address + "\"" + "},"
 
+                        response_function = response_function + response_interface
+
+                response_function_2 = response_function[:-1]
+                response_function_2 = response_function_2 + "]"
+                #response_function = "{ + + },"
+                print("function-----function")
+                print (response_function_2)
+
+            response_functions = response_functions + response_function_2
+            response_functions = response_functions + "}]"
+            
+            response = response + response_functions
+            response = response + "}"
             print (response)
             return response
 
