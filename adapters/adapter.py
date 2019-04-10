@@ -651,12 +651,18 @@ class Adapter:
             response_json = response.content
             logging.debug (response_json)
             jjson = json.loads(response_json)
-            pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
+            #pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
             
-            if pkg:
+            for x in jjson:
+                if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version :
+                    logging.debug(x['uuid'])
+                    return x['uuid']
 
+            '''
+            if pkg:
                 logging.debug(pkg)
-                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['nsd']['name'] == name)]            
+                #uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['nsd']['name'] == name)]            
+                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['nsd']['name'] == name)]
                 logging.debug(uuid_to_delete_1)
                 uuid_0 = uuid_to_delete_1.__str__()
                 uuid_to_delete_2 = uuid_0[2:]
@@ -668,6 +674,7 @@ class Adapter:
             if response.ok:                                        
                     logging.debug(uuid_to_delete_3)
                     return uuid_to_delete_3
+            '''
 
 
     def getPackageId(self,name,vendor,version):    
@@ -2013,6 +2020,7 @@ class Adapter:
 
             ### service operations
             service_id = self.getServiceId(name,vendor,version)
+            logging.debug (service_id)
             time.sleep(5)
             try:
                 instance_name = content['instance_name']
@@ -2021,17 +2029,27 @@ class Adapter:
 
             instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
             logging.debug (instantiate_str)
-            instantiate_str_replaced = instantiate_str.replace("'","\"")  
-            instantiate_json = json.loads(instantiate_str_replaced)          
-            logging.debug (instantiate_json)
-            instantiation_call = self.instantiation(instantiate_str)       
+            #instantiate_str_replaced = instantiate_str.replace("'","\"")
+            #logging.debug (instantiate_str_replaced)  
+            #instantiate_json = json.loads(instantiate_str_replaced)          
+            #logging.debug (instantiate_json)
 
+            instantiation_call = None
+            try:
+                instantiation_call = self.instantiation(instantiate_str)  
+                logging.debug (instantiation_call)     
+            except:
+                msg = "{\"error\": \"error in the instantiation process, check the SP logs\"}"
+                return msg  
+            
+            logging.debug (instantiation_call)
             _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
             
             instantiation_call_str = instantiation_call.__str__()
             instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
             instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
 
+            #package_id = self.getSPPackageIdfromServiceId(service_id)
             string_inicial = "{\"package_id\": \"" + package_id + "\","
             request_response = string_inicial + instantiation_call_str_replaced_2
 
@@ -2148,33 +2166,47 @@ class Adapter:
         vendor = content['service_vendor']
         version = content['service_version']        
         callback = content['callback']
-        my_type =  self.getDBType()      
-        if my_type == 'sonata':            
-            ### package operations
+        my_type =  self.getDBType()   
+        service_id = None   
+        if my_type == 'sonata':
+               ### service operations
             service_id = self.getServiceId(name,vendor,version)
-            package_id = self.getPackageIdfromServiceId(service_id)
-            #package_id = self.getVnVPackagebyId(name,vendor,version)
-            logging.debug (package_id)
-            #download_pkg = self.downloadPackageTGO(package_id)
-            #print (download_pkg)            
-            #download_pkg_json = json.loads(download_pkg)
-            #print (download_pkg_json)
-            #package_path = download_pkg_json['package']
-            #print (package_path)
-            #upload_pkg = self.uploadPackage(package_path)
-            #print (upload_pkg)
-
-            time.sleep(15)
-            
-            ### service operations
+            logging.debug ("this is the service_id")
+            logging.debug (service_id)
             time.sleep(5)
             try:
                 instance_name = content['instance_name']
             except:
-                logging.error("No instance name found")
-            logging.debug(package_id)
-            return (package_id)
-            #return (instantiation_call)	
+                logging.debug("No instance name found")
+
+            instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
+            logging.debug (instantiate_str)
+            #instantiate_str_replaced = instantiate_str.replace("'","\"")
+            #logging.debug (instantiate_str_replaced)  
+            #instantiate_json = json.loads(instantiate_str_replaced)          
+            #logging.debug (instantiate_json)
+
+            instantiation_call = None
+            try:
+                instantiation_call = self.instantiation(instantiate_str)  
+                logging.debug (instantiation_call)     
+            except:
+                msg = "{\"error\": \"error in the instantiation process, check the SP logs\"}"
+                return msg  
+            
+            logging.debug (instantiation_call)
+            _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            
+            instantiation_call_str = instantiation_call.__str__()
+            instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
+            instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
+
+            package_id = self.getSPPackageIdfromServiceId(service_id)
+            string_inicial = "{\"package_id\": \"" + package_id + "\","
+            request_response = string_inicial + instantiation_call_str_replaced_2
+
+            logging.debug(request_response)   
+            return (request_response)		
 
     def getPackageIdfromServiceId (self,service_id):
         logging.info("get package id from service id starts")
