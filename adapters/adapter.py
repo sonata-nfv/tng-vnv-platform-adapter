@@ -2042,10 +2042,12 @@ class Adapter:
                 upload_pkg_json =  json.loads(upload_pkg)
                 upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
                 upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
-                if upload_pkg_status != "success":
+                logging.debug (upload_pkg_status)
+                if upload_pkg_status == "running":
                     logging.debug ("pkg does not finish to upload yet, retying...")
                     time.sleep(1)
                     upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+                    logging.debug (upload_pkg_status)
    
 
             ### service operations
@@ -2055,10 +2057,11 @@ class Adapter:
                 upload_pkg_json =  json.loads(upload_pkg)
                 upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
                 upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
-                if upload_pkg_status != "success":
+                if upload_pkg_status == "running":
                     logging.debug ("pkg does not finish to upload yet, retying...")
                     time.sleep(1)
-                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                
+                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+                    logging.debug (upload_pkg_status)                
             except:
                 logging.error ("Error uploading package to the SP")
             try:
