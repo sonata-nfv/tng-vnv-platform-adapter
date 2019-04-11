@@ -1980,6 +1980,7 @@ class Adapter:
         download_pkg = None
         package_path = None
         thing = None
+        service_id = None
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
