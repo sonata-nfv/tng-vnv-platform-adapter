@@ -2012,13 +2012,19 @@ class Adapter:
                 if service_id:
                     logging.debug("The Service is already in the SP")
             except:
-                logging.debug:("The Service is not in the SP  ") 
+                logging.debug("The Service is not in the SP  ") 
                 upload_pkg = self.uploadPackage(package_path)  
                 logging.debug (upload_pkg)                 
             #sleep for the unpackager to save descriptors
             time.sleep(15)        
 
             ### service operations
+            #try:
+            #    upload_pkg = self.uploadPackage(package_path)
+            #    logging.debug (upload_pkg) 
+            #except:
+            #    logging.debug ("Error uploading package to the SP")
+
             service_id = self.getServiceId(name,vendor,version)
             logging.debug (service_id)
             time.sleep(5)
