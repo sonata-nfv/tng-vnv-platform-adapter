@@ -424,13 +424,14 @@ class Adapter:
         if my_type == 'sonata':               
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + ':32002/api/v3/packages'
+            logging.info("package info:")
             logging.info(package)
             logging.info(url)
             files = {'package': open(package,'rb')}
             upload = requests.post(url, files=files)
-            if request.method == 'POST':
-                logging.debug(upload.text)
-                return upload.text
+            
+            logging.debug(upload.text)
+            return upload.text
 
 
         if my_type == 'onap':               
@@ -1977,6 +1978,8 @@ class Adapter:
         vnv_service_id = None
         package_id = None
         download_pkg = None
+        package_path = None
+        thing = None
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
@@ -2019,14 +2022,17 @@ class Adapter:
             time.sleep(15)        
 
             ### service operations
-            #try:
-            #    upload_pkg = self.uploadPackage(package_path)
-            #    logging.debug (upload_pkg) 
-            #except:
-            #    logging.debug ("Error uploading package to the SP")
+            try:
+                upload_pkg = self.uploadPackage(package_path)
+                logging.debug (upload_pkg) 
+            except:
+                logging.error ("Error uploading package to the SP")
+            try:
+                service_id = self.getServiceId(name,vendor,version)
+                logging.debug (service_id)
+            except:
+                logging.error ("The service is not in the SP. Was the package uploaded?")
 
-            service_id = self.getServiceId(name,vendor,version)
-            logging.debug (service_id)
             time.sleep(5)
             try:
                 instance_name = content['instance_name']
