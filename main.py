@@ -220,6 +220,11 @@ def adapter_get_package_file(service_platform, pkg_id):
     ad = adapter.Adapter(service_platform)
     return ad.getPackageFile(pkg_id)   
 
+@app.route('/adapters/<service_platform>/packages/status/<pkg_process_id>', methods=['GET'])
+def upload_package_status(service_platform, pkg_process_id):
+    ad = adapter.Adapter(service_platform)
+    return ad.uploadPackageStatus(pkg_process_id)   
+
 
 
 
