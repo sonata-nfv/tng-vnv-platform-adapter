@@ -1965,7 +1965,24 @@ class Adapter:
         package_path = download_pkg_json['package']        
         upload_pkg = self.uploadPackage(package_path)  
         logging.debug(upload_pkg)
-        return upload_pkg          
+        return upload_pkg     
+
+
+    def uploadPackageStatus(self,process_uuid):
+
+        logging.info("uploadPackageStatusstarts")
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':32002/api/v3/packages/status/' + process_uuid            
+        logging.info(process_uuid)
+        logging.info(url)           
+        upload_status_curl = requests.post(url, headers=JSON_CONTENT_HEADER) 
+        logging.debug (upload_status_curl.text)
+        upload_status_curl_json = json.loads(upload_status_curl.text)        
+        logging.debug(upload_status_curl_json)
+        status = upload_status_curl_json['package_process_status']
+        return status
 
     def instantiateService(self,request): 
         logging.info("instantiate service starts")
@@ -1981,6 +1998,7 @@ class Adapter:
         package_path = None
         thing = None
         service_id = None
+        upload_pkg = None
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
@@ -2018,14 +2036,27 @@ class Adapter:
             except:
                 logging.debug("The Service is not in the SP  ") 
                 upload_pkg = self.uploadPackage(package_path)  
-                logging.debug (upload_pkg)                 
-            #sleep for the unpackager to save descriptors
-            time.sleep(15)        
+                logging.debug (upload_pkg)
+                upload_pkg_json =  json.loads(upload_pkg)
+                upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
+                upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+                if upload_pkg_status != "success":
+                    logging.debug ("pkg does not finish to upload yet, retying...")
+                    time.sleep(1)
+                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+   
 
             ### service operations
             try:
-                upload_pkg = self.uploadPackage(package_path)
-                logging.debug (upload_pkg) 
+                upload_pkg = self.uploadPackage(package_path)  
+                logging.debug (upload_pkg)
+                upload_pkg_json =  json.loads(upload_pkg)
+                upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
+                upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+                if upload_pkg_status != "success":
+                    logging.debug ("pkg does not finish to upload yet, retying...")
+                    time.sleep(1)
+                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                
             except:
                 logging.error ("Error uploading package to the SP")
             try:
