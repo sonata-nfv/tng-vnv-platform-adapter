@@ -1977,11 +1977,13 @@ class Adapter:
         url = sp_host_2 + ':32002/api/v3/packages/status/' + process_uuid            
         logging.info(process_uuid)
         logging.info(url)           
-        upload_status_curl = requests.post(url, headers=JSON_CONTENT_HEADER) 
+        upload_status_curl = requests.get(url, headers=JSON_CONTENT_HEADER) 
+        logging.debug(upload_status_curl)
         logging.debug (upload_status_curl.text)
         upload_status_curl_json = json.loads(upload_status_curl.text)        
         logging.debug(upload_status_curl_json)
         status = upload_status_curl_json['package_process_status']
+        #status = "hola"
         return status
 
     def instantiateService(self,request): 
