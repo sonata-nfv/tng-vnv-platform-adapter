@@ -2024,10 +2024,13 @@ class Adapter:
                 upload_pkg = self.uploadPackage(package_path)
                 logging.debug (upload_pkg) 
             except:
-                logging.debug ("Error uploading package to the SP")
+                logging.error ("Error uploading package to the SP")
+            try:
+                service_id = self.getServiceId(name,vendor,version)
+                logging.debug (service_id)
+            except:
+                logging.error ("The service is not in the SP. Was the package uploaded?")
 
-            service_id = self.getServiceId(name,vendor,version)
-            logging.debug (service_id)
             time.sleep(5)
             try:
                 instance_name = content['instance_name']
