@@ -733,8 +733,11 @@ class Adapter:
             sp_host_2 = self.getHostIp()
 
             url = sp_host_2 + ':32002/api/v3/requests/' +  request
+            time.sleep(2)
             logging.debug (url)            
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            logging.debug (response) 
+            logging.debug (response.text) 
             response_json = response.content
             logging.debug (response_json)            
             if response.ok:        
