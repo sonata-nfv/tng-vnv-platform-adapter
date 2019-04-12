@@ -22,16 +22,16 @@ pipeline {
             echo 'Publication of containers in local registry....'
           }
         }
-        stage('tng-gtk-usr') {
+        stage('docker push') {
           steps {
             sh 'docker push registry.sonata-nfv.eu:5000/tng-vnv-platform-adapter'
           }
         }
       }
     }
-    stage('Deployment in Integration') {
+    stage('Deployment in Pre-Integration') {
       parallel {
-        stage('Deployment in Integration') {
+        stage('Deployment in Pre-Integration') {
           steps {
             echo 'Deploying in integration...'
           }
@@ -41,7 +41,7 @@ pipeline {
             sh 'rm -rf tng-devops || true'
             sh 'git clone https://github.com/sonata-nfv/tng-devops.git'
             dir(path: 'tng-devops') {
-              sh 'ansible-playbook roles/vnv.yml -i environments -e "target=target=pre-int-vnv-bcn.5gtango.eu component=adapter"'
+              sh 'ansible-playbook roles/vnv.yml -i environments -e "target=pre-int-vnv-bcn.5gtango.eu component=tng-vnv-platform-adapter"'
             }
           }
         }
@@ -69,7 +69,7 @@ pipeline {
             sh 'rm -rf tng-devops || true'
             sh 'git clone https://github.com/sonata-nfv/tng-devops.git'
             dir(path: 'tng-devops') {
-              sh 'ansible-playbook roles/vnv.yml -i environments -e "target=pre-int-vnv-bcn.5gtango.eu component=adapter"'
+              sh 'ansible-playbook roles/vnv.yml -i environments -e "target=pre-int-vnv-bcn.5gtango.eu component=tng-vnv-platform-adapter"'
             }
           }
         }
