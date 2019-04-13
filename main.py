@@ -3,33 +3,14 @@
 from flask import Flask, request, jsonify, render_template
 import os, sys, logging, json, argparse 
 from configparser import ConfigParser
-
 import requests
-
-from adapters import sonata
-from adapters import osm
 from adapters import adapter as adapter
 from adapters import serviceplatform as serviceplatform
-
 from models import utils
 from models import users
-
 import psycopg2
 
-
 app = Flask(__name__)
-
-
-################### Login Tests ##################
-#@app.route('/hello')
-#def hello():
-#   r = requests.get('http://www.google.com')
-#   return r.text
-@app.route('/login')
-def login():
-   #login = requests.post('http://tng-gtk-usr:4567/login')
-   login = requests.post('http://172.18.0.3:4567/login')
-   return jsonify(login)
 
 ##### SERVICE PLATFORMS ROUTES #####
 @app.route('/service_platforms', methods=['GET','POST','OPTIONS','DELETE','PATCH'])
@@ -450,7 +431,6 @@ def monitoring(service_platform):
     ad = adapter.Adapter(service_platform)  
     return ad.monitoringTests(content['metric'])
     
-
 @app.route('/adapters/instantiate_service', methods=['POST'])
 def adapter_instatiate_service():
     print (request.is_json)
@@ -459,18 +439,7 @@ def adapter_instatiate_service():
     ad = adapter.Adapter(sp) 
     print (content) 
     return ad.instantiateService(request)  
-
-
-@app.route('/adapters/instantiate_service/nocallback', methods=['POST'])
-def adapter_instatiate_service_no_callback():
-    print (request.is_json)
-    content = request.get_json()
-    sp = content['service_platform']
-    ad = adapter.Adapter(sp) 
-    print (content) 
-    return ad.instantiateServiceNoCallback(request)      
-
-
+   
 @app.route('/adapters/instantiate_service/tests', methods=['POST'])
 def adapter_instatiate_service_tests():
     print (request.is_json)
@@ -490,8 +459,6 @@ def adapterDownloadUploadTest():
     return ad.DownloadUploadTest(request)      
 
 
-
-
 from flask_cors import CORS
 #app = Flask(__name__)
 CORS(app)
@@ -504,8 +471,6 @@ def after_request(response):
   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH')
   return response
 
-
-
 #MAIN FUNCTION OF THE SERVER
 
 if __name__ == '__main__':
@@ -517,10 +482,7 @@ if __name__ == '__main__':
     config.read(args.conf_file)
     createUsersObj = utils.Utils()
     createUsersObj.createTableUsers("db-config.cfg")
-    createUsersObj.createTableServicePlatforms("db-config.cfg")
-
-    
+    createUsersObj.createTableServicePlatforms("db-config.cfg")    
     #RUN SERVER
-    #app.run(debug=True, host='0.0.0.0', port=os.environ.get("SLICE_MGR_PORT"))
     app.run(debug=True,host='0.0.0.0',port=5001)
 
