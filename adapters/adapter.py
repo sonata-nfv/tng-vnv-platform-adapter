@@ -2098,7 +2098,11 @@ class Adapter:
                 return msg  
             
             logging.debug (instantiation_call)
-            _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            try:
+                _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            except:
+                msg = "{\"error\": \"error in the instantiation process, callback aborted\"}"
+                return msg                 
             
             instantiation_call_str = instantiation_call.__str__()
             instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
