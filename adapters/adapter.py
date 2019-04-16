@@ -2294,10 +2294,10 @@ class Adapter:
         for package in vnv_packages_json:
             package_pd = package['pd']
             package_content = package_pd['package_content']
-            logging.debug (package_content)
+            #logging.debug (package_content)
             for pc in package_content:
                 nsd_uuid = pc['uuid']
-                logging.debug (nsd_uuid)
+                #logging.debug (nsd_uuid)
                 if nsd_uuid == service_id:
                     correct_package = package
         
