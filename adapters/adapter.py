@@ -2285,25 +2285,30 @@ class Adapter:
 
     def getPackageIdfromServiceId (self,service_id):
         logging.info("get package id from service id starts")
-        package_id = None
-        correct_package = None
+        package_id = None        
         vnv_packages = self.getVnVPackages()
         vnv_packages_json = json.loads(vnv_packages)
         logging.debug (vnv_packages_json)        
 
         for package in vnv_packages_json:
+            logging.debug (package['uuid'])
             package_pd = package['pd']
             package_content = package_pd['package_content']
             #logging.debug (package_content)
             for pc in package_content:
                 nsd_uuid = pc['uuid']
-                #logging.debug (nsd_uuid)
-                if nsd_uuid == service_id:
-                    correct_package = package
+                logging.debug (nsd_uuid)
+                if nsd_uuid == service_id:                    
                     package_id = package['uuid']
-        #package_id = correct_package['uuid']
-        logging.debug (package_id)
-        return package_id
+
+                    logging.debug (package_id)
+                    logging.info("get package id from service id finishing")
+                    return package_id
+        
+        if package_id = None
+            msg = "error getting the id from the packages list"
+            return msg
+        
 
     def backupgetPackageIdfromServiceId (self,service_id):
         logging.info("get package id from service id starts")
