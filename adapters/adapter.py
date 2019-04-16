@@ -2305,7 +2305,7 @@ class Adapter:
                     logging.info("get package id from service id finishing")
                     return package_id
         
-        if package_id = None
+        if package_id == None:
             msg = "error getting the id from the packages list"
             return msg
         
