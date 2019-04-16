@@ -2300,10 +2300,32 @@ class Adapter:
                 #logging.debug (nsd_uuid)
                 if nsd_uuid == service_id:
                     correct_package = package
+                    package_id = package['uuid']
+        #package_id = correct_package['uuid']
+        logging.debug (package_id)
+        return package_id
+
+    def backupgetPackageIdfromServiceId (self,service_id):
+        logging.info("get package id from service id starts")
+        package_id = None
+        correct_package = None
+        vnv_packages = self.getVnVPackages()
+        vnv_packages_json = json.loads(vnv_packages)
+        logging.debug (vnv_packages_json)        
+
+        for package in vnv_packages_json:
+            package_pd = package['pd']
+            package_content = package_pd['package_content']
+            #logging.debug (package_content)
+            for pc in package_content:
+                nsd_uuid = pc['uuid']
+                #logging.debug (nsd_uuid)
+                if nsd_uuid == service_id:
+                    correct_package = package
         
         package_id = correct_package['uuid']
         logging.debug (package_id)
-        return package_id
+        return package_id        
 
 
     def getSPPackageIdfromServiceId (self,service_id):
