@@ -1560,14 +1560,19 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'} 
         
         url = 'http://tng-cat:4011/api/catalogues/v2/packages'  
-        response = requests.get(url,headers=JSON_CONTENT_HEADER)
-        response_json = response.content
-        jjson = json.loads(response_json)
-        for x in jjson:
-            if ( x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version ) :
-                uuid = x['uuid']
-        logging.debug(uuid)
-        return uuid                   
+
+        try:
+            response = requests.get(url,headers=JSON_CONTENT_HEADER)
+            response_json = response.content
+            jjson = json.loads(response_json)
+            for x in jjson:
+                if ( x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version ) :
+                    uuid = x['uuid']
+            logging.debug(uuid)
+            return uuid                   
+        except:
+            msg = "{\"error\": \"error getting the package id from the VnV catalogue\"}"
+            return msg  
     
 
     def getHostIp(self):
@@ -1973,6 +1978,7 @@ class Adapter:
 
     def uploadPackageStatus(self,process_uuid):
 
+        status = None
         logging.info("uploadPackageStatusstarts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
 
@@ -1980,14 +1986,17 @@ class Adapter:
         url = sp_host_2 + ':32002/api/v3/packages/status/' + process_uuid            
         logging.info(process_uuid)
         logging.info(url)           
-        upload_status_curl = requests.get(url, headers=JSON_CONTENT_HEADER) 
-        logging.debug(upload_status_curl)
-        logging.debug (upload_status_curl.text)
-        upload_status_curl_json = json.loads(upload_status_curl.text)        
-        logging.debug(upload_status_curl_json)
-        status = upload_status_curl_json['package_process_status']
-        #status = "hola"
-        return status
+        try:
+            upload_status_curl = requests.get(url, headers=JSON_CONTENT_HEADER) 
+            logging.debug(upload_status_curl)
+            logging.debug (upload_status_curl.text)
+            upload_status_curl_json = json.loads(upload_status_curl.text)        
+            logging.debug(upload_status_curl_json)
+            status = upload_status_curl_json['package_process_status']
+            return status
+        except:
+            msg = "{\"error\": \"error checking the status of the uploaded package\"}"
+            return msg  
 
     def instantiateService(self,request): 
         logging.info("instantiate service starts")
@@ -2175,15 +2184,22 @@ class Adapter:
     def SonataInstantiateCallback(self,callback,instantiation_call):
         logging.info("sonata instantiate callback starts")
         logging.debug (instantiation_call)
-        instantiation_request_json_dumps = json.dumps(instantiation_call)
-        logging.debug (instantiation_request_json_dumps)
-        instantiation_request_json = json.loads(instantiation_call)
-        logging.debug (instantiation_request_json)
-        logging.debug (instantiation_request_json['id'])
-        instantiation_request_id = instantiation_request_json['id']        
-        logging.debug (instantiation_request_id)
-        instance_status = self.wait_for_instantiation(instantiation_request_id)
-        logging.debug (instance_status)
+        instance_status = None
+
+        try:
+            instantiation_request_json_dumps = json.dumps(instantiation_call)
+            logging.debug (instantiation_request_json_dumps)
+            instantiation_request_json = json.loads(instantiation_call)
+            logging.debug (instantiation_request_json)
+            logging.debug (instantiation_request_json['id'])
+            instantiation_request_id = instantiation_request_json['id']        
+            logging.debug (instantiation_request_id)
+            instance_status = self.wait_for_instantiation(instantiation_request_id)
+            logging.debug (instance_status)
+        except:
+            msg = "{\"error\": \"error getting request status\"}"
+            return msg  
+
         if instance_status == 'READY':
             instantiation_info = self.instantiationInfoCurator(instantiation_request_id)
             logging.debug (instantiation_info) 
@@ -2352,18 +2368,23 @@ class Adapter:
     def deletePackagefromService(self,name,vendor,version):    
         logging.info("delete package from service starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
-        response = None
-        print ("deletePackagefromService started")
+        response = None        
         my_type =  self.getDBType()
         if my_type == 'sonata':    
-            sp_host_2 = self.getHostIp()
-            service_id = self.getServiceId(name,vendor,version)
-            package_id = self.getSPPackageIdfromServiceId(service_id)            
-            url = sp_host_2 + ':32002/api/v3/packages/' + package_id   
-            logging.debug (url)     
-            response = requests.delete(url,headers=JSON_CONTENT_HEADER)
-            logging.debug (response)    
-        logging.debug (response.text)
-        msg = '{\"msg\": \"package deleted\"}'
-        logging.debug (msg)
-        return msg
+            try:
+                sp_host_2 = self.getHostIp()
+                service_id = self.getServiceId(name,vendor,version)
+                package_id = self.getSPPackageIdfromServiceId(service_id)            
+                url = sp_host_2 + ':32002/api/v3/packages/' + package_id   
+                logging.debug (url)     
+                response = requests.delete(url,headers=JSON_CONTENT_HEADER)
+                logging.debug (response)    
+        
+                logging.debug (response.text)
+                msg = '{\"msg\": \"package deleted\"}'
+                logging.debug (msg)
+                return msg
+            except:
+                msg = "{\"error\": \"error deleting the package in the SP from the service info\"}"
+                return msg              
+        
