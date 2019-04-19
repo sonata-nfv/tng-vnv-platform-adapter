@@ -108,6 +108,34 @@ class Adapter:
                     connection.close()
                     print("PostgreSQL connection is closed") 
 
+    def getVimAccount(self):
+        logging.info("getdbtype starts")
+        try:
+            db = database.Database(FILE)
+            connection = psycopg2.connect(user = db.user,
+                                        password = db.password,
+                                        host = db.host,
+                                        port = db.port,
+                                        database = db.database)  
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            get_type = "SELECT vim_account FROM service_platforms WHERE name=\'" +self.name+ "\'"            
+            cursor.execute(get_type)
+            all = cursor.fetchall()            
+            type_0 = all.__str__()            
+            type_1 = type_0[3:]                       
+            type_2 = type_1[:-4]             
+            return type_2
+        except (Exception, psycopg2.Error) as error :
+            logging.error(error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")                     
+
 
 
 
@@ -455,11 +483,12 @@ class Adapter:
         if my_type == 'osm':               
             sp_host_2 = self.getHostIp()
             sp_host_3 = sp_host_2[7:]
-            content = request.get_json()
-            logging.info(content)          
+            #content = request.get_json()
+            #logging.info(content)          
             token = self.getOSMToken(request)
             logging.debug(token)
-            file_to_upload = content['service']
+            #file_to_upload = content['service']
+            file_to_upload = request
             file_composed = "@" + file_to_upload
             file = {'nsd-create': open(file_to_upload, 'rb')}           
             data = {'service':file_to_upload}
@@ -470,7 +499,8 @@ class Adapter:
                 'Authorization':'Bearer ' +token+''                
             }
             print (HEADERS)
-            url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors'
+            #url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors'
+            url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'            
             url_2 = url.replace("http","https")
         
             upload_nsd = "curl -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
@@ -495,16 +525,19 @@ class Adapter:
     def uploadOSMFunction(self,request):
         logging.info("upload osm function starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        print (request)
         my_type =  self.getDBType()
         if my_type == 'osm':               
             sp_host_2 = self.getHostIp()
             sp_host_3 = sp_host_2[7:]
             token = self.getOSMToken(request)
             logging.debug(token)
-            content = request.get_json()
-            file_to_upload = content['function']
+            #content = request.get_json()
+            #file_to_upload = content['function']
+            file_to_upload = request
             
-            url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages'
+            #url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages'
+            url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages_content'
             url_2 = url.replace("http","https")
 
             upload_nsd = "curl -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
@@ -836,19 +869,31 @@ class Adapter:
             sp_host_2 = self.getHostIp()
             sp_host_3 = sp_host_2[7:]
             url = sp_host_3
-            content = request.get_json()
+            #content = request.get_json()
+            print ("REQUEST")
+            print (request)
+            content = json.loads(request.__str__())
+            print ("CONTENT:")
             logging.debug(content)
             token = self.getOSMToken(request)
             logging.debug (token)
-            content = request.get_json()           
+            #content = request.get_json()           
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
             url_2 = url.replace("http","https")
             logging.debug (url_2)
-            vim_id = self.getVimId(content['vim_account'])
+            vim_account = self.getVimAccount()
+            vim_id = self.getVimId(vim_account)
             logging.debug (vim_id)
             logging.debug (content['nsd_name'])
-            nsd_id = self.getOSMNsdId(content['nsd_name'])
+            #nsd_id = self.getOSMNsdId(content['nsd_name'])
+            nsd_id = content['nsd_name']
+            ns_name = content['ns_name']
             logging.debug (nsd_id)
+
+
+          
+
+
 
             HEADERS = {
                 'Accept':'application/json',
@@ -858,7 +903,7 @@ class Adapter:
 
             data_inst = {
                 'nsdId':''+nsd_id+'',
-                'nsName':''+content['ns_name']+'',
+                'nsName':''+ns_name+'',
                 'vimAccountId':''+vim_id+''
             }       
             
@@ -2281,7 +2326,189 @@ class Adapter:
             request_response = string_inicial + instantiation_call_str_replaced_2
 
             logging.debug(request_response)   
-            return (request_response)		
+            return (request_response)
+
+        if my_type == 'osm':
+            logging.debug("This SP is osm")
+            service_id = None
+            package_id = None
+            package_path = None
+            vnv_service_id = None
+
+            print ("instantion for osm SPs stars")
+
+            ### package operations
+            """             
+            vnv_service_id = self.getVnVServiceId(name,vendor,version)
+            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+            logging.debug (package_id)
+            download_pkg = self.downloadPackageTGO(package_id)
+            logging.debug (download_pkg)            
+            download_pkg_json = json.loads(download_pkg)
+            logging.debug (download_pkg_json)
+            package_path = download_pkg_json['package']
+            logging.debug (package_path)            
+            """
+            
+            package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+            print (package_path)
+            
+            try:
+                # verify if the service is in the SP
+                service_id = self.getOSMServiceId(name,vendor,version)
+                print (service_id)
+                if service_id:
+                    logging.debug("The Service is already in the SP")
+            except:
+                logging.debug:("The Service is not in the SP  ") 
+                # if the service is not in the SP, we need to upload it
+                functions_array = self.createFunctionsArray(package_path)
+                services_array = self.createServicesArray(package_path)
+                
+                for function in functions_array:
+                    function_str = "{\"function\": \"" + function + "\"}"
+                    print (function_str)                                        
+                    function_json = json.loads(function_str.__str__())
+                    print (function_json)
+                    print (function_json['function'])
+                    function_file_path = function_json['function']
+                   
+                    upload_function = self.uploadOSMFunction(function_file_path)
+                    logging.debug (upload_function)
+                
+                for service in services_array:
+                    service_str = "{\"service\": \"" + service + "\"}"
+
+                    print (service_str)                                        
+                    service_json = json.loads(service_str.__str__())
+                    print (service_json)
+                    print (service_json['service'])
+                    service_file_path = service_json['service']
+
+                    upload_service = self.uploadOSMService(service_file_path)
+                    logging.debug (upload_service)
+                    
+                    service_id = self.getUploadedOSMServiceId(upload_service)
+                    print ("THIS IS THE NEW UPLOADED SERVICE ID")
+                    print (service_id)
+                    #return service_id
+                
+            time.sleep(2)
+            
+
+            #return "hola"
+            
+            ## INSTANCIANDO
+            nsd_name = service_id
+            ns_name = service_id
+            vim_account = self.getVimAccount()
+
+            print (nsd_name)
+            print (ns_name)
+            print (vim_account)            
+
+            instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
+            print ("THIS IS THE INSTANTIATE STRING FOR OSM")
+            print ("aaaaaaaaaaa")
+
+            
+            logging.debug(instantiate_str)
+
+
+            print ("aaaaaaaaaaa")
+
+            instantiation_call = self.instantiation(instantiate_str)    
+            logging.debug (instantiation_call)
+
+            _thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
+            
+            return (instantiation_call)
+                 
+
+    def getOSMServiceId(self,name,vendor,version):
+        
+        return service_id
+
+    def getUploadedOSMServiceId(self,upload_service):
+        print ("This is the upload service response:")
+        print (upload_service)
+        service_id = None
+        json = yaml.load(upload_service) 
+        service_id = json['id']
+        print (service_id)
+        return service_id
+
+    def createFunctionsArray(self,package_path):
+        functions_array = None
+        files = []
+        functions_array = []
+        services_array = []
+        for r,d,f in os.walk(package_path):
+            for file in f:
+                    if '.yaml' in file:
+                        files.append(os.path.join(r,file))
+                    if '.yml' in file:
+                        files.append(os.path.join(r,file))                  
+        for f in files:
+            print (f)
+            with open(f) as file_in_array:
+                    file = yaml.load(file_in_array)      
+                    #print (file)
+                    try:
+                        vnfd = file['vnfd:vnfd-catalog']
+                        #print ("this file is an osm vnfd")
+                        functions_array.append(f)
+                    except:
+                        try:
+                                nsd = file['nsd:nsd-catalog']
+                                #print ("this file is an osm nsd")
+                                services_array.append(f)                  
+                        except:
+                                print ("this files is not an OSM vnfd or nsd")
+        print ("osm functions list:")
+        for func in functions_array:
+            print (func)
+        print ("osm services list:")
+        for serv in services_array:
+            print (serv)                
+        return functions_array
+
+    def createServicesArray(self,package_path):
+        services_array = None
+        files = []
+        functions_array = []
+        services_array = []
+        for r,d,f in os.walk(package_path):
+            for file in f:
+                    if '.yaml' in file:
+                        files.append(os.path.join(r,file))
+                    if '.yml' in file:
+                        files.append(os.path.join(r,file))                  
+        for f in files:
+            print (f)
+            with open(f) as file_in_array:
+                    file = yaml.load(file_in_array)      
+                    #print (file)
+                    try:
+                        vnfd = file['vnfd:vnfd-catalog']
+                        #print ("this file is an osm vnfd")
+                        functions_array.append(f)
+                    except:
+                        try:
+                                nsd = file['nsd:nsd-catalog']
+                                #print ("this file is an osm nsd")
+                                services_array.append(f)                  
+                        except:
+                                print ("this files is not an OSM vnfd or nsd")
+        print ("osm functions list:")
+        for func in functions_array:
+            print (func)
+        print ("osm services list:")
+        for serv in services_array:
+            print (serv)                
+        return services_array
+
+
 
     def getPackageIdfromServiceId (self,service_id):
         logging.info("get package id from service id starts")
