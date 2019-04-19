@@ -1283,7 +1283,14 @@ class Adapter:
             status = subprocess.check_output([status_ns_3], shell=True)                        
             return (status)     
 
-    def OSMInstantiateCallback(self,token,url_2,callback_url,inst_resp_yaml):
+    def OSMInstantiateCallback(self, callback_url,inst_resp_yaml):
+
+        token = self.getOSMToken(request)
+
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+        url_2 = url.replace("http","https")        
+
         logging.info("osm instantiate callback starts")
         logging.debug ("callback start")                
         response = yaml.load(inst_resp_yaml)
