@@ -1326,7 +1326,10 @@ class Adapter:
 
         logging.debug (status)
 
-        callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
+        #callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
+
+        callback_msg = self.instantiationInfoCurator(service_id)
+
         logging.debug (callback_msg)
         callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
 
