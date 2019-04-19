@@ -71,6 +71,7 @@ class Utils:
                         username varchar(255),
                         password varchar(255),
                         project_name varchar(255),
+                        vim_account varchar(255),
                         service_token varchar(256),
                         monitoring_urls varchar(256)
                         )

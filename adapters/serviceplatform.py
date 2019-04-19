@@ -12,15 +12,45 @@ from configparser import ConfigParser
 
 class ServicePlatform:
 
-    def __init__(self, name, host, type, username, password, project_name,service_token,monitoring_urls):
+    def __init__(self, name, host, type, username, password, project_name,vim_account, service_token,monitoring_urls):
         self.name = name
         self.host = host
         self.type = type
         self.username = username
         self.password = password
         self.project_name = project_name
+        self.vim_account = vim_account
         self.service_token = service_token
         self.monitoring_urls = monitoring_urls
+
+
+
+
+    def getServicePlatformVimAccount(self):
+        try:
+            connection = psycopg2.connect(user = "sonatatest",
+                                        password = "sonata",
+                                        host = "son-postgres",
+                                        port = "5432",
+                                        database = "gatekeeper")
+            cursor = connection.cursor()
+            print ( connection.get_dsn_parameters(),"\n")
+            #create table Service Platforms
+            get_sp = "SELECT vim_account FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            print (get_sp)
+            cursor.execute(get_sp)
+            all = cursor.fetchall()
+            return jsonify(all), 200     
+        except (Exception, psycopg2.Error) as error :
+            print (error)
+            exception_message = str(error)
+            return exception_message, 401
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed") 
 
 
 
@@ -198,7 +228,7 @@ class ServicePlatform:
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")            
             print (self.name)
-            new_sp = "INSERT INTO service_platforms (name, host, type, username, password, project_name, service_token,monitoring_urls) VALUES (\'" +self.name+ "\',\'" +self.host+ "\',\'" +self.type+ "\',\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.project_name+ "\',\'" +self.service_token+ "\',\'" +self.monitoring_urls+ "\')"
+            new_sp = "INSERT INTO service_platforms (name, host, type, username, password, project_name, vim_account, service_token,monitoring_urls) VALUES (\'" +self.name+ "\',\'" +self.host+ "\',\'" +self.type+ "\',\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.project_name+ "\',\'" +self.vim_account+ "\',\'" +self.service_token+ "\',\'" +self.monitoring_urls+ "\')"
             print (new_sp)                    
             cursor.execute(new_sp)
             connection.commit()
@@ -229,7 +259,7 @@ class ServicePlatform:
             print ( connection.get_dsn_parameters(),"\n")            
             print (self.name)
             #new_sp = "INSERT INTO service_platforms (name, host, type, username, password, project_name, service_token,monitoring_urls) VALUES (\'" +self.name+ "\',\'" +self.host+ "\',\'" +self.type+ "\',\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.project_name+ "\',\'" +self.service_token+ "\',\'" +self.monitoring_urls+ "\')"
-            new_sp = "UPDATE service_platforms SET host=\'" +self.host+ "\',type=\'" +self.type+ "\',username=\'" +self.username+ "\',password=\'" +self.password+ "\',project_name=\'" +self.project_name+ "\',service_token=\'" +self.service_token+ "\',monitoring_urls=\'" +self.monitoring_urls+ "\' WHERE name=\'" +self.name+ "\'"                
+            new_sp = "UPDATE service_platforms SET host=\'" +self.host+ "\',type=\'" +self.type+ "\',username=\'" +self.username+ "\',password=\'" +self.password+ "\',project_name=\'" +self.project_name+ "\',vim_account=\'" +self.vim_account+ "\',service_token=\'" +self.service_token+ "\',monitoring_urls=\'" +self.monitoring_urls+ "\' WHERE name=\'" +self.name+ "\'"                
             print ("patch_string")
             print (new_sp)                    
             cursor.execute(new_sp)
