@@ -961,16 +961,22 @@ class Adapter:
             sp_host_2 = self.getHostIp()
             sp_host_3 = sp_host_2[7:]
             url = sp_host_3
-            logging.debug(request.get_json())
+            logging.debug(request)
             logging.debug(url)
             token = self.getOSMToken(request)
             logging.debug (token)
-            content = request.get_json()
+            
+            #url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
             url_2 = url.replace("http","https")
-            ns_id = content['ns_id']
+            
+            content = json.loads(request)
+            ns_id = content['instance_uuid']
+            logging.debug(ns_id)
+            
+            #ns_id = request['instance_uuid']
             logging.debug (ns_id)
-            delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             delete_ns_2 = delete_ns +token + "\" "
             delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
             logging.debug (delete_ns_3)
