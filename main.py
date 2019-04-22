@@ -21,7 +21,14 @@ def sps():
 
     if request.method == 'POST':
         print (request.is_json)
+        vim_account = None
         content = request.get_json()
+
+        try:
+            vim_account = content['vim_account']
+        except:
+            vim_account = "vim_account"
+        
         print (content)  
         try:      
             mon_urls = content['monitoring_urls']
@@ -29,21 +36,21 @@ def sps():
             try:
                 pr = content['project_name']
                 print ("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],content['vim_account'],"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
                 return sp.registerServicePlatform()
             except:
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",content['vim_account'],"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
                 return sp.registerServicePlatform()
         except:
             print ("mon_url does not exists")
             try:
                 pr = content['project_name']
                 print ("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],content['vim_account'],"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
                 return sp.registerServicePlatform() 
             except:
                 print ("project name does not exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",content['vim_account'],"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
                 return sp.registerServicePlatform()         
 
     if request.method == 'OPTIONS':
@@ -62,21 +69,21 @@ def sps():
             try:
                 pr = content['project_name']
                 print ("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],content['vim_account'],"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
                 return sp.patchServicePlatform()
             except:
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",content['vim_account'],"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
                 return sp.patchServicePlatform()
         except:
             print ("mon_url does not exists")
             try:
                 pr = content['project_name']
                 print ("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],content['vim_account'],"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
                 return sp.patchServicePlatform() 
             except:
                 print ("project name does not exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",content['vim_account'],"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
                 return sp.patchServicePlatform() 
 
 
@@ -99,21 +106,21 @@ def sp(service_platform):
             try:
                 pr = content['project_name']
                 print ("project name exists")
-                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],content['vim_account'],"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
                 return sp.patchServicePlatform()
             except:
-                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name",content['vim_account'],"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
                 return sp.patchServicePlatform()
         except:
             print ("mon_url does not exists")
             try:
                 pr = content['project_name']
                 print ("project name exists")
-                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],content['vim_account'],"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
                 return sp.patchServicePlatform() 
             except:
                 print ("project name does not exists")
-                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name",content['vim_account'],"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
                 return sp.patchServicePlatform()           
 
 
