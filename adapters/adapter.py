@@ -1981,22 +1981,23 @@ class Adapter:
 
     def wait_for_instantiation(self,id):
         logging.info("wait for instantiation starts")
+        time.sleep(2)
         status = None
         while status == None:
             status =  self.getRequestStatus(id)
             logging.debug (status)
             if status == None:
-                time.sleep(5)
+                time.sleep(7)
         while status == 'NEW':
             status =  self.getRequestStatus(id)
             logging.debug (status)
             if status == 'NEW':
-                time.sleep(5)        
+                time.sleep(7)        
         while status == 'INSTANTIATING':
             status =  self.getRequestStatus(id)
             logging.debug (status)
             if status == 'INSTANTIATING':
-                time.sleep(5)                             
+                time.sleep(7)                             
         logging.debug(status)
         return status
         
@@ -2262,6 +2263,7 @@ class Adapter:
             logging.debug (instantiation_request_json['id'])
             instantiation_request_id = instantiation_request_json['id']        
             logging.debug (instantiation_request_id)
+            time.sleep(2)
             instance_status = self.wait_for_instantiation(instantiation_request_id)
             logging.debug (instance_status)
         except:
