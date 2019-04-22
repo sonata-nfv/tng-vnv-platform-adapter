@@ -2334,10 +2334,14 @@ class Adapter:
             inst_error = self.getRequestError(instantiation_request_id)    
 
             logging.error (inst_error)
-            callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
-            logging.debug (callback_post)		
-            call = subprocess.check_output([callback_post], shell=True)
-            logging.debug(call)
+            error_string = inst_error.__str__()
+            try:
+                callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + error_string + "\"}' " + callback        
+                logging.debug (callback_post)		
+                call = subprocess.check_output([callback_post], shell=True)
+                logging.debug(call)
+            except:
+                logging.error ("error sending the instantiation error callback")
             #monitoring_callback = self.getMonitoringURLs()
             #monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
             #logging.debug (monitoring_callback_post)		
