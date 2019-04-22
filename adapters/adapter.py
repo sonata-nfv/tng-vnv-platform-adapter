@@ -2384,6 +2384,7 @@ class Adapter:
                 print (service_id)
                 if service_id == 'error':
                     logging.debug("The Service is already in the SP")
+                    raise Exception('The Service descriptor is in the SP or the list is empty') 
             except:
                 logging.debug:("The Service is not in the SP  ") 
                 # if the service is not in the SP, we need to upload it
@@ -2459,13 +2460,19 @@ class Adapter:
         logging.debug (token)        
         url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
         url_2 = url.replace("http","https")
-        logging.debug (url_2)
-
+        logging.debug (url_2)        
         nsds = "curl  --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
         nsds_2 = nsds +token + "\"  " + url_2 
         logging.debug (nsds_2)
-        response = subprocess.check_output([nsds_2], shell=True)
-        print (response)
+        response = None
+
+        try:
+            print ("loading descriptrs list:")
+            response = subprocess.check_output([nsds_2], shell=True)
+            print (response)
+        except:
+            service_id = "error"
+            return service_id        
 
         jjson = json.loads(response)
         print (jjson)
@@ -2479,10 +2486,11 @@ class Adapter:
         for x in jjson:
             print (x)
             print (x['name'])
+            print (x['vendor'])
             print (x['version'])
             print (x['_id'])
         
-            if ( x['name'] == name and x['version'] == version ):
+            if ( x['name'] == name and x['vendor'] == vendor and x['version'] == version ):
                 logging.debug(x['name'])
                 service_id = x['_id']
                 exists = 'YES' 
