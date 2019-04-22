@@ -1,9 +1,9 @@
 FROM ubuntu:latest
 MAINTAINER Luis Hens "luis.hens@atos.net"
 RUN apt-get update -y && apt-get install -y python3 python3-dev python3-pip curl python-pip libcurl4-gnutls-dev libgnutls28-dev git libpq-dev
-COPY . /app
+#COPY . /app
 COPY ./requirements.txt /app/requirements.txt
-WORKDIR /app
+#WORKDIR /app
 RUN pip3 install -r requirements.txt
 RUN pip3 install -U Flask_Cors
 #ENTRYPOINT ["python"]
@@ -11,6 +11,8 @@ RUN pip3 install -U Flask_Cors
 
 RUN pip install git+https://osm.etsi.org/gerrit/osm/osmclient
 
+COPY . /app
+WORKDIR /app
 RUN export LC_ALL="en_US.UTF-8"
 RUN export LC_CTYPE="en_US.UTF-8"
 
