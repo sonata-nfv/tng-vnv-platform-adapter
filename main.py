@@ -461,7 +461,19 @@ def adapterDownloadUploadTest():
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
     print (content) 
-    return ad.DownloadUploadTest(request)      
+    return ad.DownloadUploadTest(request)   
+
+@app.route('/adapters/getOSMServiceId/tests', methods=['POST'])
+def getOSMServiceIdTest():
+    print (request.is_json)
+    content = request.get_json()
+    print (content) 
+    sp = content['service_platform']
+    ad = adapter.Adapter(sp) 
+    #print (content) 
+    s_id = ad.getOSMServiceId(content['service_name'],content['service_vendor'],content['service_version'])
+    print (s_id)
+    return  s_id
 
 
 from flask_cors import CORS

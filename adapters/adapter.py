@@ -2382,7 +2382,7 @@ class Adapter:
                 # verify if the service is in the SP
                 service_id = self.getOSMServiceId(name,vendor,version)
                 print (service_id)
-                if service_id:
+                if service_id == 'error':
                     logging.debug("The Service is already in the SP")
             except:
                 logging.debug:("The Service is not in the SP  ") 
@@ -2451,7 +2451,45 @@ class Adapter:
                  
 
     def getOSMServiceId(self,name,vendor,version):
+        logging.info("get OSM service id starts")
+        service_id = None 
+        exists = 'NO'   
+        sp_host_2 = self.getHostIp()
+        token = self.getOSMToken(request)
+        logging.debug (token)        
+        url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
+        url_2 = url.replace("http","https")
+        logging.debug (url_2)
+
+        nsds = "curl  --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        nsds_2 = nsds +token + "\"  " + url_2 
+        logging.debug (nsds_2)
+        response = subprocess.check_output([nsds_2], shell=True)
+        print (response)
+
+        jjson = json.loads(response)
+        print (jjson)
+        print ("1111111111111111111111111111111111111111111111111")
+        print ("1111111111111111111111111111111111111111111111111")
+
+        print (name)
+        print (vendor)
+        print (version)
+
+        for x in jjson:
+            print (x)
+            print (x['name'])
+            print (x['version'])
+            print (x['_id'])
         
+            if ( x['name'] == name and x['version'] == version ):
+                logging.debug(x['name'])
+                service_id = x['_id']
+                exists = 'YES' 
+        
+        if service_id == None: 
+            service_id = "error"
+
         return service_id
 
     def getUploadedOSMServiceId(self,upload_service):
