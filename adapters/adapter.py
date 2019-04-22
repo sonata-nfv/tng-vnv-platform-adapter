@@ -2308,8 +2308,13 @@ class Adapter:
             #call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
 
         if instance_status == 'ERROR': 
-            instantiation_info_json = json.loads(instantiation_info)
-            inst_error = instantiation_info_json['error']
+            instantiation_request_json_dumps = json.dumps(instantiation_call)
+            logging.debug (instantiation_request_json_dumps)
+            instantiation_request_json = json.loads(instantiation_call)
+            logging.debug (instantiation_request_json)  
+            inst_error = instantiation_request_json['error']           
+            #instantiation_info_json = json.loads(instantiation_info)
+            #inst_error = instantiation_info_json['error']
             logging.error (inst_error)
             callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
             logging.debug (callback_post)		
