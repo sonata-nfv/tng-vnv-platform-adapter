@@ -1283,43 +1283,66 @@ class Adapter:
             status = subprocess.check_output([status_ns_3], shell=True)                        
             return (status)     
 
-    def OSMInstantiateCallback(self,token,url_2,callback_url,inst_resp_yaml):
+    def OSMInstantiateCallback(self, callback_url,inst_resp_yaml):
+
+        token = self.getOSMToken(request)
+
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+        url_2 = url.replace("http","https")        
+
         logging.info("osm instantiate callback starts")
         logging.debug ("callback start")                
         response = yaml.load(inst_resp_yaml)
         service_id = response['id']
         logging.debug(service_id)
-        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        #status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id 
         logging.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
         logging.debug (status_curl)
 
-        with open('/app/temp.file') as f:
-            data = json.load(f)
+        #instance_json = json.loads(status_curl.__str__())
+        instance_json = json.loads(status_curl)
 
-        status = 'my_status'
-        is_active = 'not'
+        config_status = instance_json['config-status']
+        print (config_status)
 
-        while status != 'ACTIVE':    
-            while is_active == 'not':
-                try:
-                    status = data['admin']['deployed']['RO']['nsr_status'] 
-                    is_active = 'yes'
-                    status = 'ACTIVE'
-                except:
-                    is_active = 'not'
-                    status = 'my_status'
-                    print("Retraying in 3 sec")
-                    print(status)
-                    time.sleep(3)
-                    status_curl = subprocess.check_output([status_url], shell=True)
-                    print (status_curl)
-                    with open('/app/temp.file') as f:
-                        data = json.load(f)
+        #with open('/app/temp.file') as f:
+        #    data = json.load(f)
 
+        #status = 'my_status'
+
+        print ("                     -               ")
+        print ("THIS IS THE INSTANCE RECORD")
+        print (instance_json)
+        print ("                     -               ")
+
+        status = None
+        #while status != 'ACTIVE':
+         
+
+        while config_status != 'configured':               
+            try:
+                status = data['config-status']                    
+                print (status)
+            except:
+                print("Retraying in 3 sec")
+                print (status)
+                time.sleep(3)
+                status_curl = subprocess.check_output([status_url], shell=True)
+                print (status_curl)
+                instance_json = json.loads(status_curl)
+                config_status = instance_json['config-status']
+                print (config_status)
+
+        status = config_status
         logging.debug (status)
 
-        callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
+        #callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
+
+        callback_msg = self.instantiationInfoCurator(service_id)
+
         logging.debug (callback_msg)
         callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
 
