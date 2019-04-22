@@ -1951,13 +1951,20 @@ class Adapter:
                         response_function = response_function + response_interface
 
                 response_function_2 = response_function[:-1]
-                response_function_2 = response_function_2 + "]"
+                response_function_2 = response_function_2 + "]},"
+                #response_function_2 = response_function_2 + "]"
                 #response_function = "{ + + },"
                 print("function-----function")
                 print (response_function_2)
+                response_functions = response_functions + response_function_2
 
-            response_functions = response_functions + response_function_2
-            response_functions = response_functions + "}]"
+            #response_functions = response_functions + response_function_2
+            #response_functions = response_functions + "}]"
+            #response_functions = response_functions + "]"
+
+            response_functions_2 = response_functions[:-1] 
+
+            response_functions = response_functions_2 + "]"
             
             response = response + response_functions
             response = response + "}"
