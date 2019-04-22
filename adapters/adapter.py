@@ -1342,13 +1342,19 @@ class Adapter:
         #callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
 
         callback_msg = self.instantiationInfoCurator(service_id)
-
+        print ("THIS IS THE CALLBACK FROM OSM:")
+        print ("THIS IS THE CALLBACK FROM OSM:")
+        print ("THIS IS THE CALLBACK FROM OSM:")
         logging.debug (callback_msg)
-        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
-
+        print ("THIS WAS THE CALLBACK FROM OSM")
+        print ("THIS WAS THE CALLBACK FROM OSM")
+        print ("THIS WAS THE CALLBACK FROM OSM")
+        #callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
+        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url
+        print (callback_post)
         call = subprocess.check_output([callback_post], shell=True)
         logging.debug(call)
-        logging.debug ("callback end")
+        logging.debug ("callback ends")
 
 
 
