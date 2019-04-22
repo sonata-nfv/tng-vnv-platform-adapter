@@ -2016,11 +2016,26 @@ class Adapter:
             status =  self.getRequestStatus(id)
             logging.debug (status)
             if status == 'INSTANTIATING':
-                time.sleep(7)                             
+                time.sleep(7)  
+        if status == 'ERROR':
+            status =  self.getRequestError(id)
         logging.debug(status)
         return status
         
-
+    def getRequestError(self,id):
+        logging.info("get request status starts")        
+        status_call = self.instantiationStatus(id)
+        logging.debug(status_call)
+        instantiation_request_json_dumps = json.dumps(status_call)
+        logging.debug (instantiation_request_json_dumps)
+        instantiation_request_json = json.loads(status_call)
+        try:
+            status = instantiation_request_json['error']
+            logging.debug(status)
+            return (status)
+        except:
+            msg = "{\"error\": \"the record's status has no value\"}"
+            return (msg) 
 
 
     def getRequestStatus(self,id):
@@ -2311,10 +2326,13 @@ class Adapter:
             instantiation_request_json_dumps = json.dumps(instantiation_call)
             logging.debug (instantiation_request_json_dumps)
             instantiation_request_json = json.loads(instantiation_call)
-            logging.debug (instantiation_request_json)  
-            inst_error = instantiation_request_json['error']           
-            #instantiation_info_json = json.loads(instantiation_info)
-            #inst_error = instantiation_info_json['error']
+            logging.debug (instantiation_request_json)
+            logging.debug (instantiation_request_json['id'])
+            instantiation_request_id = instantiation_request_json['id']        
+            logging.debug (instantiation_request_id)
+            time.sleep(2)
+            inst_error = self.getRequestError(instantiation_request_id)    
+
             logging.error (inst_error)
             callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
             logging.debug (callback_post)		
