@@ -1717,7 +1717,14 @@ class Adapter:
                         function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
                         #print (function_vim)
-                        response = response + "\"pod_name\": \"" + cdu_reference + "\","
+                        print (cdu_reference)
+                        cdu_reference_splitted = cdu_reference.split(":")
+                        #cnf_name = cdu_reference[0: cdu_reference.find(":") ]
+                        cnf_name = cdu_reference_splitted[1]
+                        logging.debug (cnf_name)
+
+                        response = response + "\"pod_name\": \"" + cnf_name + "\","
+                        #response = response + "\"pod_name\": \"" + cdu_reference + "\","
                         response = response + "\"vim_id\": \"" + function_vim + "\","
                         vim_object= self.getVim(function_vim)
                         vim_json = json.loads(vim_object)
