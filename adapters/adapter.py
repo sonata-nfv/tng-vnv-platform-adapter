@@ -2313,14 +2313,17 @@ class Adapter:
             logging.debug (callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
             logging.debug(call)	
-            #monitoring_callback = self.getMonitoringURLs()
-            #info_monitoring =self.instantiationInfoMonitoring(instantiation_request_id)	
-            #print (info_monitoring) 
-            #info_monitoring_str = info_monitoring.__str__()
-            #monitoring_string_replaced = info_monitoring_str.replace("'","\"")        
-            #monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
-            #logging.debug (monitoring_callback_post)		
-            #call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
+
+            monitoring_callback = self.getMonitoringURLs()
+            info_monitoring =self.instantiationInfoMonitoring(instantiation_request_id)	
+            print (info_monitoring) 
+            info_monitoring_str = info_monitoring.__str__()
+            monitoring_string_replaced = info_monitoring_str.replace("'","\"")        
+            monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
+            logging.debug (monitoring_callback_post)		
+            call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
+
+
 
         if instance_status == 'ERROR': 
             instantiation_request_json_dumps = json.dumps(instantiation_call)
@@ -2342,10 +2345,14 @@ class Adapter:
                 logging.debug(call)
             except:
                 logging.error ("error sending the instantiation error callback")
-            #monitoring_callback = self.getMonitoringURLs()
-            #monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
-            #logging.debug (monitoring_callback_post)		
-            #call_mon = subprocess.check_output([monitoring_callback_post], shell=True)   
+
+
+            monitoring_callback = self.getMonitoringURLs()
+            monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
+            logging.debug (monitoring_callback_post)		
+            call_mon = subprocess.check_output([monitoring_callback_post], shell=True)   
+
+            
         logging.info ("sonata instantiate callback ends")        
 
 
