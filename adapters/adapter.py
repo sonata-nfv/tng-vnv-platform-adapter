@@ -955,6 +955,15 @@ class Adapter:
             terminate = requests.post(url,data=request,headers=JSON_CONTENT_HEADER) 
             logging.debug (terminate)
             logging.debug (terminate.text)
+
+            content = json.loads(request)
+            ns_id = content['instance_uuid']
+            logging.debug(ns_id)
+            url_monitoring = self.getMonitoringURLs()
+            terminate_string = "curl -X DELETE -H \"Content-type: application/json\" "  + url_monitoring + "/" + ns_id 
+            logging.debug(terminate_string)    
+            terminate_monitoring = subprocess.check_output([terminate_string], shell=True)
+
             return terminate.text
 
         if my_type == 'osm':
@@ -2352,7 +2361,7 @@ class Adapter:
             logging.debug (monitoring_callback_post)		
             call_mon = subprocess.check_output([monitoring_callback_post], shell=True)   
 
-            
+
         logging.info ("sonata instantiate callback ends")        
 
 
