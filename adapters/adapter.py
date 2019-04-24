@@ -1369,6 +1369,17 @@ class Adapter:
         print (callback_post)
         call = subprocess.check_output([callback_post], shell=True)
         logging.debug(call)
+
+
+        #Monitoring callback       
+        callback_msg = self.instantiationInfoMonitoring(service_id)
+        callback_url_monitoring = self.getMonitoringURLs()
+        callback_post_monitoring = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url_monitoring
+        print (callback_post_monitoring)
+        call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
+        logging.debug(call_monitoring)
+
+
         logging.debug ("callback ends")
 
 
@@ -1756,6 +1767,85 @@ class Adapter:
 
             response_2 = response_2 + "}"
             return response_2
+
+        if my_type == 'osm':
+            instance_request = self.instantiationStatus(id) 
+            logging.debug (instance_request) 
+            instance_request_json =  json.loads(instance_request)
+            ns_id = instance_request_json['ns-instance-config-ref']
+            logging.debug (ns_id)
+
+            response = "{\"ns_instance_uuid\": \"" + ns_id + "\","
+            response = response + "\"platform_type\": \"osm\","
+            response = response + "\"functions\": ["
+
+            vnfr_array = instance_request_json['constituent-vnfr-ref']
+            print (vnfr_array)
+            response_functions = " "
+            for vnfr_id in vnfr_array:
+                print ("FUCNTIONS")
+                print(vnfr_id)
+                response_function = "{\"vnfr_id\": \"" + vnfr_id + "\", \"function_type\": " + "\"vnf\","                
+
+                function_request = self.functionRecordOSM(vnfr_id)
+                function_request_json =  json.loads(function_request)
+                print (function_request_json)
+                vnfd_name = function_request_json['vnfd-ref']  
+
+                vim_id = function_request_json['vim-account-id'] 
+
+                response_function = response_function + "\"name\": \"" + vnfd_name + "\","
+                response_function = response_function + "\"endpoints\": ["
+                vdur = function_request_json['vdur']                                
+                print (vdur)
+                
+                for vdu in vdur:
+                    vc_id = vdu['vim-id']                                       
+                    interfaces = vdu['interfaces']
+                    print (interfaces)
+                    for interface in interfaces:                       
+                        print (interface)
+                        address = interface['ip-address']
+                        print (address)
+                        name = interface['name']
+                        type = interface['name']
+                        print (name)
+                        response_interface = "{\"name\": \"" + name + "\", \"type\": \"" + type + "\",\"address\":\"" + address + "\"" + "},"
+
+                        response_function = response_function + response_interface
+
+                response_function_2 = response_function[:-1]
+
+                response_function = response_function_2 + "],"
+
+                response_function = response_function + "\"vc_id\": \"" + vc_id + "\","
+                response_function = response_function + "\"vim_id\": \"" + vim_id + "\","
+                vim_info = self.getOSMVIMInfo(vim_id)
+                vim_url = self.getOSMVIMInfoURL(vim_info)
+                response_function = response_function + "\"vim_endpoint\": \"" + vim_url + "\","
+
+                response_function_2 = response_function[:-1]
+                response_function_2 = response_function_2 + "},"
+                #response_function_2 = response_function_2 + "]"
+                #response_function = "{ + + },"
+                print("function-----function")
+                print (response_function_2)
+                response_functions = response_functions + response_function_2
+
+            #response_functions = response_functions + response_function_2
+            #response_functions = response_functions + "}]"
+            #response_functions = response_functions + "]"
+
+            response_functions_2 = response_functions[:-1] 
+
+            response_functions = response_functions_2 + "],"
+            
+            
+            response = response + response_functions
+            response = response + "\"test_id\": \"null\""
+            response = response + "}"
+            print (response)
+            return response            
 
 
     def unzipPackage(self,package):
@@ -2842,4 +2932,33 @@ class Adapter:
             except:
                 msg = "{\"error\": \"error deleting the package in the SP from the service info\"}"
                 return msg              
+        
+
+    def getOSMVIMInfo(self,vim_id):
+        logging.info("get OSM get vim info starts")
+        service_id = None 
+        exists = 'NO'   
+        sp_host_2 = self.getHostIp()
+        token = self.getOSMToken(request)
+        logging.debug (token)  
+        url = sp_host_2.replace("http","https")      
+        url_2 = url + ':9999/osm//admin/v1/vim_accounts/' + vim_id      
+        vim_info = "curl  --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        vim_info_2 = vim_info +token + "\"  " + url_2 
+        logging.debug (vim_info_2)       
+
+        response = subprocess.check_output([vim_info_2], shell=True)
+        print (response)
+        return response
+
+    def getOSMVIMInfoURL(self,vim_info):
+        logging.info("get OSM get vim info url starts")
+        
+        content = json.loads(vim_info)
+        print (content)
+        vim_url_full = content['vim_url']
+        vim_url_array = vim_url_full.split(":")
+        vim_url_center = vim_url_array[1]
+        return vim_url_center[2:]
+
         
