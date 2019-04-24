@@ -1732,9 +1732,12 @@ class Adapter:
                         cdu_reference_splitted = cdu_reference.split(":")
                         #cnf_name = cdu_reference[0: cdu_reference.find(":") ]
                         cnf_name = cdu_reference_splitted[1]
+                        container_name = cnf_name
                         logging.debug (cnf_name)
 
-                        response = response + "\"pod_name\": \"" + cnf_name + "\","
+                        response = response + "\"container_name\": \"" + cnf_name + "\","
+                        response = response + "\"pod_name\": \"" + cdu_reference + "\","
+                        #response = response + "\"pod_name\": \"" + cnf_name + "\","
                         #response = response + "\"pod_name\": \"" + cdu_reference + "\","
                         response = response + "\"vim_id\": \"" + function_vim + "\","
                         vim_object= self.getVim(function_vim)
