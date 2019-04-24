@@ -2444,7 +2444,7 @@ class Adapter:
             logging.debug (package_path)            
             
             
-            package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+            #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
             print (package_path)
             
             try:
