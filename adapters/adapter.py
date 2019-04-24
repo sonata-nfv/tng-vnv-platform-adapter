@@ -2439,10 +2439,16 @@ class Adapter:
             download_pkg = self.downloadPackageTGO(package_id)
             logging.debug (download_pkg)            
             download_pkg_json = json.loads(download_pkg)
-            logging.debug (download_pkg_json)
-            package_path = download_pkg_json['package']
-            logging.debug (package_path)            
+        
+            download_pkg = self.downloadPackageTGO(package_id)
+            download_pkg_json = json.loads(download_pkg)        
+            package_path_downloaded = download_pkg_json['package'] 
+
+            unzip = self.unzipPackage(package_path_downloaded)  
+
+            print(unzip)       
             
+            package_path = '/app/packages/' + package_id
             
             #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
             print (package_path)
