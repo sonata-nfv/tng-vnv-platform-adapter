@@ -1770,7 +1770,8 @@ class Adapter:
         
         msg_response = "The package " + package + " was unzipped to: " + package_string_2
         logging.debug(msg_response)
-        return msg_response
+        #return msg_response
+        return package_string_2
 
 
     def instantiationInfoCurator(self,id):    
@@ -2448,7 +2449,8 @@ class Adapter:
 
             print(unzip)       
             
-            package_path = '/app/packages/' + package_id
+            #package_path = '/app/packages/' + package_id
+            package_path = unzip
             
             #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
             print (package_path)
