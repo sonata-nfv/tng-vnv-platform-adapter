@@ -241,6 +241,11 @@ def adapter_get_package(service_platform,name,vendor, version):
     ad = adapter.Adapter(service_platform)
     return ad.getPackage(name,vendor,version)    
 
+@app.route('/adapters/services/<name>/<vendor>/<version>', methods=['GET'])
+def adapter_get_services_osm_test(name,vendor, version):
+    ad = adapter.Adapter("service_platform")
+    return ad.getVnVOSMServiceIdTEST(name,vendor,version)       
+
 #@app.route('/adapters/<service_platform>/packages/<name>/<vendor>/<version>', methods=['DELETE'])
 #def adapter_delete_package(service_platform,name,vendor, version):
 #    ad = adapter.Adapter(service_platform)

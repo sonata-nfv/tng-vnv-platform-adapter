@@ -2762,27 +2762,54 @@ class Adapter:
         logging.info("get vnv service id starts")
         uuid = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
-        my_type =  self.getDBType()
-        if my_type == 'sonata':          
-            url = 'http://tng-cat:4011/api/catalogues/v2/network-services'  
-            response = requests.get(url,headers=JSON_CONTENT_HEADER)
-            response_json = response.content
-            jjson = json.loads(response_json)
-            for x in jjson:
-                print(x)
-                logging.debug(x)
-                try:
-                    osm_name = x['nsd']['nsd:nsd-catalog']['nsd']['name']
-                    print("OSM service descriptor, checking if is the one we are searching:") 
-                    if ( x['nsd']['nsd:nsd-catalog']['nsd']['name'] == name and x['nsd']['nsd:nsd-catalog']['nsd']['vendor'] == vendor and x['nsd']['nsd:nsd-catalog']['nsd']['version'] == version ) :
-                        print("same name")
-                        uuid = x['uuid']
-                        print(uuid)  
-                except:
-                    print("Sonata services descriptor, trying next")        
+                 
+        url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
+        response = requests.get(url,headers=JSON_CONTENT_HEADER)
+        print (response)
+        response_json = response.content
+        jjson = json.loads(response_json)
+        for x in jjson:
+            print(x)
+            logging.debug(x)
+            try:
+                osm_name = x['nsd']['nsd:nsd-catalog']['nsd']['name']
+                print("OSM service descriptor, checking if is the one we are searching:") 
+                if ( x['nsd']['nsd:nsd-catalog']['nsd']['name'] == name and x['nsd']['nsd:nsd-catalog']['nsd']['vendor'] == vendor and x['nsd']['nsd:nsd-catalog']['nsd']['version'] == version ) :
+                    print("same name")
+                    uuid = x['uuid']
+                    print(uuid)  
+            except:
+                print("Sonata services descriptor, trying next")        
 
         logging.debug(uuid)
-        return uuid             
+        return uuid    
+
+
+    def getVnVOSMServiceIdTEST(self,name,vendor,version):    
+        logging.info("get vnv service id starts")
+        uuid = None
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+                 
+        url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
+        response = requests.get(url,headers=JSON_CONTENT_HEADER)
+        print (response)
+        response_json = response.content
+        jjson = json.loads(response_json)
+        for x in jjson:
+            print(x)
+            logging.debug(x)
+            try:
+                osm_name = x['nsd']['nsd:nsd-catalog']['nsd']['name']
+                print("OSM service descriptor, checking if is the one we are searching:") 
+                if ( x['nsd']['nsd:nsd-catalog']['nsd']['name'] == name and x['nsd']['nsd:nsd-catalog']['nsd']['vendor'] == vendor and x['nsd']['nsd:nsd-catalog']['nsd']['version'] == version ) :
+                    print("same name")
+                    uuid = x['uuid']
+                    print(uuid)  
+            except:
+                print("Sonata services descriptor, trying next")        
+
+        logging.debug(uuid)
+        return uuid          
 
 
     def deletePackagefromService(self,name,vendor,version):    
