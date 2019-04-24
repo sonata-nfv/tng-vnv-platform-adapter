@@ -2851,10 +2851,13 @@ class Adapter:
             for x in jjson:
                 print(x)
                 logging.debug(x)
-                if ( x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version ) :
-                    print("same name")
-                    uuid = x['uuid']
-                    print(uuid)  
+                try:
+                    if ( x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version ) :
+                        print("same name")
+                        uuid = x['uuid']
+                        print(uuid)  
+                except:
+                    logging.debug("this descriptor is not a Sonata one")
 
         logging.debug(uuid)
         return uuid     
@@ -2880,7 +2883,7 @@ class Adapter:
                     uuid = x['uuid']
                     print(uuid)  
             except:
-                print("Sonata services descriptor, trying next")        
+                logging.debug("this descriptor is not a OSM one")       
 
         logging.debug(uuid)
         return uuid    
