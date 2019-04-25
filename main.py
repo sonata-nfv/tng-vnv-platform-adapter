@@ -324,9 +324,6 @@ def serviceInstantiation(service_platform):
 
 @app.route('/adapters/<service_platform>/instantiations/terminate', methods=['POST'])
 def serviceterminate(service_platform): 
-
-    return "testing"
-
     print (request.is_json)
     print (request)
     content = request.get_json()
