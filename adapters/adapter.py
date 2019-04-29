@@ -857,12 +857,17 @@ class Adapter:
         if my_type == 'sonata':
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + ':32002/api/v3/requests'
-            logging.debug(url)         
-            instantiate = requests.post( url, data=request, headers=JSON_CONTENT_HEADER)                      
-            logging.debug ("THIS IS THE INSTANTIATE RESPONSE:")
-            logging.debug (instantiate)
-            logging.debug (instantiate.text)
-            return instantiate.text
+            logging.debug(url)
+            try:         
+                instantiate = requests.post( url, data=request, headers=JSON_CONTENT_HEADER)                      
+                logging.debug ("THIS IS THE INSTANTIATE RESPONSE:")
+                logging.debug (instantiate)
+                logging.debug (instantiate.text)
+                return instantiate.text
+            except:
+                logging.error ("Error sending the request, check the connection and logs")
+                msg = "{\"error\": \"error sending the request, check the connection and logs\"}"
+                return msg                  
 
         if my_type == 'osm':
             print('this SP is a OSM')  
@@ -2412,7 +2417,15 @@ class Adapter:
             logging.debug (instance_status)
         except:
             msg = "{\"error\": \"error getting request status\"}"
+
+            msg_str = msg.__str__()
+            callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  msg_str  +  "' " + callback        
+            logging.debug (callback_post)		
+            call = subprocess.check_output([callback_post], shell=True)
+            logging.debug(call)	
+
             return msg  
+            
 
         if instance_status == 'READY':
             instantiation_info = self.instantiationInfoCurator(instantiation_request_id)
