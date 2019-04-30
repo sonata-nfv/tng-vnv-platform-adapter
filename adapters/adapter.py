@@ -2450,13 +2450,14 @@ class Adapter:
 
             #return (instantiation_call)
 
-            instantiation_call_str = instantiation_call.__str__()
-            instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
-            instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]            
-
-            string_inicial = "{\"package_id\": \"" + package_id + "\","
-            request_response = string_inicial + instantiation_call_str_replaced_2
-
+            instantiation_call_str = instantiation_call
+            print (instantiation_call_str)   
+            instantiation_call_json = json.loads(instantiation_call_str)  
+            print (instantiation_call_json)
+            instantiation_id = instantiation_call_json['id']
+            print (instantiation_id)
+            request_response = "{\"package_id\": \"" + package_id + "\", \"id\": \"" + instantiation_id + "\"}"            
+            print (request_response)
             logging.debug(request_response)   
             return (request_response)	            
             
@@ -2604,7 +2605,7 @@ class Adapter:
             print ("instantion for osm SPs stars")
 
             ### package operations
-                        
+            '''          
             vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
             package_id = self.getPackageIdfromServiceId(vnv_service_id)            
             logging.debug (package_id)
@@ -2622,8 +2623,8 @@ class Adapter:
             
             #package_path = '/app/packages/' + package_id
             package_path = unzip
-            
-            #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+            '''
+            package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
             print (package_path)
             
             try:
@@ -2660,7 +2661,7 @@ class Adapter:
                     service_file_path = service_json['service']
 
                     upload_service = self.uploadOSMService(service_file_path)
-                    logging.debug (upload_service)
+                    #logging.debug (upload_service)
                     
                     service_id = self.getUploadedOSMServiceId(upload_service)
                     print ("THIS IS THE NEW UPLOADED SERVICE ID")
@@ -2694,9 +2695,25 @@ class Adapter:
             instantiation_call = self.instantiation(instantiate_str)    
             logging.debug (instantiation_call)
 
-            _thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
+            #_thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
             
-            return (instantiation_call)
+            #return (instantiation_call)
+            #return (instantiation_call)
+
+            instantiation_call_str = instantiation_call
+            print (instantiation_call_str)   
+            instantiation_call_json = json.loads(instantiation_call_str)  
+            print (instantiation_call_json)
+            instantiation_id = instantiation_call_json['id']
+            print (instantiation_id)
+               
+
+            #package_id = "aaaaaaaa"
+            request_response = "{\"package_id\": \"" + package_id + "\", \"id\": \"" + instantiation_id + "\"}"            
+            print (request_response)     
+
+            logging.debug(request_response)   
+            return (request_response)	            
                  
 
     def getOSMServiceId(self,name,vendor,version):
