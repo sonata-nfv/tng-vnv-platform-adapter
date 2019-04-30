@@ -2070,7 +2070,10 @@ class Adapter:
                         print (interface)
                         address = interface['ip-address']
                         print (address)
-                        name = interface['name']
+                        
+                        #name = interface['name']
+                        name = interface['ns-vld-id']
+
                         type = interface['name']
                         print (name)
                         response_interface = "{\"name\": \"" + name + "\", \"type\": \"" + type + "\",\"address\":\"" + address + "\"" + "},"
