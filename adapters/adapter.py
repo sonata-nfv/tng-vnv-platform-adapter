@@ -988,26 +988,93 @@ class Adapter:
             ns_id = content['instance_uuid']
             logging.debug(ns_id)
             
-            #ns_id = request['instance_uuid']
+            
             logging.debug (ns_id)
             delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             delete_ns_2 = delete_ns +token + "\" "
             delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
             logging.debug (delete_ns_3)
 
+            # terminating the instance
             terminate = subprocess.check_output([delete_ns_3], shell=True)
+            #terminate = "hola"
 
-            try:
-                callback_url = content['callback']
-                logging.debug ("Callback url specified")
-                _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,content['ns_id']))
-            except:
-                logging.debug ("No callback url specified")                 
+            # deleting the descriptors
+            package_uploaded = content['package_uploaded']
+            logging.debug(package_uploaded)
+            if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
+                instance_status = self.OSMTerminateStatus(url_2,ns_id)
+                print(instance_status)
+                while instance_status != 'terminated':
+                    time.sleep(2)
+                    instance_status = self.OSMTerminateStatus(url_2,ns_id)
+                delete_descriptors = self.deleteOSMDescriptors(ns_id)
                 
+                print (delete_descriptors)
+
+            print (terminate)
+            #_thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,content['ns_id']))
+                                 
             logging.debug(terminate)
             return (terminate)            
 
                         
+    def deleteOSMDescriptors(self,instance_id):
+        logging.debug("deleteOSMDescriptors begins")
+        sp_host_2 = self.getHostIp()
+        logging.debug(sp_host_2)
+        token = self.getOSMToken(request)
+        logging.debug (token)        
+        #url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+        url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+        url_2 = url.replace("http","https")
+        logging.debug (url_2)
+
+        #content = json.loads(request)
+        ns_id = instance_id
+        logging.debug(ns_id)
+        
+        logging.debug (ns_id)
+        instance_ns = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        instance_ns_2 = instance_ns +token + "\" "
+        instance_ns_3 = instance_ns_2 + " " + url_2 + "/" + ns_id          
+        logging.debug (instance_ns_3)
+
+        instance = subprocess.check_output([instance_ns_3], shell=True)
+        print(instance)
+        instance_json = json.loads(instance)
+        print(instance_json)
+        nsdId = instance_json['instantiate_params']['nsdId']
+        print (nsdId)
+
+        vnfr_array = instance_json['constituent-vnfr-ref']
+
+
+        vnfds = []
+
+        print (vnfr_array)
+        for vnfr_id in vnfr_array:
+            print ("FUCNTIONS")
+            print(vnfr_id)                
+            function_request = self.functionRecordOSM(vnfr_id)
+            function_request_json =  json.loads(function_request)
+            print (function_request_json)
+            vnfd_id = function_request_json['vnfd-id']
+            print (vnfd_id)
+            vnfds.append(vnfd_id)
+
+            
+
+        deleteOSMService = self.deleteOSMService(nsdId)
+        print (deleteOSMService)
+        time.sleep(5)
+        for vnfd_id in vnfds:
+            deleteOSMFunction = self.deleteOSMFunction(vnfd_id)
+            print (deleteOSMFunction)
+        print ("hola")
+
+        return "hola"       
+        
 
 
     def getOSMToken(self,request):        
@@ -1386,6 +1453,51 @@ class Adapter:
 
 
         logging.debug ("callback ends")
+
+
+
+
+
+    def OSMTerminateStatus(self,url_2,ns_id):
+        logging.info("osm terminate status starts")        
+        service_id = ns_id
+        logging.debug(service_id)
+        token = self.getOSMToken(ns_id)
+        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        logging.debug(status_url)
+        status_curl = subprocess.check_output([status_url], shell=True)
+        logging.debug (status_curl)
+        with open('/app/temp.file') as f:
+            data = json.load(f)
+
+        status = 'my_status'
+        is_active = 'not'
+
+        while status != '404':    
+            while is_active == 'not':
+                try:
+                    status = data['admin']['deployed']['RO']['nsr_status'] 
+                    is_active = 'yes'
+                    status = '404'
+                except:
+                    is_active = 'not'
+                    status = 'my_status'
+                    logging.debug("Retraying in 3 sec")
+                    logging.debug(status)
+                    time.sleep(3)
+                    status_curl = subprocess.check_output([status_url], shell=True)
+                    logging.debug (status_curl)
+                    with open('/app/temp.file') as f:
+                        data = json.load(f)
+
+        status = "terminated"  
+
+        return status
+
+
+
+
+
 
 
 
@@ -2234,6 +2346,7 @@ class Adapter:
         thing = None
         service_id = None
         upload_pkg = None
+        package_uploaded = False
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
@@ -2270,7 +2383,8 @@ class Adapter:
                     logging.debug("The Service is already in the SP")
             except:
                 logging.debug("The Service is not in the SP  ") 
-                upload_pkg = self.uploadPackage(package_path)  
+                upload_pkg = self.uploadPackage(package_path)
+                package_uploaded = True
                 logging.debug (upload_pkg)
                 upload_pkg_json =  json.loads(upload_pkg)
                 upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
@@ -2288,6 +2402,7 @@ class Adapter:
             ### service operations
             try:
                 upload_pkg = self.uploadPackage(package_path)  
+                package_uploaded = True
                 logging.debug (upload_pkg)
                 upload_pkg_json =  json.loads(upload_pkg)
                 upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
@@ -2340,6 +2455,9 @@ class Adapter:
 
             #package_id = self.getSPPackageIdfromServiceId(service_id)
             string_inicial = "{\"package_id\": \"" + package_id + "\","
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
+            logging.debug(string_inicial)
+
             request_response = string_inicial + instantiation_call_str_replaced_2
 
             logging.debug(request_response)   
@@ -2419,6 +2537,8 @@ class Adapter:
                     print (service_id)
                     #return service_id
                 
+                package_uploaded = True
+                
             time.sleep(2)
             
 
@@ -2456,7 +2576,12 @@ class Adapter:
             print (instantiation_call_json)
             instantiation_id = instantiation_call_json['id']
             print (instantiation_id)
-            request_response = "{\"package_id\": \"" + package_id + "\", \"id\": \"" + instantiation_id + "\"}"            
+            #request_response = "{\"package_id\": \"" + package_id + "\", \"id\": \"" + instantiation_id + "\"}"   
+
+            string_inicial = "{\"package_id\": \"" + package_id + "\","                
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","                            
+            request_response = string_inicial + "\"id\": \"" + instantiation_id + "\"}"
+
             print (request_response)
             logging.debug(request_response)   
             return (request_response)	            
@@ -2553,7 +2678,9 @@ class Adapter:
         vendor = content['service_vendor']
         version = content['service_version']        
         callback = content['callback']
-        my_type =  self.getDBType()   
+        my_type =  self.getDBType()  
+        package_uploaded = False
+
         service_id = None   
         if my_type == 'sonata':
                ### service operations
@@ -2661,12 +2788,13 @@ class Adapter:
                     service_file_path = service_json['service']
 
                     upload_service = self.uploadOSMService(service_file_path)
-                    #logging.debug (upload_service)
+                    logging.debug (upload_service)
                     
                     service_id = self.getUploadedOSMServiceId(upload_service)
                     print ("THIS IS THE NEW UPLOADED SERVICE ID")
                     print (service_id)
                     #return service_id
+                package_uploaded = True
                 
             time.sleep(2)
             
@@ -2709,7 +2837,14 @@ class Adapter:
                
 
             #package_id = "aaaaaaaa"
-            request_response = "{\"package_id\": \"" + package_id + "\", \"id\": \"" + instantiation_id + "\"}"            
+            #request_response = "{\"package_id\": \"" + package_id + "\", \"id\": \"" + instantiation_id + "\"}"            
+            
+            
+            string_inicial = "{\"package_id\": \"" + "111111111111" + "\","                
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
+            string_replaced = string_inicial.replace("\"True\"","true")                            
+            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"            
+            
             print (request_response)     
 
             logging.debug(request_response)   
