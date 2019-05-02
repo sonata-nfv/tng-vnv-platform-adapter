@@ -336,6 +336,37 @@ def serviceterminate(service_platform):
     ad = adapter.Adapter(service_platform)  
     return ad.instantiationDelete(terminate_str)
 
+@app.route('/adapters/<service_platform>/instantiations/terminate/tests', methods=['POST'])
+def serviceterminatetest(service_platform): 
+    print (request)
+    print (type(request))
+    content = request.get_json()
+    #print (content)
+    #print (content['instance_uuid'])
+    #print (content['package_uploaded'])
+
+
+    try:         
+        print (content)
+        print (content['instance_uuid'])
+        instance_uuid = content['instance_uuid']    
+        print (instance_uuid)
+        package_uploaded = content['package_uploaded']
+        print (package_uploaded)
+
+        if ( package_uploaded == False ) or ( package_uploaded == "false" ):
+            terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"False\",\"request_type\":\"TERMINATE_SERVICE\"}"
+        if ( package_uploaded == True ) or ( package_uploaded == "true" ):
+            terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"True\",\"request_type\":\"TERMINATE_SERVICE\"}"
+        
+        print (terminate_str)                      
+        ad = adapter.Adapter(service_platform)  
+        return ad.instantiationDelete(terminate_str)    
+        
+    except:
+        error = "{\"error\": \"error launching the terminate\"}"
+        return error
+
 
 
 
