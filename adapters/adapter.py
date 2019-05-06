@@ -1063,17 +1063,29 @@ class Adapter:
             print (vnfd_id)
             vnfds.append(vnfd_id)
 
-            
 
+        try:
+            instance = None
+            instance = subprocess.check_output([instance_ns_3], shell=True)
+            print (instance)
+            while instance is not None:
+                instance = subprocess.check_output([instance_ns_3], shell=True)
+                print (instance)
+                instance_json = json.loads(instance)
+                status = instance_json['status']
+                if status == '404':
+                    raise Exception('The instance has been terminated. Deleting descriptors...') 
+        except:
+            logging.debug("The instance has been terminated. Deleting descriptors...")
+        
         deleteOSMService = self.deleteOSMService(nsdId)
         print (deleteOSMService)
-        time.sleep(5)
+        time.sleep(7)
         for vnfd_id in vnfds:
             deleteOSMFunction = self.deleteOSMFunction(vnfd_id)
             print (deleteOSMFunction)
-        print ("hola")
-
-        return "hola"       
+        
+        return "deleted"       
         
 
 
