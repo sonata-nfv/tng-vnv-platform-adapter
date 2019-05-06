@@ -1407,6 +1407,9 @@ class Adapter:
         config_status = instance_json['config-status']
         print (config_status)
 
+        operational_status = instance_json['operational-status']
+        print (operational_status)
+
         #with open('/app/temp.file') as f:
         #    data = json.load(f)
 
@@ -1419,9 +1422,10 @@ class Adapter:
 
         status = None
         #while status != 'ACTIVE':
-         
 
-        while config_status != 'configured':               
+
+        #while (config_status != 'configured') and operational_status != 'running':               
+        while ( operational_status != 'running' and operational_status != 'error' ):               
             try:
                 status = data['config-status']                    
                 print (status)
@@ -1434,6 +1438,8 @@ class Adapter:
                 instance_json = json.loads(status_curl)
                 config_status = instance_json['config-status']
                 print (config_status)
+                operational_status = instance_json['operational-status']
+                print (operational_status)
 
         status = config_status
         logging.debug (status)
@@ -2835,10 +2841,9 @@ class Adapter:
             instantiation_call = self.instantiation(instantiate_str)    
             logging.debug (instantiation_call)
 
-            #_thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
-            
-            #return (instantiation_call)
-            #return (instantiation_call)
+
+            _thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
+
 
             instantiation_call_str = instantiation_call
             print (instantiation_call_str)   
