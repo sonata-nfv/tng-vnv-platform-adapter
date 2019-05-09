@@ -830,14 +830,15 @@ class Adapter:
 
     def instantiation(self,request):    
         logging.info("instantiation starts")
-        print ("INSTANTIATION FUNCTION BEGINS")
-        print (request)
+        logging.debug ("INSTANTIATION FUNCTION BEGINS")
+        logging.debug (request)
         request_str = request.__str__()
         logging.debug (request_str)
         JSON_CONTENT_HEADER = {'content-Type':'application/json'}   
         my_type =  self.getDBType()
 
         if my_type == 'onap':
+            '''
             print('this SP is ONAP')
             sp_host_2 = self.getHostIp()
             print ("sp2 es: ")
@@ -851,7 +852,8 @@ class Adapter:
             instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER)            
             print (instantiate)
             if request.method == 'POST':
-                return instantiate.text            
+                return instantiate.text 
+            '''           
 
 
         if my_type == 'sonata':
@@ -875,10 +877,10 @@ class Adapter:
             sp_host_3 = sp_host_2[7:]
             url = sp_host_3
             #content = request.get_json()
-            print ("REQUEST")
-            print (request)
+            logging.debug ("REQUEST")
+            logging.debug (request)
             content = json.loads(request.__str__())
-            print ("CONTENT:")
+            logging.debug ("CONTENT:")
             logging.debug(content)
             token = self.getOSMToken(request)
             logging.debug (token)
@@ -1052,10 +1054,10 @@ class Adapter:
 
         vnfds = []
 
-        print (vnfr_array)
+        logging.debug (vnfr_array)
         for vnfr_id in vnfr_array:
-            print ("FUCNTIONS")
-            print(vnfr_id)                
+            logging.debug ("FUCNTIONS")
+            logging.debug(vnfr_id)                
             function_request = self.functionRecordOSM(vnfr_id)
             function_request_json =  json.loads(function_request)
             print (function_request_json)
@@ -1410,36 +1412,23 @@ class Adapter:
         operational_status = instance_json['operational-status']
         print (operational_status)
 
-        #with open('/app/temp.file') as f:
-        #    data = json.load(f)
-
-        #status = 'my_status'
-
-        print ("                     -               ")
-        print ("THIS IS THE INSTANCE RECORD")
-        print (instance_json)
-        print ("                     -               ")
-
         status = None
-        #while status != 'ACTIVE':
-
-
-        #while (config_status != 'configured') and operational_status != 'running':               
+             
         while ( operational_status != 'running' and operational_status != 'error' ):               
             try:
                 status = data['config-status']                    
-                print (status)
+                logging.debug (status)
             except:
-                print("Retraying in 3 sec")
-                print (status)
+                logging.debug("Retraying in 3 sec")
+                logging.debug (status)
                 time.sleep(3)
                 status_curl = subprocess.check_output([status_url], shell=True)
-                print (status_curl)
+                logging.debug (status_curl)
                 instance_json = json.loads(status_curl)
                 config_status = instance_json['config-status']
-                print (config_status)
+                logging.debug (config_status)
                 operational_status = instance_json['operational-status']
-                print (operational_status)
+                logging.debug (operational_status)
 
         status = config_status
         logging.debug (status)
@@ -1447,16 +1436,10 @@ class Adapter:
         #callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
 
         callback_msg = self.instantiationInfoCurator(service_id)
-        print ("THIS IS THE CALLBACK FROM OSM:")
-        print ("THIS IS THE CALLBACK FROM OSM:")
-        print ("THIS IS THE CALLBACK FROM OSM:")
         logging.debug (callback_msg)
-        print ("THIS WAS THE CALLBACK FROM OSM")
-        print ("THIS WAS THE CALLBACK FROM OSM")
-        print ("THIS WAS THE CALLBACK FROM OSM")
         #callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
         callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url
-        print (callback_post)
+        logging.debug (callback_post)
         call = subprocess.check_output([callback_post], shell=True)
         logging.debug(call)
 
@@ -1465,7 +1448,7 @@ class Adapter:
         callback_msg = self.instantiationInfoMonitoring(service_id)
         callback_url_monitoring = self.getMonitoringURLs()
         callback_post_monitoring = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url_monitoring
-        print (callback_post_monitoring)
+        logging.debug (callback_post_monitoring)
         call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
         logging.debug(call_monitoring)
 
@@ -1521,7 +1504,7 @@ class Adapter:
 
     def OSMTerminateCallback(self,token,url_2,callback_url,ns_id):
         logging.info("osm terminate callback starts")
-        print ("callback start")
+        logging.debug ("callback start")
         service_id = ns_id
         logging.debug(service_id)
         status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
@@ -1610,7 +1593,7 @@ class Adapter:
         logging.debug (status_curl)
         with open('/app/temp.file') as f:
             data = json.load(f)
-        print (data)
+        logging.debug (data)
         status = 'my_status'
 
         while status == 'my_status': 
@@ -1863,7 +1846,7 @@ class Adapter:
                         function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
                         #print (function_vim)
-                        print (cdu_reference)
+                        logging.debug (cdu_reference)
                         cdu_reference_splitted = cdu_reference.split(":")
                         #cnf_name = cdu_reference[0: cdu_reference.find(":") ]
                         cnf_name = cdu_reference_splitted[1]
@@ -1918,16 +1901,16 @@ class Adapter:
             response = response + "\"functions\": ["
 
             vnfr_array = instance_request_json['constituent-vnfr-ref']
-            print (vnfr_array)
+            logging.debug (vnfr_array)
             response_functions = " "
             for vnfr_id in vnfr_array:
-                print ("FUCNTIONS")
-                print(vnfr_id)
+                logging.debug ("FUCNTIONS")
+                logging.debug(vnfr_id)
                 response_function = "{\"vnfr_id\": \"" + vnfr_id + "\", \"function_type\": " + "\"vnf\","                
 
                 function_request = self.functionRecordOSM(vnfr_id)
                 function_request_json =  json.loads(function_request)
-                print (function_request_json)
+                logging.debug (function_request_json)
                 vnfd_name = function_request_json['vnfd-ref']  
 
                 vim_id = function_request_json['vim-account-id'] 
@@ -1935,19 +1918,19 @@ class Adapter:
                 response_function = response_function + "\"name\": \"" + vnfd_name + "\","
                 response_function = response_function + "\"endpoints\": ["
                 vdur = function_request_json['vdur']                                
-                print (vdur)
+                logging.debug (vdur)
                 
                 for vdu in vdur:
                     vc_id = vdu['vim-id']                                       
                     interfaces = vdu['interfaces']
-                    print (interfaces)
+                    logging.debug (interfaces)
                     for interface in interfaces:                       
-                        print (interface)
+                        logging.debug (interface)
                         address = interface['ip-address']
-                        print (address)
+                        logging.debug (address)
                         name = interface['name']
                         type = interface['name']
-                        print (name)
+                        logging.debug (name)
                         response_interface = "{\"name\": \"" + name + "\", \"type\": \"" + type + "\",\"address\":\"" + address + "\"" + "},"
 
                         response_function = response_function + response_interface
@@ -1964,15 +1947,9 @@ class Adapter:
 
                 response_function_2 = response_function[:-1]
                 response_function_2 = response_function_2 + "},"
-                #response_function_2 = response_function_2 + "]"
-                #response_function = "{ + + },"
-                print("function-----function")
-                print (response_function_2)
-                response_functions = response_functions + response_function_2
 
-            #response_functions = response_functions + response_function_2
-            #response_functions = response_functions + "}]"
-            #response_functions = response_functions + "]"
+                logging.debug (response_function_2)
+                response_functions = response_functions + response_function_2
 
             response_functions_2 = response_functions[:-1] 
 
@@ -1982,7 +1959,7 @@ class Adapter:
             response = response + response_functions
             response = response + "\"test_id\": \"null\""
             response = response + "}"
-            print (response)
+            logging.debug (response)
             return response            
 
 
@@ -2178,49 +2155,44 @@ class Adapter:
             response = response + "\"functions\": ["
 
             vnfr_array = instance_request_json['constituent-vnfr-ref']
-            print (vnfr_array)
+            logging.debug (vnfr_array)
             response_functions = " "
             for vnfr_id in vnfr_array:
-                print ("FUCNTIONS")
-                print(vnfr_id)
+                logging.debug ("FUCNTIONS")
+                logging.debug(vnfr_id)
                 response_function = "{\"id\": \"" + vnfr_id + "\", \"function_type\": " + "\"vnf\","                
 
                 function_request = self.functionRecordOSM(vnfr_id)
                 function_request_json =  json.loads(function_request)
-                print (function_request_json)
+                logging.debug (function_request_json)
                 vnfd_name = function_request_json['vnfd-ref']                
                 response_function = response_function + "\"name\": \"" + vnfd_name + "\","
                 response_function = response_function + "\"endpoints\": ["
                 vdur = function_request_json['vdur']                                
-                print (vdur)
+                logging.debug (vdur)
                 for vdu in vdur:
                     interfaces = vdu['interfaces']
-                    print (interfaces)
+                    logging.debug (interfaces)
                     for interface in interfaces:                       
-                        print (interface)
+                        logging.debug (interface)
                         address = interface['ip-address']
-                        print (address)
+                        logging.debug (address)
                         
                         #name = interface['name']
                         name = interface['ns-vld-id']
 
                         type = interface['name']
-                        print (name)
+                        logging.debug (name)
                         response_interface = "{\"name\": \"" + name + "\", \"type\": \"" + type + "\",\"address\":\"" + address + "\"" + "},"
 
                         response_function = response_function + response_interface
 
                 response_function_2 = response_function[:-1]
                 response_function_2 = response_function_2 + "]},"
-                #response_function_2 = response_function_2 + "]"
-                #response_function = "{ + + },"
-                print("function-----function")
-                print (response_function_2)
-                response_functions = response_functions + response_function_2
 
-            #response_functions = response_functions + response_function_2
-            #response_functions = response_functions + "}]"
-            #response_functions = response_functions + "]"
+                logging.debug("function-----function")
+                logging.debug (response_function_2)
+                response_functions = response_functions + response_function_2
 
             response_functions_2 = response_functions[:-1] 
 
@@ -2228,7 +2200,7 @@ class Adapter:
             
             response = response + response_functions
             response = response + "}"
-            print (response)
+            logging.debug (response)
             return response
 
     def functionRecordOSM(self, vnfr_id):
@@ -2447,10 +2419,6 @@ class Adapter:
 
             instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
             logging.debug (instantiate_str)
-            #instantiate_str_replaced = instantiate_str.replace("'","\"")
-            #logging.debug (instantiate_str_replaced)  
-            #instantiate_json = json.loads(instantiate_str_replaced)          
-            #logging.debug (instantiate_json)
 
             instantiation_call = None
             try:
@@ -2489,7 +2457,7 @@ class Adapter:
             package_path = None
             vnv_service_id = None
 
-            print ("instantion for osm SPs stars")
+            logging.debug ("instantion for osm SPs stars")
 
             ### package operations
                         
@@ -2506,18 +2474,18 @@ class Adapter:
 
             unzip = self.unzipPackage(package_path_downloaded)  
 
-            print(unzip)       
+            logging.debug(unzip)       
             
             #package_path = '/app/packages/' + package_id
             package_path = unzip
             
             #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
-            print (package_path)
+            logging.debug (package_path)
             
             try:
                 # verify if the service is in the SP
                 service_id = self.getOSMServiceId(name,vendor,version)
-                print (service_id)
+                logging.debug (service_id)
                 if service_id == 'error':
                     logging.debug("The Service is already in the SP")
                     raise Exception('The Service descriptor is in the SP or the list is empty') 
@@ -2529,10 +2497,10 @@ class Adapter:
                 
                 for function in functions_array:
                     function_str = "{\"function\": \"" + function + "\"}"
-                    print (function_str)                                        
+                    logging.debug (function_str)                                        
                     function_json = json.loads(function_str.__str__())
-                    print (function_json)
-                    print (function_json['function'])
+                    logging.debug (function_json)
+                    prilogging.debugnt (function_json['function'])
                     function_file_path = function_json['function']
                    
                     upload_function = self.uploadOSMFunction(function_file_path)
@@ -2541,18 +2509,18 @@ class Adapter:
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
 
-                    print (service_str)                                        
+                    logging.debug (service_str)                                        
                     service_json = json.loads(service_str.__str__())
-                    print (service_json)
-                    print (service_json['service'])
+                    logging.debug (service_json)
+                    logging.debug (service_json['service'])
                     service_file_path = service_json['service']
 
                     upload_service = self.uploadOSMService(service_file_path)
                     logging.debug (upload_service)
                     
                     service_id = self.getUploadedOSMServiceId(upload_service)
-                    print ("THIS IS THE NEW UPLOADED SERVICE ID")
-                    print (service_id)
+                    logging.debug ("THIS IS THE NEW UPLOADED SERVICE ID")
+                    logging.debug (service_id)
                     #return service_id
                 
                 package_uploaded = True
@@ -2567,40 +2535,37 @@ class Adapter:
             ns_name = service_id
             vim_account = self.getVimAccount()
 
-            print (nsd_name)
-            print (ns_name)
-            print (vim_account)            
+            logging.debug (nsd_name)
+            logging.debug (ns_name)
+            logging.debug (vim_account)            
 
             instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
-            print ("THIS IS THE INSTANTIATE STRING FOR OSM")
-            print ("aaaaaaaaaaa")
+            logging.debug ("THIS IS THE INSTANTIATE STRING FOR OSM")
+            logging.debug ("aaaaaaaaaaa")
 
             
             logging.debug(instantiate_str)
 
 
-            print ("aaaaaaaaaaa")
+            logging.debug ("aaaaaaaaaaa")
 
             instantiation_call = self.instantiation(instantiate_str)    
             logging.debug (instantiation_call)
 
             _thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
 
-            #return (instantiation_call)
-
             instantiation_call_str = instantiation_call
-            print (instantiation_call_str)   
+            logging.debug (instantiation_call_str)   
             instantiation_call_json = json.loads(instantiation_call_str)  
-            print (instantiation_call_json)
+            logging.debug (instantiation_call_json)
             instantiation_id = instantiation_call_json['id']
-            print (instantiation_id)
-            #request_response = "{\"package_id\": \"" + package_id + "\", \"id\": \"" + instantiation_id + "\"}"   
+            logging.debug (instantiation_id) 
 
             string_inicial = "{\"package_id\": \"" + package_id + "\","                
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","                            
             request_response = string_inicial + "\"id\": \"" + instantiation_id + "\"}"
 
-            print (request_response)
+            logging.debug (request_response)
             logging.debug(request_response)   
             return (request_response)	            
             
@@ -2647,7 +2612,7 @@ class Adapter:
 
             monitoring_callback = self.getMonitoringURLs()
             info_monitoring =self.instantiationInfoMonitoring(instantiation_request_id)	
-            print (info_monitoring) 
+            logging.debug (info_monitoring) 
             info_monitoring_str = info_monitoring.__str__()
             monitoring_string_replaced = info_monitoring_str.replace("'","\"")        
             monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
@@ -2713,10 +2678,6 @@ class Adapter:
 
             instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
             logging.debug (instantiate_str)
-            #instantiate_str_replaced = instantiate_str.replace("'","\"")
-            #logging.debug (instantiate_str_replaced)  
-            #instantiate_json = json.loads(instantiate_str_replaced)          
-            #logging.debug (instantiate_json)
 
             instantiation_call = None
             try:
@@ -2770,12 +2731,12 @@ class Adapter:
             package_path = unzip
             '''
             package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
-            print (package_path)
+            logging.debug (package_path)
             
             try:
                 # verify if the service is in the SP
                 service_id = self.getOSMServiceId(name,vendor,version)
-                print (service_id)
+                logging.debug (service_id)
                 if service_id == 'error':
                     logging.debug("The Service is already in the SP")
                     raise Exception('The Service descriptor is in the SP or the list is empty') 
@@ -2787,10 +2748,10 @@ class Adapter:
                 
                 for function in functions_array:
                     function_str = "{\"function\": \"" + function + "\"}"
-                    print (function_str)                                        
+                    logging.debug (function_str)                                        
                     function_json = json.loads(function_str.__str__())
-                    print (function_json)
-                    print (function_json['function'])
+                    logging.debug (function_json)
+                    logging.debug (function_json['function'])
                     function_file_path = function_json['function']
                    
                     upload_function = self.uploadOSMFunction(function_file_path)
@@ -2799,18 +2760,18 @@ class Adapter:
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
 
-                    print (service_str)                                        
+                    logging.debug (service_str)                                        
                     service_json = json.loads(service_str.__str__())
-                    print (service_json)
-                    print (service_json['service'])
+                    logging.debug (service_json)
+                    logging.debug (service_json['service'])
                     service_file_path = service_json['service']
 
                     upload_service = self.uploadOSMService(service_file_path)
                     logging.debug (upload_service)
                     
                     service_id = self.getUploadedOSMServiceId(upload_service)
-                    print ("THIS IS THE NEW UPLOADED SERVICE ID")
-                    print (service_id)
+                    logging.debug ("THIS IS THE NEW UPLOADED SERVICE ID")
+                    logging.debug (service_id)
                     #return service_id
                 package_uploaded = True
                 
@@ -2824,45 +2785,34 @@ class Adapter:
             ns_name = service_id
             vim_account = self.getVimAccount()
 
-            print (nsd_name)
-            print (ns_name)
-            print (vim_account)            
+            logging.debug (nsd_name)
+            logging.debug (ns_name)
+            logging.debug (vim_account)            
 
             instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
-            print ("THIS IS THE INSTANTIATE STRING FOR OSM")
-            print ("aaaaaaaaaaa")
-
+            logging.debug ("THIS IS THE INSTANTIATE STRING FOR OSM")
+            logging.debug ("aaaaaaaaaaa")
             
             logging.debug(instantiate_str)
-
-
-            print ("aaaaaaaaaaa")
 
             instantiation_call = self.instantiation(instantiate_str)    
             logging.debug (instantiation_call)
 
-
             _thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
 
-
             instantiation_call_str = instantiation_call
-            print (instantiation_call_str)   
+            logging.debug (instantiation_call_str)   
             instantiation_call_json = json.loads(instantiation_call_str)  
-            print (instantiation_call_json)
+            logging.debug (instantiation_call_json)
             instantiation_id = instantiation_call_json['id']
-            print (instantiation_id)
-               
-
-            #package_id = "aaaaaaaa"
-            #request_response = "{\"package_id\": \"" + package_id + "\", \"id\": \"" + instantiation_id + "\"}"            
-            
+            logging.debug (instantiation_id)
             
             string_inicial = "{\"package_id\": \"" + "111111111111" + "\","                
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
             string_replaced = string_inicial.replace("\"True\"","true")                            
             request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"            
             
-            print (request_response)     
+            logging.debug (request_response)     
 
             logging.debug(request_response)   
             return (request_response)	            
@@ -2884,28 +2834,26 @@ class Adapter:
         response = None
 
         try:
-            print ("loading descriptrs list:")
+            logging.debug ("loading descriptrs list:")
             response = subprocess.check_output([nsds_2], shell=True)
-            print (response)
+            logging.debug (response)
         except:
             service_id = "error"
             return service_id        
 
         jjson = json.loads(response)
-        print (jjson)
-        print ("1111111111111111111111111111111111111111111111111")
-        print ("1111111111111111111111111111111111111111111111111")
+        logging.debug (jjson)
 
-        print (name)
-        print (vendor)
-        print (version)
+        logging.debug (name)
+        logging.debug (vendor)
+        logging.debug (version)
 
         for x in jjson:
-            print (x)
-            print (x['name'])
-            print (x['vendor'])
-            print (x['version'])
-            print (x['_id'])
+            logging.debug (x)
+            logging.debug (x['name'])
+            logging.debug (x['vendor'])
+            logging.debug (x['version'])
+            logging.debug (x['_id'])
         
             if ( x['name'] == name and x['vendor'] == vendor and x['version'] == version ):
                 logging.debug(x['name'])
@@ -2918,12 +2866,12 @@ class Adapter:
         return service_id
 
     def getUploadedOSMServiceId(self,upload_service):
-        print ("This is the upload service response:")
-        print (upload_service)
+        logging.debug ("This is the upload service response:")
+        logging.debug (upload_service)
         service_id = None
         json = yaml.load(upload_service) 
         service_id = json['id']
-        print (service_id)
+        logging.debug (service_id)
         return service_id
 
     def createFunctionsArray(self,package_path):
@@ -2938,7 +2886,7 @@ class Adapter:
                     if '.yml' in file:
                         files.append(os.path.join(r,file))                  
         for f in files:
-            print (f)
+            logging.debug (f)
             with open(f) as file_in_array:
                     file = yaml.load(file_in_array)      
                     #print (file)
@@ -2952,13 +2900,13 @@ class Adapter:
                                 #print ("this file is an osm nsd")
                                 services_array.append(f)                  
                         except:
-                                print ("this files is not an OSM vnfd or nsd")
-        print ("osm functions list:")
+                                logging.debug ("this files is not an OSM vnfd or nsd")
+        logging.debug ("osm functions list:")
         for func in functions_array:
-            print (func)
-        print ("osm services list:")
+            logging.debug (func)
+        logging.debug ("osm services list:")
         for serv in services_array:
-            print (serv)                
+            logging.debug (serv)                
         return functions_array
 
     def createServicesArray(self,package_path):
@@ -2973,7 +2921,7 @@ class Adapter:
                     if '.yml' in file:
                         files.append(os.path.join(r,file))                  
         for f in files:
-            print (f)
+            logging.debug (f)
             with open(f) as file_in_array:
                     file = yaml.load(file_in_array)      
                     #print (file)
@@ -2987,13 +2935,13 @@ class Adapter:
                                 #print ("this file is an osm nsd")
                                 services_array.append(f)                  
                         except:
-                                print ("this files is not an OSM vnfd or nsd")
-        print ("osm functions list:")
+                                logging.debug ("this files is not an OSM vnfd or nsd")
+        logging.debug ("osm functions list:")
         for func in functions_array:
-            print (func)
-        print ("osm services list:")
+            logging.debug (func)
+        logging.debug ("osm services list:")
         for serv in services_array:
-            print (serv)                
+            logging.debug (serv)                
         return services_array
 
 
@@ -3096,13 +3044,13 @@ class Adapter:
             response_json = response.content
             jjson = json.loads(response_json)
             for x in jjson:
-                print(x)
+                logging.debug(x)
                 logging.debug(x)
                 try:
                     if ( x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version ) :
-                        print("same name")
+                        logging.debug("same name")
                         uuid = x['uuid']
-                        print(uuid)  
+                        logging.debug(uuid)  
                 except:
                     logging.debug("this descriptor is not a Sonata one")
 
@@ -3116,7 +3064,7 @@ class Adapter:
                  
         url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
         response = requests.get(url,headers=JSON_CONTENT_HEADER)
-        print (response)
+        logging.debug (response)
         response_json = response.content
         jjson = json.loads(response_json)
         for x in jjson:
@@ -3124,11 +3072,11 @@ class Adapter:
             logging.debug(x)
             try:
                 osm_name = x['nsd']['nsd:nsd-catalog']['nsd']['name']
-                print("OSM service descriptor, checking if is the one we are searching:") 
+                logging.debug("OSM service descriptor, checking if is the one we are searching:") 
                 if ( x['nsd']['nsd:nsd-catalog']['nsd']['name'] == name and x['nsd']['nsd:nsd-catalog']['nsd']['vendor'] == vendor and x['nsd']['nsd:nsd-catalog']['nsd']['version'] == version ) :
-                    print("same name")
+                    logging.debug("same name")
                     uuid = x['uuid']
-                    print(uuid)  
+                    logging.debug(uuid)  
             except:
                 logging.debug("this descriptor is not a OSM one")       
 
@@ -3143,7 +3091,7 @@ class Adapter:
                  
         url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
         response = requests.get(url,headers=JSON_CONTENT_HEADER)
-        print (response)
+        logging.debug (response)
         response_json = response.content
         jjson = json.loads(response_json)
         for x in jjson:
@@ -3151,13 +3099,13 @@ class Adapter:
             logging.debug(x)
             try:
                 osm_name = x['nsd']['nsd:nsd-catalog']['nsd']['name']
-                print("OSM service descriptor, checking if is the one we are searching:") 
+                logging.debug("OSM service descriptor, checking if is the one we are searching:") 
                 if ( x['nsd']['nsd:nsd-catalog']['nsd']['name'] == name and x['nsd']['nsd:nsd-catalog']['nsd']['vendor'] == vendor and x['nsd']['nsd:nsd-catalog']['nsd']['version'] == version ) :
-                    print("same name")
+                    logging.debug("same name")
                     uuid = x['uuid']
-                    print(uuid)  
+                    logging.debug(uuid)  
             except:
-                print("Sonata services descriptor, trying next")        
+                logging.debug("Sonata services descriptor, trying next")        
 
         logging.debug(uuid)
         return uuid          
@@ -3201,14 +3149,14 @@ class Adapter:
         logging.debug (vim_info_2)       
 
         response = subprocess.check_output([vim_info_2], shell=True)
-        print (response)
+        logging.debug (response)
         return response
 
     def getOSMVIMInfoURL(self,vim_info):
         logging.info("get OSM get vim info url starts")
         
         content = json.loads(vim_info)
-        print (content)
+        logging.debug (content)
         vim_url_full = content['vim_url']
         vim_url_array = vim_url_full.split(":")
         vim_url_center = vim_url_array[1]
