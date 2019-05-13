@@ -2500,7 +2500,7 @@ class Adapter:
                     logging.debug (function_str)                                        
                     function_json = json.loads(function_str.__str__())
                     logging.debug (function_json)
-                    prilogging.debugnt (function_json['function'])
+                    logging.debug (function_json['function'])
                     function_file_path = function_json['function']
                    
                     upload_function = self.uploadOSMFunction(function_file_path)
