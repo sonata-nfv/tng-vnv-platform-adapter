@@ -2622,6 +2622,9 @@ class Adapter:
 
 
         if instance_status == 'ERROR': 
+
+            inst_error = None 
+
             instantiation_request_json_dumps = json.dumps(instantiation_call)
             logging.debug (instantiation_request_json_dumps)
             instantiation_request_json = json.loads(instantiation_call)
@@ -2630,7 +2633,12 @@ class Adapter:
             instantiation_request_id = instantiation_request_json['id']        
             logging.debug (instantiation_request_id)
             time.sleep(2)
-            inst_error = self.getRequestError(instantiation_request_id)    
+            
+            try:
+                inst_error = self.getRequestError(instantiation_request_id)    
+            except:
+                inst_error = self.getRequestError(instantiation_request_id)
+
 
             logging.error ("The request is in error status")
             logging.error (inst_error)
