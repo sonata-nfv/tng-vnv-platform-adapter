@@ -2640,23 +2640,23 @@ class Adapter:
                 inst_error = self.getRequestError(instantiation_request_id)
 
 
-            logging.error ("The request is in error status")
-            logging.error (inst_error)
-            error_string = inst_error.__str__()
-            logging.error (error_string)
-            try:
-                callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + error_string + "\"}' " + callback        
-                logging.debug (callback_post)		
-                call = subprocess.check_output([callback_post], shell=True)
-                logging.debug(call)
+                logging.error ("The request is in error status")
+                logging.error (inst_error)
+                error_string = inst_error.__str__()
+                logging.error (error_string)
+                try:
+                    callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + error_string + "\"}' " + callback        
+                    logging.debug (callback_post)		
+                    call = subprocess.check_output([callback_post], shell=True)
+                    logging.debug(call)
 
-                monitoring_callback = self.getMonitoringURLs()
-                monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
-                logging.debug (monitoring_callback_post)		
-                call_mon = subprocess.check_output([monitoring_callback_post], shell=True)  
+                    monitoring_callback = self.getMonitoringURLs()
+                    monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
+                    logging.debug (monitoring_callback_post)		
+                    call_mon = subprocess.check_output([monitoring_callback_post], shell=True)  
 
-            except:
-                logging.error ("error sending the instantiation error callbacks")
+                except:
+                    logging.error ("error sending the instantiation error callbacks")
 
         logging.info ("sonata instantiate callback ends")        
 
