@@ -971,6 +971,26 @@ class Adapter:
             logging.debug(terminate_string)    
             terminate_monitoring = subprocess.check_output([terminate_string], shell=True)
 
+
+            # deleting the descriptors
+            package_uploaded = content['package_uploaded']
+            logging.debug(package_uploaded)
+            if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
+                instance_status = self.SonataTerminateStatus(ns_id)
+                print(instance_status)
+                while instance_status != 'terminated':
+                    time.sleep(2)
+                    instance_status = self.SonataTerminateStatus(ns_id)
+
+                descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id) 
+                name = self.SonataTerminateDescriptorName(descriptor_reference_id)
+                vendor = self.SonataTerminateDescriptorVendor(descriptor_reference_id)
+                version = self.SonataTerminateDescriptorVersion(descriptor_reference_id)
+
+                delete_descriptors = self.deletePackagefromService(name,vendor,version)                
+                print (delete_descriptors)
+
+            print (terminate)
             return terminate.text
 
         if my_type == 'osm':
@@ -1020,7 +1040,74 @@ class Adapter:
             logging.debug(terminate)
             return (terminate)            
 
-                        
+
+    def SonataTerminateStatus(self,ns_id):
+        logging.debug("SonataTerminateStatus begins")
+        JSON_CONTENT_HEADER = {'Accept':'application/json'} 
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':32002/api/v3/records/services/' + ns_id
+        logging.debug(url)        
+        service_record = requests.get(url,headers=JSON_CONTENT_HEADER) 
+        logging.debug (service_record)
+        service_record_json = json.loads(service_record)
+        logging.debug (service_record_json)
+        instance_status = service_record_json['status']
+        return instance_status
+
+    def SonataTerminateDescriptorReference(self,ns_id):
+        logging.debug("SonataTerminateStatus begins")
+        JSON_CONTENT_HEADER = {'Accept':'application/json'} 
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':32002/api/v3/records/services/' + ns_id
+        logging.debug(url)        
+        service_record = requests.get(url,headers=JSON_CONTENT_HEADER) 
+        logging.debug (service_record)
+        service_record_json = json.loads(service_record)
+        logging.debug (service_record_json)
+        instance_descriptor_reference = service_record_json['descriptor_reference']
+        return instance_descriptor_reference
+
+
+    def SonataTerminateDescriptorName(self,descriptor_reference_id):
+        logging.debug("SonataTerminateStatus begins")
+        JSON_CONTENT_HEADER = {'Accept':'application/json'} 
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':32002/api/v3/services/' + descriptor_reference_id
+        logging.debug(url)        
+        service_descriptor= requests.get(url,headers=JSON_CONTENT_HEADER) 
+        logging.debug (service_descriptor)
+        service_descriptor_json = json.loads(serviservice_descriptorce_record)
+        logging.debug (service_descriptor_json)
+        service_descriptor_name = service_descriptor_json['nsd']['name']
+        return service_descriptor_name
+
+    def SonataTerminateDescriptorVendor(self,descriptor_reference_id):
+        logging.debug("SonataTerminateStatus begins")
+        JSON_CONTENT_HEADER = {'Accept':'application/json'} 
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':32002/api/v3/services/' + descriptor_reference_id
+        logging.debug(url)        
+        service_descriptor= requests.get(url,headers=JSON_CONTENT_HEADER) 
+        logging.debug (service_descriptor)
+        service_descriptor_json = json.loads(serviservice_descriptorce_record)
+        logging.debug (service_descriptor_json)
+        service_descriptor_vendor = service_descriptor_json['nsd']['vendor']
+        return service_descriptor_vendor
+    
+    def SonataTerminateDescriptorVersion(self,descriptor_reference_id):
+        logging.debug("SonataTerminateStatus begins")
+        JSON_CONTENT_HEADER = {'Accept':'application/json'} 
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':32002/api/v3/services/' + descriptor_reference_id
+        logging.debug(url)        
+        service_descriptor= requests.get(url,headers=JSON_CONTENT_HEADER) 
+        logging.debug (service_descriptor)
+        service_descriptor_json = json.loads(serviservice_descriptorce_record)
+        logging.debug (service_descriptor_json)
+        service_descriptor_version = service_descriptor_json['nsd']['version']
+        return service_descriptor_version
+
+
     def deleteOSMDescriptors(self,instance_id):
         logging.debug("deleteOSMDescriptors begins")
         sp_host_2 = self.getHostIp()
