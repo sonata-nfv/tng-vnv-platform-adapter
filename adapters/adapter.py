@@ -1761,19 +1761,23 @@ class Adapter:
 
     def downloadPackageTGO(self,package_id):
         logging.info("dwnload package tgo starts")
-        get_package_curl = 'curl -H \'Content-type: application/json\' http://tng-cat:4011/api/catalogues/v2/packages/' + package_id
-        package_json = subprocess.check_output([get_package_curl], shell=True)
-        package_json_loaded = json.loads(package_json)
+        msg = None
+        try:
+            get_package_curl = 'curl -H \'Content-type: application/json\' http://tng-cat:4011/api/catalogues/v2/packages/' + package_id
+            package_json = subprocess.check_output([get_package_curl], shell=True)
+            package_json_loaded = json.loads(package_json)
 
-        package_file_uuid = package_json_loaded['pd']['package_file_uuid']       
-        logging.debug (package_file_uuid)
+            package_file_uuid = package_json_loaded['pd']['package_file_uuid']       
+            logging.debug (package_file_uuid)
 
-        get_tgo_curl = 'curl -H \'Content-type: application/zip\' http://tng-cat:4011/api/catalogues/v2/tgo-packages/' + package_file_uuid + ' --output /app/packages/' + package_file_uuid + '.tgo'            
-        logging.debug (get_tgo_curl)    
-        package_tgo = subprocess.check_output([get_tgo_curl], shell=True)
+            get_tgo_curl = 'curl -H \'Content-type: application/zip\' http://tng-cat:4011/api/catalogues/v2/tgo-packages/' + package_file_uuid + ' --output /app/packages/' + package_file_uuid + '.tgo'            
+            logging.debug (get_tgo_curl)    
+            package_tgo = subprocess.check_output([get_tgo_curl], shell=True)
 
-        msg = "{\"package\": \"/app/packages/" + package_file_uuid + ".tgo\"}" 
-        logging.debug(msg)
+            msg = "{\"package\": \"/app/packages/" + package_file_uuid + ".tgo\"}" 
+            logging.debug(msg)
+        except:
+            msg = "error"
         return (msg)
 
 
@@ -2444,6 +2448,12 @@ class Adapter:
             
             try:
                 download_pkg = self.downloadPackageTGO(package_id)
+
+                if download_pkg == "error":
+                    msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
+                    return msg 
+
+
                 logging.debug (download_pkg)            
                 download_pkg_json = json.loads(download_pkg)
                 logging.debug (download_pkg_json)
