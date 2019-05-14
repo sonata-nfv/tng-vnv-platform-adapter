@@ -2619,7 +2619,8 @@ class Adapter:
             
             ## INSTANCIANDO
             nsd_name = service_id
-            ns_name = service_id
+            #ns_name = service_id
+            ns_name = content['instance_name']
             vim_account = self.getVimAccount()
 
             logging.debug (nsd_name)
@@ -2876,8 +2877,9 @@ class Adapter:
             #return "hola"
             
             ## INSTANCIANDO
-            nsd_name = service_id
-            ns_name = service_id
+            nsd_name = service_id            
+            #ns_name = service_id
+            ns_name = content['instance_name']            
             vim_account = self.getVimAccount()
 
             logging.debug (nsd_name)
