@@ -2471,6 +2471,7 @@ class Adapter:
             except:
                 logging.debug("The Service is not in the SP  ") 
                 upload_pkg = self.uploadPackage(package_path)
+                time.sleep(7) 
                 package_uploaded = True
                 logging.debug (upload_pkg)
                 upload_pkg_json =  json.loads(upload_pkg)
