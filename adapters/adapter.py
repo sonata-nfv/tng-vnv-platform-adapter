@@ -2379,7 +2379,7 @@ class Adapter:
             return (msg) 
 
     def getRequestInstanceId(self,id):
-        logging.info("get request if starts")
+        logging.info("get request id starts")
         request = self.instantiationStatus(id)
         request_json = request.get_json()
         logging.debug(request_json['instance_uuid'])
@@ -2456,8 +2456,9 @@ class Adapter:
             try: 
                 package_id = self.getPackageIdfromServiceId(vnv_service_id)
                 logging.debug (package_id)
-            except:
+            except:                
                 msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
+                logging.debug (msg)
                 return msg   
             
             try:
@@ -2475,6 +2476,7 @@ class Adapter:
                 logging.debug (package_path)
             except:
                 msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
+                logging.debug (msg)
                 return msg                  
             
             ###### commented for try test ffor when the service already exists in the SP
