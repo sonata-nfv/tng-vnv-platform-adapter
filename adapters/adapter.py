@@ -761,21 +761,25 @@ class Adapter:
         logging.info("instantiation status starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
+        error = "error"
 
         if my_type == 'sonata':
             sp_host_2 = self.getHostIp()
 
-            url = sp_host_2 + ':32002/api/v3/requests/' +  request
+            url = sp_host_2 + ':32002/api/v3/requests/' +  request            
             time.sleep(2)
             logging.debug (url)            
-            response = requests.get(url,headers=JSON_CONTENT_HEADER)
-            logging.debug (response) 
-            logging.debug (response.text) 
-            response_json = response.content
-            logging.debug (response_json)            
-            if response.ok:        
-                logging.debug(response.text)
-                return (response.text)
+            try:
+                response = requests.get(url,headers=JSON_CONTENT_HEADER)
+                logging.debug (response) 
+                logging.debug (response.text) 
+                response_json = response.content
+                logging.debug (response_json)            
+                if response.ok:        
+                    logging.debug(response.text)
+                    return (response.text)
+            except:
+                return error
 
         if my_type == 'osm':
             sp_host_2 = self.getHostIp() 
@@ -2351,8 +2355,15 @@ class Adapter:
 
 
     def getRequestStatus(self,id):
-        logging.info("get request status starts")        
-        status_call = self.instantiationStatus(id)
+        logging.info("get request status starts")   
+        status_call = None
+        try:
+            status_call = self.instantiationStatus(id)
+        except:
+            if status_call == "error":
+                msg = "{\"error\": \"the curl for getting the request has failed\"}"
+                return (msg)
+
         logging.debug(status_call)
         instantiation_request_json_dumps = json.dumps(status_call)
         logging.debug (instantiation_request_json_dumps)
