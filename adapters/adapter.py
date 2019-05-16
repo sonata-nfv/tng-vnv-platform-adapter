@@ -2335,6 +2335,8 @@ class Adapter:
                 time.sleep(7)  
         if status == 'ERROR':
             status =  self.getRequestError(id)
+        if status == 'READY':
+            return status           
         logging.debug(status)
         return status
         
