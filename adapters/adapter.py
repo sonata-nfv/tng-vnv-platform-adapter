@@ -457,7 +457,7 @@ class Adapter:
             logging.info(url)
             files = {'package': open(package,'rb')}
             upload = requests.post(url, files=files)
-            
+            logging.debug(upload)
             logging.debug(upload.text)
             return upload.text
 
