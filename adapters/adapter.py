@@ -2447,6 +2447,7 @@ class Adapter:
         if my_type == 'sonata':
             
             ### package operations
+            '''
             try:
                 vnv_service_id = self.getVnVServiceId(name,vendor,version)
             except:
@@ -2478,7 +2479,21 @@ class Adapter:
                 msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
                 logging.debug (msg)
                 return msg                  
-            
+            '''
+
+            vnv_service_id = self.getVnVServiceId(name,vendor,version)
+            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+            logging.debug (package_id)
+            download_pkg = self.downloadPackageTGO(package_id)
+            logging.debug (download_pkg)            
+            download_pkg_json = json.loads(download_pkg)
+        
+            download_pkg = self.downloadPackageTGO(package_id)
+            download_pkg_json = json.loads(download_pkg)        
+            package_path_downloaded = download_pkg_json['package'] 
+
+
+
             ###### commented for try test ffor when the service already exists in the SP
             try:
                 service_id = self.getServiceId(name,vendor,version)
