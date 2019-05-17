@@ -2482,6 +2482,8 @@ class Adapter:
             '''
 
             vnv_service_id = self.getVnVServiceId(name,vendor,version)
+            print ("this is the service id in the vnv")
+            print(vnv_service_id)
             package_id = self.getPackageIdfromServiceId(vnv_service_id)            
             logging.debug (package_id)
             download_pkg = self.downloadPackageTGO(package_id)
