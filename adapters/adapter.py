@@ -2482,7 +2482,7 @@ class Adapter:
             ###### commented for try test ffor when the service already exists in the SP
             try:
                 service_id = self.getServiceId(name,vendor,version)
-                if service_id:
+                if service_id is not None:
                     logging.debug("The Service is already in the SP")
             except:
                 logging.debug("The Service is not in the SP  ")                
@@ -2496,17 +2496,18 @@ class Adapter:
                 upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
                 logging.debug (upload_pkg_status)
 
-                while upload_pkg_status != 'success':
+                while upload_pkg_status == 'running':
                     upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
                     logging.debug (upload_pkg_status)
                     if upload_pkg_status == 'running':
-                        time.sleep(7)  
+                        time.sleep(3)  
                     if upload_pkg_status == 'error':             
                         return "error uploading package"             
 
    
 
             ### service operations
+            '''
             try:
                 upload_pkg = self.uploadPackage(package_path)  
                 package_uploaded = True
@@ -2516,16 +2517,17 @@ class Adapter:
                 upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
                 upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
                 
-                while upload_pkg_status != 'success':
+                while upload_pkg_status == 'running':
                     upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
                     logging.debug (upload_pkg_status)
                     if upload_pkg_status == 'running':
                         time.sleep(7)
                     if upload_pkg_status == 'error':             
                         return "error uploading package" 
-                                                             
+
             except:
                 logging.error ("Error uploading package to the SP")
+            '''
             try:
                 service_id = self.getServiceId(name,vendor,version)
                 logging.debug (service_id)
