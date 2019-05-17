@@ -2504,7 +2504,7 @@ class Adapter:
                     logging.debug("The Service is already in the SP")
             except:
                 logging.debug("The Service is not in the SP  ")                
-                upload_pkg = self.uploadPackage(package_path)
+                upload_pkg = self.uploadPackage(package_path_downloaded)
                 time.sleep(7) 
                 package_uploaded = True
                 logging.debug ("upload package response")
