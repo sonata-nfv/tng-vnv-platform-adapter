@@ -455,11 +455,16 @@ class Adapter:
             logging.info("package info:")
             logging.info(package)
             logging.info(url)
-            files = {'package': open(package,'rb')}
-            upload = requests.post(url, files=files)
-            logging.debug(upload)
-            logging.debug(upload.text)
-            return upload.text
+            #files = {'package': open(package,'rb')}
+            #upload = requests.post(url, files=files)
+            #logging.debug(upload)
+            #logging.debug(upload.text)
+            #return upload.text
+            upload_string = "curl -X POST  -F \"package=@." + package + "\" " + url
+            print (upload_string)
+            upload_curl = subprocess.check_output([upload_string], shell=True)
+            return upload_curl
+
 
 
         if my_type == 'onap':               
