@@ -674,7 +674,7 @@ class Adapter:
 
 
     def getServiceId(self,name,vendor,version):    
-        logging.info("get service id starts")
+        logging.info("get service id in the SP starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
         my_type =  self.getDBType()
         if my_type == 'sonata':                
@@ -686,11 +686,25 @@ class Adapter:
             logging.debug (response_json)
             jjson = json.loads(response_json)
             #pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
-            
+            '''
             for x in jjson:
                 if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version :
                     logging.debug(x['uuid'])
                     return x['uuid']
+            '''
+            for x in jjson:
+                logging.debug(x)
+                try:
+                    if ( x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version ) :
+                        logging.debug("this is the correct service")
+                        uuid = x['uuid']
+                        logging.debug(uuid)
+                        return uuid  
+                except:
+                    logging.debug("this descriptor is not a Sonata one")
+        
+        logging.debug(uuid)
+        return uuid              
 
             '''
             if pkg:
@@ -3198,9 +3212,10 @@ class Adapter:
                 logging.debug(x)
                 try:
                     if ( x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version ) :
-                        logging.debug("same name")
+                        logging.debug("this is the correct service")
                         uuid = x['uuid']
-                        logging.debug(uuid)  
+                        logging.debug(uuid)
+                        return uuid  
                 except:
                     logging.debug("this descriptor is not a Sonata one")
 
