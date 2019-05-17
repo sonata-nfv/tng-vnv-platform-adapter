@@ -2485,21 +2485,24 @@ class Adapter:
                 if service_id:
                     logging.debug("The Service is already in the SP")
             except:
-                logging.debug("The Service is not in the SP  ") 
+                logging.debug("The Service is not in the SP  ")                
                 upload_pkg = self.uploadPackage(package_path)
                 time.sleep(7) 
                 package_uploaded = True
+                logging.debug ("upload package response")
                 logging.debug (upload_pkg)
                 upload_pkg_json =  json.loads(upload_pkg)
                 upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
                 upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
                 logging.debug (upload_pkg_status)
 
-                while upload_pkg_status == 'running':
+                while upload_pkg_status != 'success':
                     upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
                     logging.debug (upload_pkg_status)
                     if upload_pkg_status == 'running':
-                        time.sleep(3)  
+                        time.sleep(7)  
+                    if upload_pkg_status == 'error':             
+                        return "error uploading package"             
 
    
 
@@ -2507,16 +2510,20 @@ class Adapter:
             try:
                 upload_pkg = self.uploadPackage(package_path)  
                 package_uploaded = True
+                logging.debug ("upload package response")
                 logging.debug (upload_pkg)
                 upload_pkg_json =  json.loads(upload_pkg)
                 upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
                 upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
                 
-                while upload_pkg_status == 'running':
+                while upload_pkg_status != 'success':
                     upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
                     logging.debug (upload_pkg_status)
                     if upload_pkg_status == 'running':
-                        time.sleep(3)                 
+                        time.sleep(7)
+                    if upload_pkg_status == 'error':             
+                        return "error uploading package" 
+                                                             
             except:
                 logging.error ("Error uploading package to the SP")
             try:
