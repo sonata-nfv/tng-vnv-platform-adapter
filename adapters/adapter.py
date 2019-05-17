@@ -706,24 +706,6 @@ class Adapter:
         logging.debug(uuid)
         return uuid              
 
-            '''
-            if pkg:
-                logging.debug(pkg)
-                #uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['nsd']['name'] == name)]            
-                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['nsd']['name'] == name)]
-                logging.debug(uuid_to_delete_1)
-                uuid_0 = uuid_to_delete_1.__str__()
-                uuid_to_delete_2 = uuid_0[2:]
-                print(uuid_to_delete_2)
-                uuid_to_delete_3 = uuid_to_delete_2[:-2]
-                url_for_delete = url + '/' + uuid_to_delete_3
-                delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
-        
-            if response.ok:                                        
-                    logging.debug(uuid_to_delete_3)
-                    return uuid_to_delete_3
-            '''
-
 
     def getPackageId(self,name,vendor,version):    
         logging.info("get package id starts")
