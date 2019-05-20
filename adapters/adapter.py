@@ -2448,42 +2448,7 @@ class Adapter:
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
-            
-            ### package operations
             '''
-            try:
-                vnv_service_id = self.getVnVServiceId(name,vendor,version)
-            except:
-                msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
-                return msg   
-
-            try: 
-                package_id = self.getPackageIdfromServiceId(vnv_service_id)
-                logging.debug (package_id)
-            except:                
-                msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
-                logging.debug (msg)
-                return msg   
-            
-            try:
-                download_pkg = self.downloadPackageTGO(package_id)
-
-                if download_pkg == "error":
-                    msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
-                    return msg 
-
-
-                logging.debug (download_pkg)            
-                download_pkg_json = json.loads(download_pkg)
-                logging.debug (download_pkg_json)
-                package_path = download_pkg_json['package']
-                logging.debug (package_path)
-            except:
-                msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
-                logging.debug (msg)
-                return msg                  
-            '''
-
             try:
                 vnv_service_id = self.getVnVServiceId(name,vendor,version)
                 print ("this is the service id in the vnv")
@@ -2512,7 +2477,7 @@ class Adapter:
                 msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
                 logging.debug (msg)
                 return msg              
-
+            '''
 
 
             ###### commented for try test ffor when the service already exists in the SP
@@ -2521,49 +2486,56 @@ class Adapter:
                 if service_id is not None:
                     logging.debug("The Service is already in the SP")
             except:
-                logging.debug("The Service is not in the SP  ")                
-                upload_pkg = self.uploadPackage(package_path_downloaded)
-                time.sleep(7) 
-                package_uploaded = True
-                logging.debug ("upload package response")
-                logging.debug (upload_pkg)
-                upload_pkg_json =  json.loads(upload_pkg)
-                upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
-                upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
-                logging.debug (upload_pkg_status)
+                logging.debug("The Service is not in the SP  ") 
 
-                while upload_pkg_status == 'running':
-                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
-                    logging.debug (upload_pkg_status)
-                    if upload_pkg_status == 'running':
-                        time.sleep(3)  
-                    if upload_pkg_status == 'error':             
-                        return "error uploading package"             
+                try:
+                    vnv_service_id = self.getVnVServiceId(name,vendor,version)
+                    print ("this is the service id in the vnv")
+                    print(vnv_service_id)
+                except:
+                    msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
+                    return msg 
 
-   
-
-            ### service operations
-            '''
-            try:
-                upload_pkg = self.uploadPackage(package_path)  
-                package_uploaded = True
-                logging.debug ("upload package response")
-                logging.debug (upload_pkg)
-                upload_pkg_json =  json.loads(upload_pkg)
-                upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
-                upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+                try:
+                    package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                    logging.debug (package_id)
+                except:                
+                    msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
+                    logging.debug (msg)
+                    return msg 
                 
-                while upload_pkg_status == 'running':
-                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
-                    logging.debug (upload_pkg_status)
-                    if upload_pkg_status == 'running':
-                        time.sleep(7)
-                    if upload_pkg_status == 'error':             
-                        return "error uploading package" 
+                try:
+                    download_pkg = self.downloadPackageTGO(package_id)
+                    logging.debug (download_pkg)            
+                    download_pkg_json = json.loads(download_pkg)
+                
+                    download_pkg = self.downloadPackageTGO(package_id)
+                    download_pkg_json = json.loads(download_pkg)        
+                    package_path_downloaded = download_pkg_json['package']
+                except:
+                    msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
+                    logging.debug (msg)
+                    return msg 
 
-            except:
-                logging.error ("Error uploading package to the SP")
-            '''
+                    upload_pkg = self.uploadPackage(package_path_downloaded)
+                    time.sleep(7) 
+                    package_uploaded = True
+                    logging.debug ("upload package response")
+                    logging.debug (upload_pkg)
+                    upload_pkg_json =  json.loads(upload_pkg)
+                    upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
+                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+                    logging.debug (upload_pkg_status)
+
+                    while upload_pkg_status == 'running':
+                        upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
+                        logging.debug (upload_pkg_status)
+                        if upload_pkg_status == 'running':
+                            time.sleep(3)  
+                        if upload_pkg_status == 'error':             
+                            return "error uploading package"             
+
+
             try:
                 service_id = self.getServiceId(name,vendor,version)
                 logging.debug (service_id)
