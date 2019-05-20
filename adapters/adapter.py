@@ -2517,23 +2517,23 @@ class Adapter:
                     logging.debug (msg)
                     return msg 
 
-                    upload_pkg = self.uploadPackage(package_path_downloaded)
-                    time.sleep(7) 
-                    package_uploaded = True
-                    logging.debug ("upload package response")
-                    logging.debug (upload_pkg)
-                    upload_pkg_json =  json.loads(upload_pkg)
-                    upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
-                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
-                    logging.debug (upload_pkg_status)
+                upload_pkg = self.uploadPackage(package_path_downloaded)
+                time.sleep(7) 
+                package_uploaded = True
+                logging.debug ("upload package response")
+                logging.debug (upload_pkg)
+                upload_pkg_json =  json.loads(upload_pkg)
+                upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
+                upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+                logging.debug (upload_pkg_status)
 
-                    while upload_pkg_status == 'running':
-                        upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
-                        logging.debug (upload_pkg_status)
-                        if upload_pkg_status == 'running':
-                            time.sleep(3)  
-                        if upload_pkg_status == 'error':             
-                            return "error uploading package"             
+                while upload_pkg_status == 'running':
+                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
+                    logging.debug (upload_pkg_status)
+                    if upload_pkg_status == 'running':
+                        time.sleep(3)  
+                    if upload_pkg_status == 'error':             
+                        return "error uploading package"             
 
 
             try:
