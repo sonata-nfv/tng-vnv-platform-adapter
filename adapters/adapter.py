@@ -2591,7 +2591,8 @@ class Adapter:
             logging.debug ("instantion for osm SPs stars")
 
             ### package operations
-                        
+
+            '''         
             vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
             package_id = self.getPackageIdfromServiceId(vnv_service_id)            
             logging.debug (package_id)
@@ -2612,6 +2613,7 @@ class Adapter:
             
             #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
             logging.debug (package_path)
+            '''
             
             try:
                 # verify if the service is in the SP
@@ -2623,6 +2625,32 @@ class Adapter:
             except:
                 logging.debug:("The Service is not in the SP  ") 
                 # if the service is not in the SP, we need to upload it
+
+
+                vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
+                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                logging.debug (package_id)
+                download_pkg = self.downloadPackageTGO(package_id)
+                logging.debug (download_pkg)            
+                download_pkg_json = json.loads(download_pkg)
+            
+                download_pkg = self.downloadPackageTGO(package_id)
+                download_pkg_json = json.loads(download_pkg)        
+                package_path_downloaded = download_pkg_json['package'] 
+
+                unzip = self.unzipPackage(package_path_downloaded)  
+
+                logging.debug(unzip)       
+                
+                #package_path = '/app/packages/' + package_id
+                package_path = unzip
+                
+                #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+                logging.debug (package_path)
+
+
+
+
                 functions_array = self.createFunctionsArray(package_path)
                 services_array = self.createServicesArray(package_path)
                 
