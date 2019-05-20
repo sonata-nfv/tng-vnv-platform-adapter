@@ -2484,18 +2484,34 @@ class Adapter:
                 return msg                  
             '''
 
-            vnv_service_id = self.getVnVServiceId(name,vendor,version)
-            print ("this is the service id in the vnv")
-            print(vnv_service_id)
-            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-            logging.debug (package_id)
-            download_pkg = self.downloadPackageTGO(package_id)
-            logging.debug (download_pkg)            
-            download_pkg_json = json.loads(download_pkg)
-        
-            download_pkg = self.downloadPackageTGO(package_id)
-            download_pkg_json = json.loads(download_pkg)        
-            package_path_downloaded = download_pkg_json['package'] 
+            try:
+                vnv_service_id = self.getVnVServiceId(name,vendor,version)
+                print ("this is the service id in the vnv")
+                print(vnv_service_id)
+            except:
+                msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
+                return msg 
+
+            try:
+                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                logging.debug (package_id)
+            except:                
+                msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
+                logging.debug (msg)
+                return msg 
+            
+            try:
+                download_pkg = self.downloadPackageTGO(package_id)
+                logging.debug (download_pkg)            
+                download_pkg_json = json.loads(download_pkg)
+            
+                download_pkg = self.downloadPackageTGO(package_id)
+                download_pkg_json = json.loads(download_pkg)        
+                package_path_downloaded = download_pkg_json['package']
+            except:
+                msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
+                logging.debug (msg)
+                return msg              
 
 
 
