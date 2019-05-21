@@ -336,14 +336,14 @@ def serviceterminate(service_platform):
         print (package_uploaded)
 
         if ( package_uploaded == False ) or ( package_uploaded == "false" ):
-            terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"False\",\"request_type\":\"TERMINATE_SERVICE\"}"
+            terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"False\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
         if ( package_uploaded == True ) or ( package_uploaded == "true" ):
-            terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"True\",\"request_type\":\"TERMINATE_SERVICE\"}"
+            terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"True\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
         
         print (terminate_str)                      
         ad = adapter.Adapter(service_platform)  
-        return ad.instantiationDelete(terminate_str)    
-        
+        return ad.instantiationDelete(terminate_str)  
+            
     except:
         error = "{\"error\": \"error launching the terminate\"}"
         return error
@@ -368,7 +368,7 @@ def serviceterminatetest(service_platform):
         
         print (terminate_str)                      
         ad = adapter.Adapter(service_platform)  
-        return ad.instantiationDelete(terminate_str)    
+        return ad.instantiationDeleteTest(terminate_str)    
         
     except:
         error = "{\"error\": \"error launching the terminate\"}"
