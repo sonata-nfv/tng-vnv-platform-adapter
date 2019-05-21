@@ -966,39 +966,77 @@ class Adapter:
             url = sp_host_2 + ':32002/api/v3/requests'
             logging.debug(url)
             logging.debug (request)            
-            terminate = requests.post(url,data=request,headers=JSON_CONTENT_HEADER) 
+            print (request)
+            print (type(request))
+            
+            content = json.loads(request)
+            instance_uuid = content['instance_uuid']    
+            print (instance_uuid)
+            package_uploaded = content['package_uploaded']
+            print (package_uploaded)
+
+            terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
+            #terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"request_type\":\"TERMINATE_SERVICE\"}"
+            
+            print (terminate_str)            
+            delete_ns = "curl -X POST --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -d '" + terminate_str + "' " + url
+            print (delete_ns)
+
+            #terminate = requests.post(url,data=terminate_str,headers=JSON_CONTENT_HEADER) 
+            terminate = subprocess.check_output([delete_ns], shell=True)
+            print (terminate)
+
+
+            #terminate = self.instantiationDelete(terminate_str) 
+
             logging.debug (terminate)
-            logging.debug (terminate.text)
+            print ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            #logging.debug (terminate.text)
 
             content = json.loads(request)
             ns_id = content['instance_uuid']
             logging.debug(ns_id)
+            print ("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+            '''
             url_monitoring = self.getMonitoringURLs()
             terminate_string = "curl -X DELETE -H \"Content-type: application/json\" "  + url_monitoring + "/" + ns_id 
-            logging.debug(terminate_string)    
-            terminate_monitoring = subprocess.check_output([terminate_string], shell=True)
-
+            logging.debug(terminate_string)   
+            try: 
+                terminate_monitoring = subprocess.check_output([terminate_string], shell=True)
+                print (terminate_monitoring)
+            except:
+                print (terminate_monitoring)
+            '''
 
             # deleting the descriptors
             package_uploaded = content['package_uploaded']
             logging.debug(package_uploaded)
+            print("aroaroaroaoaoor")
             if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
-                instance_status = self.SonataTerminateStatus(ns_id)
-                print(instance_status)
-                while instance_status != 'terminated':
-                    time.sleep(2)
+                logging.debug(ns_id)
+                try:
+                    print (ns_id)
                     instance_status = self.SonataTerminateStatus(ns_id)
-
-                descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id) 
-                name = self.SonataTerminateDescriptorName(descriptor_reference_id)
-                vendor = self.SonataTerminateDescriptorVendor(descriptor_reference_id)
-                version = self.SonataTerminateDescriptorVersion(descriptor_reference_id)
-
-                delete_descriptors = self.deletePackagefromService(name,vendor,version)                
-                print (delete_descriptors)
-
+                    print(instance_status)
+                    while instance_status == 'normal operation':
+                        time.sleep(5)
+                        instance_status = self.SonataTerminateStatus(ns_id)      
+                        print(instance_status)  
+                    descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id)
+                    print (descriptor_reference_id)
+                    name = self.SonataTerminateDescriptorName(descriptor_reference_id)
+                    print (name)
+                    vendor = self.SonataTerminateDescriptorVendor(descriptor_reference_id)
+                    print (vendor)
+                    version = self.SonataTerminateDescriptorVersion(descriptor_reference_id)
+                    print (version)
+                    delete_descriptors = self.deletePackagefromService(name,vendor,version)                
+                    print (delete_descriptors) 
+                except:
+                    print("error trying to delte the tgo from the SP")
+                    
             print (terminate)
-            return terminate.text
+            return terminate
 
         if my_type == 'osm':
             sp_host_2 = self.getHostIp()
@@ -1055,61 +1093,62 @@ class Adapter:
         url = sp_host_2 + ':32002/api/v3/records/services/' + ns_id
         logging.debug(url)        
         service_record = requests.get(url,headers=JSON_CONTENT_HEADER) 
-        logging.debug (service_record)
-        service_record_json = json.loads(service_record)
+        print ("this is the network service record:")
+        logging.debug (service_record.text)
+        service_record_json = json.loads(service_record.text)
         logging.debug (service_record_json)
         instance_status = service_record_json['status']
         return instance_status
 
     def SonataTerminateDescriptorReference(self,ns_id):
-        logging.debug("SonataTerminateStatus begins")
+        logging.debug("SonataTerminateDescriptorReference begins")
         JSON_CONTENT_HEADER = {'Accept':'application/json'} 
         sp_host_2 = self.getHostIp()
         url = sp_host_2 + ':32002/api/v3/records/services/' + ns_id
         logging.debug(url)        
         service_record = requests.get(url,headers=JSON_CONTENT_HEADER) 
-        logging.debug (service_record)
-        service_record_json = json.loads(service_record)
+        logging.debug (service_record.text)
+        service_record_json = json.loads(service_record.text)
         logging.debug (service_record_json)
         instance_descriptor_reference = service_record_json['descriptor_reference']
         return instance_descriptor_reference
 
 
     def SonataTerminateDescriptorName(self,descriptor_reference_id):
-        logging.debug("SonataTerminateStatus begins")
+        logging.debug("SonataTerminateDescriptorName begins")
         JSON_CONTENT_HEADER = {'Accept':'application/json'} 
         sp_host_2 = self.getHostIp()
         url = sp_host_2 + ':32002/api/v3/services/' + descriptor_reference_id
         logging.debug(url)        
         service_descriptor= requests.get(url,headers=JSON_CONTENT_HEADER) 
-        logging.debug (service_descriptor)
-        service_descriptor_json = json.loads(serviservice_descriptorce_record)
+        logging.debug (service_descriptor.text)
+        service_descriptor_json = json.loads(service_descriptor.text)
         logging.debug (service_descriptor_json)
         service_descriptor_name = service_descriptor_json['nsd']['name']
         return service_descriptor_name
 
     def SonataTerminateDescriptorVendor(self,descriptor_reference_id):
-        logging.debug("SonataTerminateStatus begins")
+        logging.debug("SonataTerminateDescriptorVendor begins")
         JSON_CONTENT_HEADER = {'Accept':'application/json'} 
         sp_host_2 = self.getHostIp()
         url = sp_host_2 + ':32002/api/v3/services/' + descriptor_reference_id
         logging.debug(url)        
         service_descriptor= requests.get(url,headers=JSON_CONTENT_HEADER) 
-        logging.debug (service_descriptor)
-        service_descriptor_json = json.loads(serviservice_descriptorce_record)
+        logging.debug (service_descriptor.text)
+        service_descriptor_json = json.loads(service_descriptor.text)
         logging.debug (service_descriptor_json)
         service_descriptor_vendor = service_descriptor_json['nsd']['vendor']
         return service_descriptor_vendor
     
     def SonataTerminateDescriptorVersion(self,descriptor_reference_id):
-        logging.debug("SonataTerminateStatus begins")
+        logging.debug("SonataTerminateDescriptorVersion begins")
         JSON_CONTENT_HEADER = {'Accept':'application/json'} 
         sp_host_2 = self.getHostIp()
         url = sp_host_2 + ':32002/api/v3/services/' + descriptor_reference_id
         logging.debug(url)        
         service_descriptor= requests.get(url,headers=JSON_CONTENT_HEADER) 
-        logging.debug (service_descriptor)
-        service_descriptor_json = json.loads(serviservice_descriptorce_record)
+        logging.debug (service_descriptor.text)
+        service_descriptor_json = json.loads(service_descriptor.text)
         logging.debug (service_descriptor_json)
         service_descriptor_version = service_descriptor_json['nsd']['version']
         return service_descriptor_version
@@ -3333,3 +3372,153 @@ class Adapter:
         return vim_url_center[2:]
 
         
+    def instantiationDeleteTest(self,request):    
+        logging.info("instantiation delete TESTS starts")
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            sp_host_2 = self.getHostIp()
+            url = sp_host_2 + ':32002/api/v3/requests'
+            logging.debug(url)
+            logging.debug (request)            
+            print (request)
+            print (type(request))
+            
+            content = json.loads(request)
+            instance_uuid = content['instance_uuid']    
+            print (instance_uuid)
+            package_uploaded = content['package_uploaded']
+            print (package_uploaded)
+
+            terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
+            #terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"request_type\":\"TERMINATE_SERVICE\"}"
+            
+            print (terminate_str)            
+            delete_ns = "curl -X POST --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -d '" + terminate_str + "' " + url
+            print (delete_ns)
+
+            #terminate = requests.post(url,data=terminate_str,headers=JSON_CONTENT_HEADER) 
+            terminate = subprocess.check_output([delete_ns], shell=True)
+            print (terminate)
+
+
+            #terminate = self.instantiationDelete(terminate_str) 
+
+            logging.debug (terminate)
+            print ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            #logging.debug (terminate.text)
+
+            content = json.loads(request)
+            ns_id = content['instance_uuid']
+            logging.debug(ns_id)
+            print ("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+            '''
+            url_monitoring = self.getMonitoringURLs()
+            terminate_string = "curl -X DELETE -H \"Content-type: application/json\" "  + url_monitoring + "/" + ns_id 
+            logging.debug(terminate_string)   
+            try: 
+                terminate_monitoring = subprocess.check_output([terminate_string], shell=True)
+                print (terminate_monitoring)
+            except:
+                print (terminate_monitoring)
+            '''
+
+            # deleting the descriptors
+            package_uploaded = content['package_uploaded']
+            logging.debug(package_uploaded)
+            print("aroaroaroaoaoor")
+            if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
+                logging.debug(ns_id)
+                try:
+                    print (ns_id)
+                    instance_status = self.SonataTerminateStatus(ns_id)
+                    print(instance_status)
+                    while instance_status == 'normal operation':
+                        time.sleep(5)
+                        instance_status = self.SonataTerminateStatus(ns_id)      
+                        print(instance_status)  
+                    descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id)
+                    print (descriptor_reference_id)
+                    name = self.SonataTerminateDescriptorName(descriptor_reference_id)
+                    print (name)
+                    vendor = self.SonataTerminateDescriptorVendor(descriptor_reference_id)
+                    print (vendor)
+                    version = self.SonataTerminateDescriptorVersion(descriptor_reference_id)
+                    print (version)
+                    delete_descriptors = self.deletePackagefromService(name,vendor,version)                
+                    print (delete_descriptors) 
+                except:
+                    print("error trying to delte the tgo from the SP")
+
+            print (terminate)
+            return terminate
+
+        if my_type == 'osm':
+            sp_host_2 = self.getHostIp()
+            sp_host_3 = sp_host_2[7:]
+            url = sp_host_3
+            logging.debug(request)
+            logging.debug(url)
+            token = self.getOSMToken(request)
+            logging.debug (token)
+            
+            #url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+            url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+            url_2 = url.replace("http","https")
+            
+            content = json.loads(request)
+            ns_id = content['instance_uuid']
+            logging.debug(ns_id)
+            
+            
+            logging.debug (ns_id)
+            delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+            delete_ns_2 = delete_ns +token + "\" "
+            delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
+            logging.debug (delete_ns_3)
+
+            # terminating the instance
+            terminate = subprocess.check_output([delete_ns_3], shell=True)
+            #terminate = "hola"
+
+            # deleting the descriptors
+            package_uploaded = content['package_uploaded']
+            logging.debug(package_uploaded)
+            if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
+                instance_status = self.OSMTerminateStatus(url_2,ns_id)
+                print(instance_status)
+                while instance_status != 'terminated':
+                    time.sleep(2)
+                    instance_status = self.OSMTerminateStatus(url_2,ns_id)
+                delete_descriptors = self.deleteOSMDescriptors(ns_id)
+                
+                print (delete_descriptors)
+
+            print (terminate)
+            #_thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,content['ns_id']))
+                                 
+            logging.debug(terminate)
+            return (terminate)         
+
+
+
+    def delPackageSonata (self,ns_id):
+        print (ns_id)
+        instance_status = self.SonataTerminateStatus(ns_id)
+        print(instance_status)
+        while instance_status == 'normal operation':
+            time.sleep(5)
+            instance_status = self.SonataTerminateStatus(ns_id)      
+            print(instance_status)  
+        descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id)
+        print (descriptor_reference_id)
+        name = self.SonataTerminateDescriptorName(descriptor_reference_id)
+        print (name)
+        vendor = self.SonataTerminateDescriptorVendor(descriptor_reference_id)
+        print (vendor)
+        version = self.SonataTerminateDescriptorVersion(descriptor_reference_id)
+        print (version)
+        delete_descriptors = self.deletePackagefromService(name,vendor,version)                
+        print (delete_descriptors)  
+              
