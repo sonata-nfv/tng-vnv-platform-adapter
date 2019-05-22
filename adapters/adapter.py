@@ -2760,12 +2760,13 @@ class Adapter:
             instantiation_id = instantiation_call_json['id']
             logging.debug (instantiation_id) 
 
-            string_inicial = "{\"package_id\": \"" + package_id + "\","                
-            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","                            
+            string_inicial = "{\"package_id\": \"" + package_id + "\","  
+            logging.debug (string_inicial)             
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","   
+            logging.debug (string_inicial)                          
             request_response = string_inicial + "\"id\": \"" + instantiation_id + "\"}"
 
-            logging.debug (request_response)
-            logging.debug(request_response)   
+            logging.debug (request_response)              
             return (request_response)	            
             
             
