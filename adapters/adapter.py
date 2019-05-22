@@ -2761,13 +2761,14 @@ class Adapter:
             logging.debug (instantiation_id) 
 
             string_inicial = "{\"package_id\": \"" + package_id + "\","
+            print (string_inicial)
             #string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","                         
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
             if package_uploaded == True:
-                pkg_up = "true"                           
+                string_replaced = string_inicial.replace("\"True\"","true")                            
             if package_uploaded == False:
-                pkg_up = "false" 
-            string_replaced = string_inicial + "\"package_uploaded\" : \"" + pkg_up + "\","           
-            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"  
+                string_replaced = string_inicial.replace("\"False\"","false")            
+            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"   
 
 
             '''                  
