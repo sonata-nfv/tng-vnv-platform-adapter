@@ -2623,7 +2623,7 @@ class Adapter:
         if my_type == 'osm':
             logging.debug("This SP is osm")
             service_id = None
-            package_id = None
+            package_id = "package_id"
             package_path = None
             vnv_service_id = None
 
