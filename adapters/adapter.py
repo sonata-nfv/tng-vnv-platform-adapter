@@ -2623,7 +2623,7 @@ class Adapter:
         if my_type == 'osm':
             logging.debug("This SP is osm")
             service_id = None
-            package_id = None
+            package_id = "package_id"
             package_path = None
             vnv_service_id = None
 
@@ -2760,12 +2760,34 @@ class Adapter:
             instantiation_id = instantiation_call_json['id']
             logging.debug (instantiation_id) 
 
-            string_inicial = "{\"package_id\": \"" + package_id + "\","                
-            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","                            
-            request_response = string_inicial + "\"id\": \"" + instantiation_id + "\"}"
+            string_inicial = "{\"package_id\": \"" + package_id + "\","
+            print (string_inicial)
+            #string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","                         
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")            
+            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"   
 
-            logging.debug (request_response)
+
+            '''                  
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")            
+            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"            
+            '''
+            
+            logging.debug (request_response)     
+
             logging.debug(request_response)   
+            return (request_response)	   
+
+
+
+            logging.debug (request_response)              
             return (request_response)	            
             
             
@@ -3017,11 +3039,12 @@ class Adapter:
             
             string_inicial = "{\"package_id\": \"" + "111111111111" + "\","                
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
-            string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")            
             request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"            
             
-            logging.debug (request_response)     
-
             logging.debug(request_response)   
             return (request_response)	            
                  
