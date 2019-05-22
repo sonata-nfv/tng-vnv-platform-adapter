@@ -2760,17 +2760,20 @@ class Adapter:
             instantiation_id = instantiation_call_json['id']
             logging.debug (instantiation_id) 
 
-            string_inicial = "{\"package_id\": \"" + package_id + "\","  
-            logging.debug (string_inicial)             
-            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
-            string_replaced = string_inicial.replace("\"True\"","true")    
-            logging.debug (string_inicial)                          
-            request_response = string_inicial + "\"id\": \"" + instantiation_id + "\"}"
+            string_inicial = "{\"package_id\": \"" + package_id + "\","                         
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")            
+            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"  
 
 
-            '''     
+            '''                  
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
-            string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")            
             request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"            
             '''
             
@@ -3033,11 +3036,12 @@ class Adapter:
             
             string_inicial = "{\"package_id\": \"" + "111111111111" + "\","                
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
-            string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")            
             request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"            
             
-            logging.debug (request_response)     
-
             logging.debug(request_response)   
             return (request_response)	            
                  
