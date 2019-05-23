@@ -2604,7 +2604,7 @@ class Adapter:
             except:
                 msg = "{\"error\": \"error in the instantiation process, callback aborted\"}"
                 return msg                 
-            
+            '''
             instantiation_call_str = instantiation_call.__str__()
             instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
             instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
@@ -2618,6 +2618,17 @@ class Adapter:
 
             logging.debug(request_response)   
             return (request_response)	
+            '''
+            instantiation_call_str = instantiation_call.__str__()
+            instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
+            instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
+
+            package_id = self.getSPPackageIdfromServiceId(service_id)
+            string_inicial = "{\"package_id\": \"" + package_id + "\","
+            request_response = string_inicial + instantiation_call_str_replaced_2
+
+            logging.debug(request_response)   
+            return (request_response)            
 	
 
         if my_type == 'osm':
