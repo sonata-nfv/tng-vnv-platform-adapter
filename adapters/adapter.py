@@ -55,11 +55,11 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
+            #print ( connection.get_dsn_parameters(),"\n")
             #print (self.name)
-            logging.info(self.name)
+            #logging.info(self.name)
             get_type = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            logging.info(get_type)
+            #logging.info(get_type)
             #print (get_type)            
             update_token = "UPDATE service_platforms SET service_token = \'" +token+ "\' WHERE name = \'" +self.name+ "\'"            
             #print (update_token)
@@ -90,7 +90,7 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
+            #print ( connection.get_dsn_parameters(),"\n")
             get_type = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"            
             cursor.execute(get_type)
             all = cursor.fetchall()            
@@ -106,7 +106,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed") 
+                    #print("PostgreSQL connection is closed") 
 
     def getVimAccount(self):
         logging.info("getdbtype starts")
@@ -118,7 +118,7 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
+            #print ( connection.get_dsn_parameters(),"\n")
             get_type = "SELECT vim_account FROM service_platforms WHERE name=\'" +self.name+ "\'"            
             cursor.execute(get_type)
             all = cursor.fetchall()            
@@ -134,7 +134,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed")                     
+                    #print("PostgreSQL connection is closed")                     
 
 
 
@@ -149,7 +149,7 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
+            #print ( connection.get_dsn_parameters(),"\n")
             get_username = "SELECT username FROM service_platforms WHERE name=\'" +self.name+ "\'"
             print (get_username)
             cursor.execute(get_username)
@@ -183,17 +183,17 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
+            #print ( connection.get_dsn_parameters(),"\n")
             get_project_name = "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            print (get_project_name)
+            #print (get_project_name)
             cursor.execute(get_project_name)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            print(type_0)
+            #print(type_0)
             type_1 = type_0[3:]            
-            print(type_1)            
+            #print(type_1)            
             type_2 = type_1[:-4]            
-            print(type_2)                  
+            #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             logging.error(error)
@@ -203,7 +203,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed")                    
+                    #print("PostgreSQL connection is closed")                    
 
 
     def getDBPassword(self):
@@ -216,17 +216,17 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
+            #print ( connection.get_dsn_parameters(),"\n")
             get_password= "SELECT password FROM service_platforms WHERE name=\'" +self.name+ "\'"
             print (get_password)
             cursor.execute(get_password)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            print(type_0)
+            #print(type_0)
             type_1 = type_0[3:]            
-            print(type_1)            
+            #print(type_1)            
             type_2 = type_1[:-4]            
-            print(type_2)                  
+            #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             logging.error(error)
@@ -236,7 +236,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed")      
+                    #print("PostgreSQL connection is closed")      
 
 
     def getDBProject(self):
@@ -249,17 +249,17 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
+            #print ( connection.get_dsn_parameters(),"\n")
             get_password= "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
             print (get_password)
             cursor.execute(get_password)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            print(type_0)
+            #print(type_0)
             type_1 = type_0[3:]            
-            print(type_1)            
+            #print(type_1)            
             type_2 = type_1[:-4]            
-            print(type_2)                  
+            #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             #print (error)
@@ -270,7 +270,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed")                                    
+                    #print("PostgreSQL connection is closed")                                    
 
 
 
@@ -285,8 +285,8 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
-            print (self.name)
+            #print ( connection.get_dsn_parameters(),"\n")
+            #print (self.name)
             get_host = "SELECT host FROM service_platforms WHERE name=\'" +self.name+ "\'"
             print (get_host)
             cursor.execute(get_host)
@@ -301,7 +301,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed") 
+                    #print("PostgreSQL connection is closed") 
 
 
     def getMonitoringURLs(self):
@@ -314,17 +314,17 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            print ( connection.get_dsn_parameters(),"\n")
+            #print ( connection.get_dsn_parameters(),"\n")
             get_type = "SELECT monitoring_urls FROM service_platforms WHERE name=\'" +self.name+ "\'"
             print (get_type)
             cursor.execute(get_type)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            print(type_0)
+            #print(type_0)
             type_1 = type_0[3:]            
-            print(type_1)            
+            #print(type_1)            
             type_2 = type_1[:-4]            
-            print(type_2)                  
+            #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             logging.error(error)
@@ -334,7 +334,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed")                     
+                    #print("PostgreSQL connection is closed")                     
 
 
     def getPackages(self):    
@@ -423,32 +423,21 @@ class Adapter:
             
             if pkg:
                 logging.info(pkg)
-                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]            
-                
+                uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]                          
                 uuid_0 = uuid_to_delete_1.__str__()
-                uuid_to_delete_2 = uuid_0[2:]
-                
-                uuid_to_delete_3 = uuid_to_delete_2[:-2]
-                
-
-                url_for_delete = url + '/' + uuid_to_delete_3
-                
+                uuid_to_delete_2 = uuid_0[2:]                
+                uuid_to_delete_3 = uuid_to_delete_2[:-2]                
+                url_for_delete = url + '/' + uuid_to_delete_3                
                 delete = requests.get(url_for_delete, headers=JSON_CONTENT_HEADER)
-
             if response.ok:                 
                     logging.debug(delete.text)
                     return (delete.text, delete.status_code, delete.headers.items())                
-
-                
-
-                
-
-
 
     def uploadPackage(self,package):
         logging.info("upload package starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
+
         if my_type == 'sonata':               
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + ':32002/api/v3/packages'
@@ -460,17 +449,8 @@ class Adapter:
             logging.debug(upload)
             logging.debug(upload.text)
             return upload.text
-            '''
-            upload_string = "curl -X POST  -F \"package=@." + package + "\" " + url
-            print (upload_string)
-            upload_curl = subprocess.check_output([upload_string], shell=True)
-            return upload_curl
-            '''
-
-
 
         if my_type == 'onap':               
-
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + '/sdc/v1/catalog/services/{uuid}/resourceInstances/{resourceInstanceNormalizedName}/artifacts'            
             print(package)
@@ -479,10 +459,6 @@ class Adapter:
             upload = requests.post(url, files=files)
             if request.method == 'POST':
                 return upload.text
-
-
-
-
 
     def uploadOSMService(self,request):  
         logging.info("upload osm service starts")
@@ -505,7 +481,7 @@ class Adapter:
                 'Content-Type':'application/zip', 
                 'Authorization':'Bearer ' +token+''                
             }
-            print (HEADERS)
+            #print (HEADERS)
             #url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors'
             url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'            
             url_2 = url.replace("http","https")
@@ -532,7 +508,7 @@ class Adapter:
     def uploadOSMFunction(self,request):
         logging.info("upload osm function starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
-        print (request)
+        #print (request)
         my_type =  self.getDBType()
         if my_type == 'osm':               
             sp_host_2 = self.getHostIp()
@@ -562,13 +538,11 @@ class Adapter:
 
             return (upload) 
 
-
-
     def getServices(self):    
         logging.info("get services starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
         my_type =  self.getDBType()        
-        print (my_type)
+        #print (my_type)
         if my_type == 'sonata':                        
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + ':32002/api/v3/services'
@@ -594,15 +568,11 @@ class Adapter:
             logging.debug(services)
             return (services) 
 
-
-
-
-            
-
     def getFunctions(self):    
         logging.info("get functions starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
         my_type =  self.getDBType()
+
         if my_type == 'sonata':                
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + ':32002/api/v3/functions'
@@ -626,11 +596,6 @@ class Adapter:
             functions = subprocess.check_output([functions_vnfd_2], shell=True)
             logging.debug(functions)
             return (functions)          
-
-
-
-
-
 
     def getService(self,name,vendor,version):    
         logging.info("get service starts")
@@ -692,13 +657,6 @@ class Adapter:
             response_json = response.content
             logging.debug (response_json)
             jjson = json.loads(response_json)
-            #pkg = [x for x in jjson if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version]
-            '''
-            for x in jjson:
-                if x['nsd']['name'] == name and x['nsd']['vendor'] == vendor and x['nsd']['version'] == version :
-                    logging.debug(x['uuid'])
-                    return x['uuid']
-            '''
             for x in jjson:
                 logging.debug(x)
                 try:
@@ -728,7 +686,6 @@ class Adapter:
             pkg = [x for x in jjson if x['pd']['name'] == name and x['pd']['vendor'] == vendor and x['pd']['version'] == version]
             
             if pkg:
-
                 logging.debug(pkg)
                 uuid_to_delete_1 = [obj['uuid'] for obj in jjson if(obj['pd']['name'] == name)]                            
                 uuid_0 = uuid_to_delete_1.__str__()
@@ -739,8 +696,6 @@ class Adapter:
             if response.ok:                                        
                     logging.debug(uuid_to_delete_3)
                     return uuid_to_delete_3
-
-
 
     def getPackageFile(self,pkg_id):    
         logging.info("get package file starts")
@@ -757,8 +712,6 @@ class Adapter:
             if response.ok:    
                 logging.debug(response.text)    
                 return (response.text, response.status_code, response.headers.items())                  
-
-
 
     def instantiationStatus(self,request):    
         logging.info("instantiation status starts")
@@ -833,8 +786,6 @@ class Adapter:
             ns_instances = subprocess.check_output([instances_2], shell=True)
             return (ns_instances)         
 
-
-
     def instantiation(self,request):    
         logging.info("instantiation starts")
         logging.debug ("INSTANTIATION FUNCTION BEGINS")
@@ -861,8 +812,6 @@ class Adapter:
             if request.method == 'POST':
                 return instantiate.text 
             '''           
-
-
         if my_type == 'sonata':
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + ':32002/api/v3/requests'
@@ -879,7 +828,7 @@ class Adapter:
                 return msg                  
 
         if my_type == 'osm':
-            print('this SP is a OSM')  
+            #print('this SP is a OSM')  
             sp_host_2 = self.getHostIp()
             sp_host_3 = sp_host_2[7:]
             url = sp_host_3
@@ -903,11 +852,6 @@ class Adapter:
             nsd_id = content['nsd_name']
             ns_name = content['ns_name']
             logging.debug (nsd_id)
-
-
-          
-
-
 
             HEADERS = {
                 'Accept':'application/json',
@@ -939,14 +883,10 @@ class Adapter:
             logging.debug(inst)
             return (inst)
 
-
-
-
     def instantiationDelete(self,request):    
         logging.info("instantiation delete starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
-
 
         if my_type == 'onap':
             sp_host_2 = self.getHostIp()
@@ -966,76 +906,55 @@ class Adapter:
             url = sp_host_2 + ':32002/api/v3/requests'
             logging.debug(url)
             logging.debug (request)            
-            print (request)
-            print (type(request))
+            #print (request)
+            #print (type(request))
             
             content = json.loads(request)
             instance_uuid = content['instance_uuid']    
-            print (instance_uuid)
+            logging.debug (instance_uuid)
             package_uploaded = content['package_uploaded']
-            print (package_uploaded)
+            logging.debug (package_uploaded)
 
             terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
             #terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"request_type\":\"TERMINATE_SERVICE\"}"
             
-            print (terminate_str)            
+            logging.debug (terminate_str)            
             delete_ns = "curl -X POST --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -d '" + terminate_str + "' " + url
-            print (delete_ns)
+            logging.debug (delete_ns)
 
-            #terminate = requests.post(url,data=terminate_str,headers=JSON_CONTENT_HEADER) 
             terminate = subprocess.check_output([delete_ns], shell=True)
-            print (terminate)
-
-
-            #terminate = self.instantiationDelete(terminate_str) 
-
             logging.debug (terminate)
-            print ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-            #logging.debug (terminate.text)
-
             content = json.loads(request)
             ns_id = content['instance_uuid']
             logging.debug(ns_id)
-            print ("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
-            '''
-            url_monitoring = self.getMonitoringURLs()
-            terminate_string = "curl -X DELETE -H \"Content-type: application/json\" "  + url_monitoring + "/" + ns_id 
-            logging.debug(terminate_string)   
-            try: 
-                terminate_monitoring = subprocess.check_output([terminate_string], shell=True)
-                print (terminate_monitoring)
-            except:
-                print (terminate_monitoring)
-            '''
 
             # deleting the descriptors
             package_uploaded = content['package_uploaded']
-            logging.debug(package_uploaded)
-            print("aroaroaroaoaoor")
+            logging.debug(package_uploaded)        
             if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
                 logging.debug(ns_id)
                 try:
-                    print (ns_id)
+                    logging.debug (ns_id)
                     instance_status = self.SonataTerminateStatus(ns_id)
-                    print(instance_status)
+                    logging.debug(instance_status)
                     while instance_status == 'normal operation':
                         time.sleep(5)
                         instance_status = self.SonataTerminateStatus(ns_id)      
-                        print(instance_status)  
+                        logging.debug(instance_status)  
                     descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id)
-                    print (descriptor_reference_id)
+                    logging.debug (descriptor_reference_id)
                     name = self.SonataTerminateDescriptorName(descriptor_reference_id)
-                    print (name)
+                    logging.debug (name)
                     vendor = self.SonataTerminateDescriptorVendor(descriptor_reference_id)
-                    print (vendor)
+                    logging.debug (vendor)
                     version = self.SonataTerminateDescriptorVersion(descriptor_reference_id)
-                    print (version)
+                    logging.debug (version)
                     delete_descriptors = self.deletePackagefromService(name,vendor,version)                
-                    print (delete_descriptors) 
+                    logging.debug (delete_descriptors) 
                 except:
-                    print("error trying to delte the tgo from the SP")
+                    logging.debug("error trying to delte the tgo from the SP")
                     
-            print (terminate)
+            logging.debug (terminate)
             return terminate
 
         if my_type == 'osm':
@@ -1046,8 +965,7 @@ class Adapter:
             logging.debug(url)
             token = self.getOSMToken(request)
             logging.debug (token)
-            
-            #url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
             url_2 = url.replace("http","https")
             
@@ -1064,8 +982,6 @@ class Adapter:
 
             # terminating the instance
             terminate = subprocess.check_output([delete_ns_3], shell=True)
-            #terminate = "hola"
-
             # deleting the descriptors
             package_uploaded = content['package_uploaded']
             logging.debug(package_uploaded)
@@ -1077,9 +993,9 @@ class Adapter:
                     instance_status = self.OSMTerminateStatus(url_2,ns_id)
                 delete_descriptors = self.deleteOSMDescriptors(ns_id)
                 
-                print (delete_descriptors)
+                logging.debug (delete_descriptors)
 
-            print (terminate)
+            logging.debug (terminate)
             #_thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,content['ns_id']))
                                  
             logging.debug(terminate)
@@ -1093,7 +1009,7 @@ class Adapter:
         url = sp_host_2 + ':32002/api/v3/records/services/' + ns_id
         logging.debug(url)        
         service_record = requests.get(url,headers=JSON_CONTENT_HEADER) 
-        print ("this is the network service record:")
+        logging.debug ("this is the network service record:")
         logging.debug (service_record.text)
         service_record_json = json.loads(service_record.text)
         logging.debug (service_record_json)
@@ -1176,36 +1092,32 @@ class Adapter:
         logging.debug (instance_ns_3)
 
         instance = subprocess.check_output([instance_ns_3], shell=True)
-        print(instance)
+        logging.debug(instance)
         instance_json = json.loads(instance)
-        print(instance_json)
+        logging.debug(instance_json)
         nsdId = instance_json['instantiate_params']['nsdId']
-        print (nsdId)
-
+        logging.debug (nsdId)
         vnfr_array = instance_json['constituent-vnfr-ref']
-
-
         vnfds = []
-
         logging.debug (vnfr_array)
         for vnfr_id in vnfr_array:
             logging.debug ("FUCNTIONS")
             logging.debug(vnfr_id)                
             function_request = self.functionRecordOSM(vnfr_id)
             function_request_json =  json.loads(function_request)
-            print (function_request_json)
+            logging.debug (function_request_json)
             vnfd_id = function_request_json['vnfd-id']
-            print (vnfd_id)
+            logging.debug (vnfd_id)
             vnfds.append(vnfd_id)
 
 
         try:
             instance = None
             instance = subprocess.check_output([instance_ns_3], shell=True)
-            print (instance)
+            logging.debug (instance)
             while instance is not None:
                 instance = subprocess.check_output([instance_ns_3], shell=True)
-                print (instance)
+                logging.debug (instance)
                 instance_json = json.loads(instance)
                 status = instance_json['status']
                 if status == '404':
@@ -1214,16 +1126,14 @@ class Adapter:
             logging.debug("The instance has been terminated. Deleting descriptors...")
         
         deleteOSMService = self.deleteOSMService(nsdId)
-        print (deleteOSMService)
+        logging.debug (deleteOSMService)
         time.sleep(7)
         for vnfd_id in vnfds:
             deleteOSMFunction = self.deleteOSMFunction(vnfd_id)
-            print (deleteOSMFunction)
+            logging.debug (deleteOSMFunction)
         
         return "deleted"       
         
-
-
     def getOSMToken(self,request):        
         logging.info("get osm token starts")      
         JSON_CONTENT_HEADER = {'Accept':'application/json'}   
@@ -1237,10 +1147,8 @@ class Adapter:
             pr_name = self.getDBProjectName()
             logging.debug ("project name from DB:")
             logging.debug (pr_name)
-
             if pr_name:
                 project_id_for_token = pr_name
-
             if not pr_name:
                 data = request.get_json()
                 project_id_for_token = data['project_id']
@@ -1268,10 +1176,8 @@ class Adapter:
 
     def getWims(self):    
         logging.info("get wims starts")
-
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
-
         if my_type == 'sonata':
             url = self.getHostIp()  
             logging.debug (url)
@@ -1280,8 +1186,6 @@ class Adapter:
             vims = subprocess.check_output([curl_vims], shell=True)
             logging.debug(vims)
             return vims
-
-
 
     def getVims(self):    
         logging.info("get vims starts")
@@ -1313,12 +1217,10 @@ class Adapter:
             logging.debug(vims)
             return (vims)              
 
-
     def getWim(self,vim):    
         logging.info("get wim starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
-
         if my_type == 'sonata':
             url = self.getHostIp()  
             logging.debug (url)
@@ -1327,9 +1229,6 @@ class Adapter:
             vim = subprocess.check_output([curl_vim], shell=True)
             logging.debug(vim)
             return vim
-
-
-
 
     def getVim(self,vim):    
         logging.info("get vim starts")
@@ -1410,7 +1309,7 @@ class Adapter:
             logging.debug (get_nsd)
             nsd_info = subprocess.check_output([get_nsd], shell=True)
             logging.debug (nsd_info)            
-            print (type(nsd_info))    
+            #print (type(nsd_info))    
             s = json.dumps(str(nsd_info))
             logging.debug(s)
             logging.debug (type(s))                                         
@@ -1488,7 +1387,7 @@ class Adapter:
                 logging.debug ("project name from json body:")
                 logging.debug (pr_name)
 
-            print (project_id_for_token)
+            #print (project_id_for_token)
             username_for_token = self.getDBUserName()
             password_for_token = self.getDBPassword()            
             admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
@@ -1520,7 +1419,6 @@ class Adapter:
     def OSMInstantiateCallback(self, callback_url,inst_resp_yaml):
 
         token = self.getOSMToken(request)
-
         sp_host_2 = self.getHostIp()
         url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
         url_2 = url.replace("http","https")        
@@ -1529,24 +1427,18 @@ class Adapter:
         logging.debug ("callback start")                
         response = yaml.load(inst_resp_yaml)
         service_id = response['id']
-        logging.debug(service_id)
-        #status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        logging.debug(service_id)        
         status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id 
         logging.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
         logging.debug (status_curl)
 
-        #instance_json = json.loads(status_curl.__str__())
         instance_json = json.loads(status_curl)
-
         config_status = instance_json['config-status']
-        print (config_status)
-
+        #print (config_status)
         operational_status = instance_json['operational-status']
-        print (operational_status)
-
-        status = None
-             
+        #print (operational_status)
+        status = None             
         while ( operational_status != 'running' and operational_status != 'error' ):               
             try:
                 status = data['config-status']                    
@@ -1565,9 +1457,7 @@ class Adapter:
 
         status = config_status
         logging.debug (status)
-
         #callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
-
         callback_msg = self.instantiationInfoCurator(service_id)
         logging.debug (callback_msg)
         #callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
@@ -1576,7 +1466,6 @@ class Adapter:
         call = subprocess.check_output([callback_post], shell=True)
         logging.debug(call)
 
-
         #Monitoring callback       
         callback_msg = self.instantiationInfoMonitoring(service_id)
         callback_url_monitoring = self.getMonitoringURLs()
@@ -1584,13 +1473,7 @@ class Adapter:
         logging.debug (callback_post_monitoring)
         call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
         logging.debug(call_monitoring)
-
-
         logging.debug ("callback ends")
-
-
-
-
 
     def OSMTerminateStatus(self,url_2,ns_id):
         logging.info("osm terminate status starts")        
@@ -1625,15 +1508,7 @@ class Adapter:
                         data = json.load(f)
 
         status = "terminated"  
-
         return status
-
-
-
-
-
-
-
 
     def OSMTerminateCallback(self,token,url_2,callback_url,ns_id):
         logging.info("osm terminate callback starts")
@@ -1889,8 +1764,6 @@ class Adapter:
         logging.debug(response_3)
         return response_3
 
-
-
     def getVnVPackages(self):    
         logging.info("get vnv packages starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}
@@ -2090,10 +1963,7 @@ class Adapter:
                 response_functions = response_functions + response_function_2
 
             response_functions_2 = response_functions[:-1] 
-
-            response_functions = response_functions_2 + "],"
-            
-            
+            response_functions = response_functions_2 + "],"                        
             response = response + response_functions
             response = response + "\"test_id\": \"null\""
             response = response + "}"
@@ -2115,7 +1985,6 @@ class Adapter:
         logging.debug(msg_response)
         #return msg_response
         return package_string_2
-
 
     def instantiationInfoCurator(self,id):    
         logging.info("instantiation info curator starts")
@@ -2735,13 +2604,9 @@ class Adapter:
                 package_uploaded = True
                 
             time.sleep(2)
-            
 
-            #return "hola"
-            
-            ## INSTANCIANDO
             nsd_name = service_id
-            #ns_name = service_id
+
             ns_name = content['instance_name']
             vim_account = self.getVimAccount()
 
@@ -2772,37 +2637,16 @@ class Adapter:
             logging.debug (instantiation_id) 
 
             string_inicial = "{\"package_id\": \"" + package_id + "\","
-            print (string_inicial)
-            #string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","                         
+            #print (string_inicial)                                  
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
             if package_uploaded == True:
                 string_replaced = string_inicial.replace("\"True\"","true")                            
             if package_uploaded == False:
                 string_replaced = string_inicial.replace("\"False\"","false")            
             request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"   
-
-
-            '''                  
-            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
-            if package_uploaded == True:
-                string_replaced = string_inicial.replace("\"True\"","true")                            
-            if package_uploaded == False:
-                string_replaced = string_inicial.replace("\"False\"","false")            
-            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"            
-            '''
-            
-            logging.debug (request_response)     
-
+  
             logging.debug(request_response)   
-            return (request_response)	   
-
-
-
-            logging.debug (request_response)              
-            return (request_response)	            
-            
-            
-
+            return (request_response)	                                   
 
     def SonataInstantiateCallback(self,callback,instantiation_call):
         logging.info("sonata instantiate callback starts")
@@ -2948,7 +2792,7 @@ class Adapter:
             package_path = None
             vnv_service_id = None
 
-            print ("instantion for osm SPs stars")
+            logging.debug ("instantiation for osm SPs stars")
 
             ### package operations
             '''          
@@ -3311,8 +3155,7 @@ class Adapter:
         response_json = response.content
         jjson = json.loads(response_json)
         for x in jjson:
-            print(x)
-            logging.debug(x)
+            logging.debug(x)            
             try:
                 osm_name = x['nsd']['nsd:nsd-catalog']['nsd']['name']
                 logging.debug("OSM service descriptor, checking if is the one we are searching:") 
@@ -3337,8 +3180,7 @@ class Adapter:
         logging.debug (response)
         response_json = response.content
         jjson = json.loads(response_json)
-        for x in jjson:
-            print(x)
+        for x in jjson:            
             logging.debug(x)
             try:
                 osm_name = x['nsd']['nsd:nsd-catalog']['nsd']['name']
@@ -3416,37 +3258,28 @@ class Adapter:
             url = sp_host_2 + ':32002/api/v3/requests'
             logging.debug(url)
             logging.debug (request)            
-            print (request)
-            print (type(request))
+            #print (request)
+            #print (type(request))
             
             content = json.loads(request)
             instance_uuid = content['instance_uuid']    
-            print (instance_uuid)
+            logging.debug (instance_uuid)
             package_uploaded = content['package_uploaded']
-            print (package_uploaded)
+            logging.debug (package_uploaded)
 
             terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
-            #terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"request_type\":\"TERMINATE_SERVICE\"}"
             
-            print (terminate_str)            
+            logging.debug (terminate_str)            
             delete_ns = "curl -X POST --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -d '" + terminate_str + "' " + url
-            print (delete_ns)
-
-            #terminate = requests.post(url,data=terminate_str,headers=JSON_CONTENT_HEADER) 
+            logging.debug (delete_ns)
             terminate = subprocess.check_output([delete_ns], shell=True)
-            print (terminate)
-
-
-            #terminate = self.instantiationDelete(terminate_str) 
+            logging.debug (terminate)
 
             logging.debug (terminate)
-            print ("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-            #logging.debug (terminate.text)
 
             content = json.loads(request)
             ns_id = content['instance_uuid']
             logging.debug(ns_id)
-            print ("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
             '''
             url_monitoring = self.getMonitoringURLs()
             terminate_string = "curl -X DELETE -H \"Content-type: application/json\" "  + url_monitoring + "/" + ns_id 
@@ -3461,31 +3294,30 @@ class Adapter:
             # deleting the descriptors
             package_uploaded = content['package_uploaded']
             logging.debug(package_uploaded)
-            print("aroaroaroaoaoor")
             if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
                 logging.debug(ns_id)
                 try:
-                    print (ns_id)
+                    logging.debug (ns_id)
                     instance_status = self.SonataTerminateStatus(ns_id)
-                    print(instance_status)
+                    logging.debug(instance_status)
                     while instance_status == 'normal operation':
                         time.sleep(5)
                         instance_status = self.SonataTerminateStatus(ns_id)      
-                        print(instance_status)  
+                        logging.debug(instance_status)  
                     descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id)
-                    print (descriptor_reference_id)
+                    logging.debug (descriptor_reference_id)
                     name = self.SonataTerminateDescriptorName(descriptor_reference_id)
-                    print (name)
+                    logging.debug (name)
                     vendor = self.SonataTerminateDescriptorVendor(descriptor_reference_id)
-                    print (vendor)
+                    logging.debug (vendor)
                     version = self.SonataTerminateDescriptorVersion(descriptor_reference_id)
-                    print (version)
+                    logging.debug (version)
                     delete_descriptors = self.deletePackagefromService(name,vendor,version)                
-                    print (delete_descriptors) 
+                    logging.debug (delete_descriptors) 
                 except:
-                    print("error trying to delte the tgo from the SP")
+                    logging.debug("error trying to delte the tgo from the SP")
 
-            print (terminate)
+            logging.debug (terminate)
             return terminate
 
         if my_type == 'osm':
@@ -3496,63 +3328,55 @@ class Adapter:
             logging.debug(url)
             token = self.getOSMToken(request)
             logging.debug (token)
-            
-            #url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
             url_2 = url.replace("http","https")
             
             content = json.loads(request)
             ns_id = content['instance_uuid']
             logging.debug(ns_id)
-            
-            
+                        
             logging.debug (ns_id)
             delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             delete_ns_2 = delete_ns +token + "\" "
             delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
             logging.debug (delete_ns_3)
-
             # terminating the instance
             terminate = subprocess.check_output([delete_ns_3], shell=True)
-            #terminate = "hola"
-
             # deleting the descriptors
             package_uploaded = content['package_uploaded']
             logging.debug(package_uploaded)
             if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
                 instance_status = self.OSMTerminateStatus(url_2,ns_id)
-                print(instance_status)
+                logging.debug(instance_status)
                 while instance_status != 'terminated':
                     time.sleep(2)
                     instance_status = self.OSMTerminateStatus(url_2,ns_id)
-                delete_descriptors = self.deleteOSMDescriptors(ns_id)
-                
-                print (delete_descriptors)
+                delete_descriptors = self.deleteOSMDescriptors(ns_id)                
+                logging.debug (delete_descriptors)
 
-            print (terminate)
+            logging.debug (terminate)
             #_thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,content['ns_id']))
                                  
             logging.debug(terminate)
             return (terminate)         
 
-
-
     def delPackageSonata (self,ns_id):
-        print (ns_id)
+        logging.debug (ns_id)
         instance_status = self.SonataTerminateStatus(ns_id)
-        print(instance_status)
+        logging.debug(instance_status)
         while instance_status == 'normal operation':
             time.sleep(5)
             instance_status = self.SonataTerminateStatus(ns_id)      
-            print(instance_status)  
+            logging.debug(instance_status)  
         descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id)
-        print (descriptor_reference_id)
+        logging.debug (descriptor_reference_id)
         name = self.SonataTerminateDescriptorName(descriptor_reference_id)
-        print (name)
+        logging.debug (name)
         vendor = self.SonataTerminateDescriptorVendor(descriptor_reference_id)
-        print (vendor)
+        logging.debug (vendor)
         version = self.SonataTerminateDescriptorVersion(descriptor_reference_id)
-        print (version)
+        logging.debug (version)
         delete_descriptors = self.deletePackagefromService(name,vendor,version)                
-        print (delete_descriptors)  
+        logging.debug (delete_descriptors)  
               
