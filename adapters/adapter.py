@@ -2493,8 +2493,21 @@ class Adapter:
             instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
 
             package_id = self.getSPPackageIdfromServiceId(service_id)
+            #string_inicial = "{\"package_id\": \"" + package_id + "\","
+            #request_response = string_inicial + instantiation_call_str_replaced_2
+
+
+
             string_inicial = "{\"package_id\": \"" + package_id + "\","
-            request_response = string_inicial + instantiation_call_str_replaced_2
+            #print (string_inicial)                                  
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")            
+            #request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"  
+            request_response = string_replaced + instantiation_call_str_replaced_2
+
 
             logging.debug(request_response)   
             return (request_response)            
