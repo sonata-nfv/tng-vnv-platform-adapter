@@ -928,6 +928,17 @@ class Adapter:
             ns_id = content['instance_uuid']
             logging.debug(ns_id)
 
+
+            #termination_request_json_dumps = json.dumps(terminate)
+            #logging.debug (termination_request_json_dumps)
+            termination_request_json = json.loads(terminate)
+            logging.debug (termination_request_json)
+            logging.debug (termination_request_json['id'])
+            termination_request_id = termination_request_json['id']        
+            logging.debug (termination_request_id)
+
+
+
             # deleting the descriptors
             package_uploaded = content['package_uploaded']
             logging.debug(package_uploaded)        
@@ -935,12 +946,14 @@ class Adapter:
                 logging.debug(ns_id)
                 try:
                     logging.debug (ns_id)
-                    instance_status = self.SonataTerminateStatus(ns_id)
-                    logging.debug(instance_status)
-                    while instance_status == 'normal operation':
+                    #request_status = self.SonataTerminateStatus(ns_id)
+                    request_status = self.getRequestStatus(termination_request_id)
+                    logging.debug(request_status)
+                    while request_status != 'READY':
                         time.sleep(5)
-                        instance_status = self.SonataTerminateStatus(ns_id)      
-                        logging.debug(instance_status)  
+                        request_status = self.getRequestStatus(termination_request_id)
+                        #request_status = self.SonataTerminateStatus(ns_id)      
+                        logging.debug(request_status)  
                     descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id)
                     logging.debug (descriptor_reference_id)
                     name = self.SonataTerminateDescriptorName(descriptor_reference_id)
