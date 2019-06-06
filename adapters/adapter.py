@@ -1688,7 +1688,32 @@ class Adapter:
         logging.debug (tok)
         token_id_json = json.loads(tok)
         logging.debug (token_id_json['token'])
-        return token_id_json['token']                   
+        return token_id_json['token']  
+
+
+    def getONAPToken(self,request):            
+        logging.info("get onap token starts")
+        JSON_CONTENT_HEADER = {'Content-type':'application/json'}   
+        sp_host_2 = self.getHostIp()
+        url = sp_host_2 + ':4567/login'
+        url_2 = url.replace("http","https")
+        logging.debug (url_2)
+        username_for_token = self.getDBUserName()
+        password_for_token = self.getDBPassword()        
+        data_for_token= "{\"username\": \"" +username_for_token+ "\", \"password\": \"" +password_for_token+ "\"}"
+        logging.debug (data_for_token)   
+        get_token = "curl -i -X POST -H Content-type: application/json -d '" + data_for_token + "' " + url 
+        logging.debug (get_token)
+        token_curl = subprocess.check_output([get_token], shell=True)
+        logging.debug (token_curl)
+        string = token_curl.__str__()
+        start = string.find('{')
+        end = string.find('}', start)
+        tok = string[start:end+1]
+        logging.debug (tok)
+        token_id_json = json.loads(tok)
+        logging.debug (token_id_json['token'])
+        return token_id_json['token']                    
 
 
 
