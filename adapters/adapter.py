@@ -82,7 +82,7 @@ class Adapter:
             return "token updated", 200    
         except (Exception, psycopg2.Error) as error :
             LOG.debug(error)
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -112,7 +112,7 @@ class Adapter:
             type_2 = type_1[:-4]             
             return type_2
         except (Exception, psycopg2.Error) as error :
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -140,7 +140,7 @@ class Adapter:
             type_2 = type_1[:-4]             
             return type_2
         except (Exception, psycopg2.Error) as error :
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -175,7 +175,7 @@ class Adapter:
             print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -209,7 +209,7 @@ class Adapter:
             #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -242,7 +242,7 @@ class Adapter:
             #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -276,7 +276,7 @@ class Adapter:
             return type_2
         except (Exception, psycopg2.Error) as error :
             #LOG.debug(error)
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -307,7 +307,7 @@ class Adapter:
             return all, 200    
         except (Exception, psycopg2.Error) as error :
             #LOG.debug(error)
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -340,7 +340,7 @@ class Adapter:
             #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            LOG.error((error)
+            LOG.error(error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -836,7 +836,7 @@ class Adapter:
                 LOG.debug(instantiate.text)
                 return instantiate.text
             except:
-                LOG.error( ("Error sending the request, check the connection and logs")
+                LOG.error("Error sending the request, check the connection and logs")
                 msg = "{\"error\": \"error sending the request, check the connection and logs\"}"
                 return msg                  
 
@@ -2499,7 +2499,7 @@ class Adapter:
                 service_id = self.getServiceId(name,vendor,version)
                 LOG.debug(service_id)
             except:
-                LOG.error( ("The service is not in the SP. Was the package uploaded?")
+                LOG.error("The service is not in the SP. Was the package uploaded?")
 
             time.sleep(5)
             try:
@@ -2781,10 +2781,10 @@ class Adapter:
                 inst_error = self.getRequestError(instantiation_request_id)
 
 
-                LOG.error( ("The request is in error status")
-                LOG.error( (inst_error)
+                LOG.error("The request is in error status")
+                LOG.error(inst_error)
                 error_string = inst_error.__str__()
-                LOG.error( (error_string)
+                LOG.error(error_string)
                 try:
                     callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + error_string + "\"}' " + callback        
                     LOG.debug(callback_post)		
@@ -2797,7 +2797,7 @@ class Adapter:
                     call_mon = subprocess.check_output([monitoring_callback_post], shell=True)  
 
                 except:
-                    LOG.error( ("error sending the instantiation error callbacks")
+                    LOG.error("error sending the instantiation error callbacks")
 
         LOG.info("sonata instantiate callback ends")        
 
