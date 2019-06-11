@@ -10,7 +10,18 @@ from models import utils
 from models import users
 import psycopg2
 
+
+from logger import TangoLogger as TangoLogger
+
 app = Flask(__name__)
+
+
+
+LOG = TangoLogger.getLogger(__name__, log_level=logging.DEBUG, log_json=True)
+TangoLogger.getLogger("your_module:main", logging.DEBUG, log_json=True)
+LOG.setLevel(logging.DEBUG)
+
+LOG.info("Hello world.")
 
 ##### SERVICE PLATFORMS ROUTES #####
 @app.route('/service_platforms', methods=['GET','POST','OPTIONS','DELETE','PATCH'])
@@ -20,7 +31,7 @@ def sps():
         return sp.getServicePlatforms()
 
     if request.method == 'POST':
-        print (request.is_json)
+        LOG.debug(request.is_json)
         vim_account = None
         content = request.get_json()
 
@@ -29,27 +40,27 @@ def sps():
         except:
             vim_account = "vim_account"
         
-        print (content)  
+        LOG.debug(content)  
         try:      
             mon_urls = content['monitoring_urls']
-            print ("mon_url exists")
+            LOG.debug("mon_url exists")
             try:
                 pr = content['project_name']
-                print ("project name exists")
+                LOG.debug("project name exists")
                 sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
                 return sp.registerServicePlatform()
             except:
                 sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
                 return sp.registerServicePlatform()
         except:
-            print ("mon_url does not exists")
+            LOG.debug("mon_url does not exists")
             try:
                 pr = content['project_name']
-                print ("project name exists")
+                LOG.debug("project name exists")
                 sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
                 return sp.registerServicePlatform() 
             except:
-                print ("project name does not exists")
+                LOG.debug("project name does not exists")
                 sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
                 return sp.registerServicePlatform()         
 
@@ -60,29 +71,29 @@ def sps():
         return "delete", 200
 
     if request.method == 'PATCH':    
-        print (request.is_json)
+        LOG.debug(request.is_json)
         content = request.get_json()
-        print (content)  
+        LOG.debug(content)  
         try:      
             mon_urls = content['monitoring_urls']
-            print ("mon_url exists")
+            LOG.debug("mon_url exists")
             try:
                 pr = content['project_name']
-                print ("project name exists")
+                LOG.debug("project name exists")
                 sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
                 return sp.patchServicePlatform()
             except:
                 sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
                 return sp.patchServicePlatform()
         except:
-            print ("mon_url does not exists")
+            LOG.debug("mon_url does not exists")
             try:
                 pr = content['project_name']
-                print ("project name exists")
+                LOG.debug("project name exists")
                 sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
                 return sp.patchServicePlatform() 
             except:
-                print ("project name does not exists")
+                LOG.debug("project name does not exists")
                 sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
                 return sp.patchServicePlatform() 
 
@@ -97,29 +108,29 @@ def sp(service_platform):
         sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
         return sp.deleteServicePlatform()
     if request.method == 'PATCH':    
-        print (request.is_json)
+        LOG.debug(request.is_json)
         content = request.get_json()
-        print (content)  
+        LOG.debug(content)  
         try:      
             mon_urls = content['monitoring_urls']
-            print ("mon_url exists")
+            LOG.debug("mon_url exists")
             try:
                 pr = content['project_name']
-                print ("project name exists")
+                LOG.debug("project name exists")
                 sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
                 return sp.patchServicePlatform()
             except:
                 sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
                 return sp.patchServicePlatform()
         except:
-            print ("mon_url does not exists")
+            LOG.debug("mon_url does not exists")
             try:
                 pr = content['project_name']
-                print ("project name exists")
+                LOG.debug("project name exists")
                 sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
                 return sp.patchServicePlatform() 
             except:
-                print ("project name does not exists")
+                LOG.debug("project name does not exists")
                 sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
                 return sp.patchServicePlatform()           
 
@@ -181,7 +192,7 @@ def adapter_get_Functions(service_platform):
 @app.route('/adapters/packages/unzip-package', methods=['POST'])
 def adapter_unzip_package():
     content = request.get_json()
-    print (content)
+    LOG.debug(content)
     ad = adapter.Adapter("service_platform")   
     return ad.unzipPackage(content['package']) 
 
@@ -263,11 +274,11 @@ def adapter_get_package_by_id(service_platform,name,vendor, version):
 
 @app.route('/adapters/<service_platform>/packages', methods=['POST'])
 def adapter_upload_package(service_platform):
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content)
+    LOG.debug(content)
     ad = adapter.Adapter(service_platform)  
-    print (ad.name)         
+    LOG.debug(ad.name)         
     return ad.uploadPackage(content['package'])
 
 
@@ -310,37 +321,37 @@ def OSMInstantiationGetIPs(service_platform,id):
 
 @app.route('/adapters/<service_platform>/instantiations', methods=['POST'])
 def serviceInstantiation(service_platform):
-    print (request.is_json)
-    print (request)
+    LOG.debug(request.is_json)
+    LOG.debug(request)
     content = request.get_json()
-    print (request.get_json())    
-    print (content)
-    print (content['service_uuid'])
+    LOG.debug(request.get_json())    
+    LOG.debug(content)
+    LOG.debug(content['service_uuid'])
     service_uuid = content['service_uuid']
-    print (service_uuid)
+    LOG.debug(service_uuid)
     instantiate_str = "{\"service_uuid\": \"" + service_uuid + "\"}" 
     ad = adapter.Adapter(service_platform)      
     return ad.instantiation(instantiate_str)
 
 @app.route('/adapters/<service_platform>/instantiations/terminate', methods=['POST'])
 def serviceterminate(service_platform): 
-    print (request)
-    print (type(request))
+    LOG.debug(request)
+    LOG.debug(type(request))
     content = request.get_json()
     try:         
-        print (content)
-        print (content['instance_uuid'])
+        LOG.debug(content)
+        LOG.debug(content['instance_uuid'])
         instance_uuid = content['instance_uuid']    
-        print (instance_uuid)
+        LOG.debug(instance_uuid)
         package_uploaded = content['package_uploaded']
-        print (package_uploaded)
+        LOG.debug(package_uploaded)
 
         if ( package_uploaded == False ) or ( package_uploaded == "false" ):
             terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"False\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
         if ( package_uploaded == True ) or ( package_uploaded == "true" ):
             terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"True\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
         
-        print (terminate_str)                      
+        LOG.debug(terminate_str)                      
         ad = adapter.Adapter(service_platform)  
         return ad.instantiationDelete(terminate_str)  
             
@@ -350,23 +361,23 @@ def serviceterminate(service_platform):
 
 @app.route('/adapters/<service_platform>/instantiations/terminate/tests', methods=['POST'])
 def serviceterminatetest(service_platform): 
-    print (request)
-    print (type(request))
+    LOG.debug(request)
+    LOG.debug(type(request))
     content = request.get_json()
     try:         
-        print (content)
-        print (content['instance_uuid'])
+        LOG.debug(content)
+        LOG.debug(content['instance_uuid'])
         instance_uuid = content['instance_uuid']    
-        print (instance_uuid)
+        LOG.debug(instance_uuid)
         package_uploaded = content['package_uploaded']
-        print (package_uploaded)
+        LOG.debug(package_uploaded)
 
         if ( package_uploaded == False ) or ( package_uploaded == "false" ):
             terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"False\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
         if ( package_uploaded == True ) or ( package_uploaded == "true" ):
             terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"package_uploaded\": \"True\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
         
-        print (terminate_str)                      
+        LOG.debug(terminate_str)                      
         ad = adapter.Adapter(service_platform)  
         return ad.instantiationDeleteTest(terminate_str)    
         
@@ -379,11 +390,11 @@ def serviceterminatetest(service_platform):
 
 @app.route('/adapters/<service_platform>/instantiations/<service_id>', methods=['GET'])
 def serviceInstantiationStatus(service_platform,service_id):
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content)    
+    LOG.debug(content)    
     ad = adapter.Adapter(service_platform)
-    #print (content['service_uuid'])        
+    #LOG.debug(content['service_uuid'])        
     return ad.instantiationStatus(service_id)      
 
 
@@ -391,11 +402,11 @@ def serviceInstantiationStatus(service_platform,service_id):
 
 @app.route('/adapters/<service_platform>/instantiations/delete', methods=['POST'])
 def serviceInstantiationDelete(service_platform):
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content)    
+    LOG.debug(content)    
     ad = adapter.Adapter(service_platform)
-    #print (content['service_uuid'])        
+    #LOG.debug(content['service_uuid'])        
     return ad.instantiationDelete(request)      
 
 @app.route('/adapters/<service_platform>/vims', methods=['GET'])
@@ -422,15 +433,13 @@ def getWimInfo(service_platform,wim_name):
 ##### OSM specific endpoints ####
 @app.route('/adapters/<service_platform>/get_token', methods=['GET'])
 def adapter_osm_get_token(service_platform):
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content) 
+    LOG.debug(content) 
     ad = adapter.Adapter(service_platform)   
     my_type = ad.getDBType()
     if my_type == 'sonata':
-        print("illllooo")
-        print ("this SP is a sonata")
-        print("illllooo")
+        LOG.debug("this SP is a sonata")
         return ad.getSonataToken(request)    
     if my_type == 'osm':
         return ad.getOSMToken(request)   
@@ -439,21 +448,21 @@ def adapter_osm_get_token(service_platform):
 
 @app.route('/adapters/<service_platform>/services', methods=['POST'])
 def adapter_upload_service(service_platform):
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content)
+    LOG.debug(content)
     ad = adapter.Adapter(service_platform)  
-    print (ad.name)         
+    LOG.debug(ad.name)         
     return ad.uploadOSMService(request)       
 
 
 @app.route('/adapters/<service_platform>/functions', methods=['POST'])
 def adapter_upload_function(service_platform):
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content)
+    LOG.debug(content)
     ad = adapter.Adapter(service_platform)  
-    print (ad.name)         
+    LOG.debug(ad.name)         
     return ad.uploadOSMFunction(request)  
 
 @app.route('/adapters/<service_platform>/functions/<id_to_delete>/delete', methods=['DELETE'])
@@ -468,9 +477,9 @@ def adapter_delete_service(service_platform,id_to_delete):
 
 @app.route('/callback_tests', methods=['POST'])
 def adapter_callback_tests():      
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content)
+    LOG.debug(content)
     return content.__str__()
 
 @app.route('/adapters/<service_platform>/monitoring', methods=['GET'])
@@ -480,49 +489,49 @@ def monitoring_tests(service_platform):
 
 @app.route('/adapters/<service_platform>/monitoring', methods=['POST'])
 def monitoring(service_platform):  
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content)      
+    LOG.debug(content)      
     ad = adapter.Adapter(service_platform)  
     return ad.monitoringTests(content['metric'])
     
 @app.route('/adapters/instantiate_service', methods=['POST'])
 def adapter_instatiate_service():
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
-    print (content) 
+    LOG.debug(content) 
     return ad.instantiateService(request)  
    
 @app.route('/adapters/instantiate_service/tests', methods=['POST'])
 def adapter_instatiate_service_tests():
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
-    print (content) 
+    LOG.debug(content) 
     return ad.instantiateServiceTest(request)      
 
 @app.route('/adapters/download-upload-test', methods=['POST'])
 def adapterDownloadUploadTest():
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
-    print (content) 
+    LOG.debug(content) 
     return ad.DownloadUploadTest(request)   
 
 @app.route('/adapters/getOSMServiceId/tests', methods=['POST'])
 def getOSMServiceIdTest():
-    print (request.is_json)
+    LOG.debug(request.is_json)
     content = request.get_json()
-    print (content) 
+    LOG.debug(content) 
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
-    #print (content) 
+    #LOG.debug(content) 
     s_id = ad.getOSMServiceId(content['service_name'],content['service_vendor'],content['service_version'])
-    print (s_id)
+    LOG.debug(s_id)
     return  s_id
 
 
@@ -547,6 +556,12 @@ if __name__ == '__main__':
     createUsersObj = utils.Utils()
     createUsersObj.createTableUsers("db-config.cfg")
     createUsersObj.createTableServicePlatforms("db-config.cfg")    
+
+    LOG.info("info")
+    LOG.info ("info")
+    LOG.debug("info")
+    LOG.debug ("info")
+
     #RUN SERVER
     app.run(debug=True,host='0.0.0.0',port=5001)
 
