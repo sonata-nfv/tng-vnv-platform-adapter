@@ -20,8 +20,7 @@ app = Flask(__name__)
 LOG = TangoLogger.getLogger(__name__, log_level=logging.DEBUG, log_json=True)
 TangoLogger.getLogger("your_module:main", logging.DEBUG, log_json=True)
 LOG.setLevel(logging.DEBUG)
-
-LOG.info("Hello world.")
+#LOG.info("Hello world.")
 
 ##### SERVICE PLATFORMS ROUTES #####
 @app.route('/service_platforms', methods=['GET','POST','OPTIONS','DELETE','PATCH'])
@@ -556,12 +555,6 @@ if __name__ == '__main__':
     createUsersObj = utils.Utils()
     createUsersObj.createTableUsers("db-config.cfg")
     createUsersObj.createTableServicePlatforms("db-config.cfg")    
-
-    LOG.info("info")
-    LOG.info ("info")
-    LOG.debug("info")
-    LOG.debug ("info")
-
     #RUN SERVER
     app.run(debug=True,host='0.0.0.0',port=5001)
 
