@@ -20,10 +20,16 @@ from _thread import start_new_thread
 import _thread
 import logging
 
-from logger import TangoLogger as TangoLogger
+from flask import Flask, request, jsonify, render_template
+import os, sys, logging, json, argparse 
+from configparser import ConfigParser
+import requests
+import psycopg2
 
-LOG = TangoLogger.getLogger(__name__, log_level=logging.DEBUG, log_json=True)
-TangoLogger.getLogger("your_module:main", logging.DEBUG, log_json=True)
+from logger import TangoLogger
+
+LOG = TangoLogger.getLogger("adapter", log_level=logging.DEBUG, log_json=True)
+
 LOG.setLevel(logging.DEBUG)
 LOG.info("Hello world.")
 
