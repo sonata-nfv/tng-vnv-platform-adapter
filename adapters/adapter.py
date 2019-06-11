@@ -68,21 +68,21 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
-            #print (self.name)
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
+            #LOG.debug(self.name)
             #LOG.info(self.name)
             get_type = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"
             #LOG.info(get_type)
-            #print (get_type)            
+            #LOG.debug(get_type)            
             update_token = "UPDATE service_platforms SET service_token = \'" +token+ "\' WHERE name = \'" +self.name+ "\'"            
-            #print (update_token)
+            #LOG.debug(update_token)
             LOG.info(update_token)
             cursor.execute(update_token)
             connection.commit()
             return "token updated", 200    
         except (Exception, psycopg2.Error) as error :
-            print (error)
-            logging.error(error)
+            LOG.debug(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -103,7 +103,7 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_type = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"            
             cursor.execute(get_type)
             all = cursor.fetchall()            
@@ -112,7 +112,7 @@ class Adapter:
             type_2 = type_1[:-4]             
             return type_2
         except (Exception, psycopg2.Error) as error :
-            logging.error(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -131,7 +131,7 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_type = "SELECT vim_account FROM service_platforms WHERE name=\'" +self.name+ "\'"            
             cursor.execute(get_type)
             all = cursor.fetchall()            
@@ -140,7 +140,7 @@ class Adapter:
             type_2 = type_1[:-4]             
             return type_2
         except (Exception, psycopg2.Error) as error :
-            logging.error(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -162,9 +162,9 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_username = "SELECT username FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            print (get_username)
+            LOG.debug(get_username)
             cursor.execute(get_username)
             all = cursor.fetchall()
             type_0 = all.__str__()
@@ -175,7 +175,7 @@ class Adapter:
             print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            logging.error(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -196,9 +196,9 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_project_name = "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            #print (get_project_name)
+            #LOG.debug(get_project_name)
             cursor.execute(get_project_name)
             all = cursor.fetchall()
             type_0 = all.__str__()
@@ -209,7 +209,7 @@ class Adapter:
             #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            logging.error(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -229,9 +229,9 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_password= "SELECT password FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            print (get_password)
+            LOG.debug(get_password)
             cursor.execute(get_password)
             all = cursor.fetchall()
             type_0 = all.__str__()
@@ -242,7 +242,7 @@ class Adapter:
             #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            logging.error(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -262,9 +262,9 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_password= "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            print (get_password)
+            LOG.debug(get_password)
             cursor.execute(get_password)
             all = cursor.fetchall()
             type_0 = all.__str__()
@@ -275,8 +275,8 @@ class Adapter:
             #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            #print (error)
-            logging.error(error)
+            #LOG.debug(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -298,16 +298,16 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
-            #print (self.name)
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
+            #LOG.debug(self.name)
             get_host = "SELECT host FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            print (get_host)
+            LOG.debug(get_host)
             cursor.execute(get_host)
             all = cursor.fetchall()
             return all, 200    
         except (Exception, psycopg2.Error) as error :
-            #print (error)
-            logging.error(error)
+            #LOG.debug(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -327,9 +327,9 @@ class Adapter:
                                         port = db.port,
                                         database = db.database)  
             cursor = connection.cursor()
-            #print ( connection.get_dsn_parameters(),"\n")
+            #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_type = "SELECT monitoring_urls FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            print (get_type)
+            LOG.debug(get_type)
             cursor.execute(get_type)
             all = cursor.fetchall()
             type_0 = all.__str__()
@@ -340,7 +340,7 @@ class Adapter:
             #print(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
-            logging.error(error)
+            LOG.error((error)
             exception_message = str(error)
             return exception_message, 401
         finally:
@@ -494,12 +494,12 @@ class Adapter:
                 'Content-Type':'application/zip', 
                 'Authorization':'Bearer ' +token+''                
             }
-            #print (HEADERS)
+            #LOG.debug(HEADERS)
             #url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors'
             url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'            
             url_2 = url.replace("http","https")
         
-            upload_nsd = "curl -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            upload_nsd = "curl -s -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
@@ -521,7 +521,7 @@ class Adapter:
     def uploadOSMFunction(self,request):
         LOG.info("upload osm function starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
-        #print (request)
+        #LOG.debug(request)
         my_type =  self.getDBType()
         if my_type == 'osm':               
             sp_host_2 = self.getHostIp()
@@ -536,7 +536,7 @@ class Adapter:
             url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages_content'
             url_2 = url.replace("http","https")
 
-            upload_nsd = "curl -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            upload_nsd = "curl -s -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
@@ -555,7 +555,7 @@ class Adapter:
         LOG.info("get services starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
         my_type =  self.getDBType()        
-        #print (my_type)
+        #LOG.debug(my_type)
         if my_type == 'sonata':                        
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + ':32002/api/v3/services'
@@ -574,7 +574,7 @@ class Adapter:
             url_2 = url.replace("http","https")
             LOG.debug(url_2)
             
-            services_nsd = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            services_nsd = "curl -s --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             services_nsd_2 = services_nsd +token + "\" "  + url_2
             LOG.debug(services_nsd_2)
             services = subprocess.check_output([services_nsd_2], shell=True)
@@ -603,7 +603,7 @@ class Adapter:
             url_2 = url.replace("http","https")
             LOG.debug(url_2)
             
-            functions_vnfd = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            functions_vnfd = "curl -s --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             functions_vnfd_2 = functions_vnfd +token + "\" "  + url_2
             LOG.debug(functions_vnfd_2)
             functions = subprocess.check_output([functions_vnfd_2], shell=True)
@@ -643,15 +643,15 @@ class Adapter:
             jjson = json.loads(response.content)
             LOG.debug(jjson)
 
-            idd = print (jjson[0]['service']['uuid'])
-            idd = print (jjson[0]['service']['name'])
-            idd = print (jjson[1]['service']['uuid'])
-            idd = print (jjson[1]['service']['name'])                       
+            idd = LOG.debug(jjson[0]['service']['uuid'])
+            idd = LOG.debug(jjson[0]['service']['name'])
+            idd = LOG.debug(jjson[1]['service']['uuid'])
+            idd = LOG.debug(jjson[1]['service']['name'])                       
             N = 0
             for N in range(10000):
-                print (jjson['service']['uuid'])
+                LOG.debug(jjson['service']['uuid'])
                 N = N + 1
-                print (N)
+                LOG.debug(N)
 
             if response.ok:            
                 return jsonify("no")
@@ -665,7 +665,7 @@ class Adapter:
         if my_type == 'sonata':                
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + ':32002/api/v3/services'  
-            #print (name,vendor,version)
+            #LOG.debug(name,vendor,version)
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
             LOG.debug(response_json)
@@ -759,7 +759,7 @@ class Adapter:
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances'
             url_2 = url.replace("http","https")
             LOG.debug(url_2)            
-            status_ns = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+            status_ns = "curl -s --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             status_ns_2 = status_ns +token + "\" "
             status_ns_3 = status_ns_2 + " " + url_2 + "/" + ns_id          
             LOG.debug(status_ns_3)
@@ -792,7 +792,7 @@ class Adapter:
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances'
             url_2 = url.replace("http","https")
             LOG.debug(url_2)            
-            instances_1 = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "                    
+            instances_1 = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "                    
             instances_2 = instances_1 +token + "\" "  + url_2
             LOG.debug(instances_2)        
             ns_instances = subprocess.check_output([instances_2], shell=True)
@@ -812,16 +812,16 @@ class Adapter:
             '''
             print('this SP is ONAP')
             sp_host_2 = self.getHostIp()
-            print ("sp2 es: ")
-            print (sp_host_2)
+            LOG.debug("sp2 es: ")
+            LOG.debug(sp_host_2)
             url = sp_host_2 + '}/serviceInstances/v4'
-            print (url)
+            LOG.debug(url)
             print(request_str.get_json())
             data = request_str.get_json()
             print(url)
-            print (data)
+            LOG.debug(data)
             instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER)            
-            print (instantiate)
+            LOG.debug(instantiate)
             if request.method == 'POST':
                 return instantiate.text 
             '''           
@@ -836,7 +836,7 @@ class Adapter:
                 LOG.debug(instantiate.text)
                 return instantiate.text
             except:
-                logging.error ("Error sending the request, check the connection and logs")
+                LOG.error( ("Error sending the request, check the connection and logs")
                 msg = "{\"error\": \"error sending the request, check the connection and logs\"}"
                 return msg                  
 
@@ -878,7 +878,7 @@ class Adapter:
                 'vimAccountId':''+vim_id+''
             }       
             
-            instantiate_nsd = "curl -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "                
+            instantiate_nsd = "curl -s -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "                
             instantiate_nsd_2 = instantiate_nsd +token + "\" "
             instantiate_nsd_3 = instantiate_nsd_2 + " --data \"" + str(data_inst) + "\""
             instantiate_nsd_4 = instantiate_nsd_3 + " " + url_2
@@ -919,8 +919,8 @@ class Adapter:
             url = sp_host_2 + ':32002/api/v3/requests'
             LOG.debug(url)
             LOG.debug(request)            
-            #print (request)
-            #print (type(request))
+            #LOG.debug(request)
+            #LOG.debug(type(request))
             
             content = json.loads(request)
             instance_uuid = content['instance_uuid']    
@@ -932,7 +932,7 @@ class Adapter:
             #terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"request_type\":\"TERMINATE_SERVICE\"}"
             
             LOG.debug(terminate_str)            
-            delete_ns = "curl -X POST --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -d '" + terminate_str + "' " + url
+            delete_ns = "curl -s -X POST --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -d '" + terminate_str + "' " + url
             LOG.debug(delete_ns)
 
             terminate = subprocess.check_output([delete_ns], shell=True)
@@ -1001,7 +1001,7 @@ class Adapter:
             
             
             LOG.debug(ns_id)
-            delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+            delete_ns = "curl -s -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             delete_ns_2 = delete_ns +token + "\" "
             delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
             LOG.debug(delete_ns_3)
@@ -1112,7 +1112,7 @@ class Adapter:
         LOG.debug(ns_id)
         
         LOG.debug(ns_id)
-        instance_ns = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        instance_ns = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
         instance_ns_2 = instance_ns +token + "\" "
         instance_ns_3 = instance_ns_2 + " " + url_2 + "/" + ns_id          
         LOG.debug(instance_ns_3)
@@ -1207,7 +1207,7 @@ class Adapter:
         if my_type == 'sonata':
             url = self.getHostIp()  
             LOG.debug(url)
-            curl_vims = 'curl ' + url + ':32002/api/v3/settings/wims'
+            curl_vims = 'curl -s ' + url + ':32002/api/v3/settings/wims'
             LOG.debug(curl_vims)
             vims = subprocess.check_output([curl_vims], shell=True)
             LOG.debug(vims)
@@ -1221,7 +1221,7 @@ class Adapter:
         if my_type == 'sonata':
             url = self.getHostIp()  
             LOG.debug(url)
-            curl_vims = 'curl ' + url + ':32002/api/v3/settings/vims'
+            curl_vims = 'curl -s ' + url + ':32002/api/v3/settings/vims'
             LOG.debug(curl_vims)
             vims = subprocess.check_output([curl_vims], shell=True)
             LOG.debug(vims)
@@ -1235,7 +1235,7 @@ class Adapter:
             url_2 = url.replace("http","https")
             LOG.debug(url_2)
             
-            vimss = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            vimss = "curl -s --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             vimss_2 = vimss +token + "\" "  + url_2
             LOG.debug(vimss_2)
             vims = subprocess.check_output([vimss_2], shell=True)
@@ -1250,7 +1250,7 @@ class Adapter:
         if my_type == 'sonata':
             url = self.getHostIp()  
             LOG.debug(url)
-            curl_vim = 'curl ' + url + ':32002/api/v3/settings/wims/' + vim
+            curl_vim = 'curl -s ' + url + ':32002/api/v3/settings/wims/' + vim
             LOG.debug(curl_vim)
             vim = subprocess.check_output([curl_vim], shell=True)
             LOG.debug(vim)
@@ -1264,7 +1264,7 @@ class Adapter:
         if my_type == 'sonata':
             url = self.getHostIp()  
             LOG.debug(url)
-            curl_vim = 'curl ' + url + ':32002/api/v3/settings/vims/' + vim
+            curl_vim = 'curl -s ' + url + ':32002/api/v3/settings/vims/' + vim
             LOG.debug(curl_vim)
             vim = subprocess.check_output([curl_vim], shell=True)
             LOG.debug(vim)
@@ -1280,7 +1280,7 @@ class Adapter:
             url_2 = url.replace("http","https")
             LOG.debug(url_2)
             
-            vimss = "curl --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            vimss = "curl -s --insecure -w \"%{http_code}\" -H \"Content-type: application/zip\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             vimss_2 = vimss +token + "\" "  + url_2 + "/" + vim
             LOG.debug(vimss_2)
             vims = subprocess.check_output([vimss_2], shell=True)
@@ -1335,7 +1335,7 @@ class Adapter:
             LOG.debug(get_nsd)
             nsd_info = subprocess.check_output([get_nsd], shell=True)
             LOG.debug(nsd_info)            
-            #print (type(nsd_info))    
+            #LOG.debug(type(nsd_info))    
             s = json.dumps(str(nsd_info))
             LOG.debug(s)
             LOG.debug(type(s))                                         
@@ -1351,7 +1351,7 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}                              
         sp_host_2 = self.getHostIp()
         url = sp_host_2 + ':32002/api/v3/packages'        
-        url2 = 'curl ' + url + '/' + package_id + '/package-file --output /app/packages/' + package_id + '.tgo'        
+        url2 = 'curl -s ' + url + '/' + package_id + '/package-file --output /app/packages/' + package_id + '.tgo'        
         LOG.debug(url2)
         download = subprocess.check_output([url2], shell=True)
         msg = "Package downloaded to: " + "/app/packages/" + package_id + '.tgo' 
@@ -1366,7 +1366,7 @@ class Adapter:
             url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
             url_2 = url.replace("http","https")
             LOG.debug(url_2)                       
-            delete_nsd = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            delete_nsd = "curl -s --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             delete_nsd_2 = delete_nsd +token + "\"  " + url_2 + "/" + id_to_delete + " -X DELETE" 
             LOG.debug(delete_nsd_2)
             deletion = subprocess.check_output([delete_nsd_2], shell=True)
@@ -1382,7 +1382,7 @@ class Adapter:
             url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages'
             url_2 = url.replace("http","https")
             LOG.debug(url_2)                                          
-            delete_nsd = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            delete_nsd = "curl -s --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             delete_nsd_2 = delete_nsd +token + "\"  " + url_2 + "/" + id_to_delete + " -X DELETE" 
             LOG.debug(delete_nsd_2)
             deletion = subprocess.check_output([delete_nsd_2], shell=True)
@@ -1413,7 +1413,7 @@ class Adapter:
                 LOG.debug("project name from json body:")
                 LOG.debug(pr_name)
 
-            #print (project_id_for_token)
+            #LOG.debug(project_id_for_token)
             username_for_token = self.getDBUserName()
             password_for_token = self.getDBPassword()            
             admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
@@ -1435,7 +1435,7 @@ class Adapter:
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances/' + service_id
             url_2 = url.replace("http","https")
             LOG.debug(url_2)            
-            status_ns = "curl  --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            status_ns = "curl -s --insecure -w \"%{http_code}\" -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
             status_ns_2 = status_ns +token + "\" "
             status_ns_3 = status_ns_2 + " " + url_2        
             LOG.debug(status_ns_3)
@@ -1454,16 +1454,16 @@ class Adapter:
         response = yaml.load(inst_resp_yaml)
         service_id = response['id']
         LOG.debug(service_id)        
-        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id 
+        status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id 
         LOG.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
         LOG.debug(status_curl)
 
         instance_json = json.loads(status_curl)
         config_status = instance_json['config-status']
-        #print (config_status)
+        #LOG.debug(config_status)
         operational_status = instance_json['operational-status']
-        #print (operational_status)
+        #LOG.debug(operational_status)
         status = None             
         while ( operational_status != 'running' and operational_status != 'error' ):               
             try:
@@ -1486,8 +1486,8 @@ class Adapter:
         #callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
         callback_msg = self.instantiationInfoCurator(service_id)
         LOG.debug(callback_msg)
-        #callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
-        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url
+        #callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
+        callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url
         LOG.debug(callback_post)
         call = subprocess.check_output([callback_post], shell=True)
         LOG.debug(call)
@@ -1495,7 +1495,7 @@ class Adapter:
         #Monitoring callback       
         callback_msg = self.instantiationInfoMonitoring(service_id)
         callback_url_monitoring = self.getMonitoringURLs()
-        callback_post_monitoring = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url_monitoring
+        callback_post_monitoring = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url_monitoring
         LOG.debug(callback_post_monitoring)
         call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
         LOG.debug(call_monitoring)
@@ -1506,7 +1506,7 @@ class Adapter:
         service_id = ns_id
         LOG.debug(service_id)
         token = self.getOSMToken(ns_id)
-        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
         LOG.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
         LOG.debug(status_curl)
@@ -1541,7 +1541,7 @@ class Adapter:
         LOG.debug("callback start")
         service_id = ns_id
         LOG.debug(service_id)
-        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
         LOG.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
         LOG.debug(status_curl)
@@ -1571,7 +1571,7 @@ class Adapter:
         LOG.debug(status)
         callback_msg='{\"Message\":\"The service ' + service_id + ' was terminated\"}'
         LOG.debug(callback_msg)
-        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
+        callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
         call = subprocess.check_output([callback_post], shell=True)
         LOG.debug(call)
         LOG.debug("callback end")        
@@ -1581,7 +1581,7 @@ class Adapter:
         response = yaml.load(inst_resp_yaml)
         service_id = response['id']
         LOG.debug(service_id)
-        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
         LOG.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
         LOG.debug(status_curl)
@@ -1598,7 +1598,7 @@ class Adapter:
                 LOG.debug("Retrying in 3 sec")
                 LOG.debug(status)
                 time.sleep(3)
-                status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+                status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
                 LOG.debug(status_url)            
                 status_curl = subprocess.check_output([status_url], shell=True)
                 LOG.debug(status_curl)
@@ -1610,7 +1610,7 @@ class Adapter:
         LOG.debug(status)
         callback_msg='{\"Message\":\"The function descriptor ' + service_id + ' is in status: ' + status + '\"}'
         LOG.debug(callback_msg)       
-        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
+        callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
         LOG.debug(callback_post)
         call = subprocess.check_output([callback_post], shell=True)
         LOG.debug(call)
@@ -1621,7 +1621,7 @@ class Adapter:
         response = yaml.load(inst_resp_yaml)
         service_id = response['id']
         LOG.debug(service_id)
-        status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+        status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
         LOG.debug(status_url)
         status_curl = subprocess.check_output([status_url], shell=True)
         LOG.debug(status_curl)
@@ -1636,7 +1636,7 @@ class Adapter:
                 LOG.debug("Retrying in 3 sec")
                 LOG.debug(status)
                 time.sleep(3)
-                status_url = "curl --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
+                status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id + " > /app/temp.file"
                 LOG.debug(status_url)            
                 status_curl = subprocess.check_output([status_url], shell=True)
                 LOG.debug(status_curl)
@@ -1646,7 +1646,7 @@ class Adapter:
         LOG.debug(status)
         callback_msg='{\"Message\":\"The function descriptor ' + service_id + ' is in status: ' + status + '\"}'
         LOG.debug(callback_msg)
-        callback_post = "curl -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
+        callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
         LOG.debug(callback_post)
         call = subprocess.check_output([callback_post], shell=True)
         LOG.debug(call)
@@ -1770,7 +1770,7 @@ class Adapter:
         url_2 = url.replace("http","https")
         LOG.debug(url_2)
         
-        status_ns = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        status_ns = "curl -s --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
         status_ns_2 = status_ns +token + "\" "
         status_ns_3 = status_ns_2 + " " + url_2 + "/" + ns_id          
         LOG.debug(status_ns_3)
@@ -1785,7 +1785,7 @@ class Adapter:
 
         for vnf_id in vnfs_array_json:
             LOG.debug(vnf_id)
-            url_4 = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\"  " + url_3+ "/" + vnf_id
+            url_4 = "curl -s --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\"  " + url_3+ "/" + vnf_id
             vnf_instance_curl= subprocess.check_output([url_4], shell=True)
             vnf_instance_json = json.loads(vnf_instance_curl)
             LOG.debug("This is an VNF instance:")
@@ -1907,7 +1907,7 @@ class Adapter:
                         #print(vdu['vim_id'])
                         function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
-                        #print (function_vim)
+                        #LOG.debug(function_vim)
                         LOG.debug(cdu_reference)
                         cdu_reference_splitted = cdu_reference.split(":")
                         #cnf_name = cdu_reference[0: cdu_reference.find(":") ]
@@ -2267,7 +2267,7 @@ class Adapter:
         LOG.debug(token)
         url = url + ':9999/osm/nslcm/v1/vnf_instances'
         url_2 = url.replace("http","https")
-        status_ns = "curl  --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        status_ns = "curl -s --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
         status_ns_2 = status_ns +token + "\" "
         status_ns_3 = status_ns_2 + " " + url_2 + "/" + vnfr_id          
         LOG.debug(status_ns_3)
@@ -2410,7 +2410,7 @@ class Adapter:
             '''
             try:
                 vnv_service_id = self.getVnVServiceId(name,vendor,version)
-                print ("this is the service id in the vnv")
+                LOG.debug("this is the service id in the vnv")
                 print(vnv_service_id)
             except:
                 msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
@@ -2449,7 +2449,7 @@ class Adapter:
 
                 try:
                     vnv_service_id = self.getVnVServiceId(name,vendor,version)
-                    print ("this is the service id in the vnv")
+                    LOG.debug("this is the service id in the vnv")
                     print(vnv_service_id)
                 except:
                     msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
@@ -2499,7 +2499,7 @@ class Adapter:
                 service_id = self.getServiceId(name,vendor,version)
                 LOG.debug(service_id)
             except:
-                logging.error ("The service is not in the SP. Was the package uploaded?")
+                LOG.error( ("The service is not in the SP. Was the package uploaded?")
 
             time.sleep(5)
             try:
@@ -2702,7 +2702,7 @@ class Adapter:
             LOG.debug(instantiation_id) 
 
             string_inicial = "{\"package_id\": \"" + package_id + "\","
-            #print (string_inicial)                                  
+            #LOG.debug(string_inicial)                                  
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
             if package_uploaded == True:
                 string_replaced = string_inicial.replace("\"True\"","true")                            
@@ -2733,7 +2733,7 @@ class Adapter:
             msg = "{\"error\": \"error getting request status\"}"
 
             msg_str = msg.__str__()
-            callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  msg_str  +  "' " + callback        
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  msg_str  +  "' " + callback        
             LOG.debug(callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
             LOG.debug(call)	
@@ -2746,7 +2746,7 @@ class Adapter:
             LOG.debug(instantiation_info) 
             instantiation_info_str = instantiation_info.__str__()
             string_replaced = instantiation_info_str.replace("'","\"")        
-            callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  string_replaced  +  "' " + callback        
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  string_replaced  +  "' " + callback        
             LOG.debug(callback_post)		
             call = subprocess.check_output([callback_post], shell=True)
             LOG.debug(call)	
@@ -2756,7 +2756,7 @@ class Adapter:
             LOG.debug(info_monitoring) 
             info_monitoring_str = info_monitoring.__str__()
             monitoring_string_replaced = info_monitoring_str.replace("'","\"")        
-            monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
+            monitoring_callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
             LOG.debug(monitoring_callback_post)		
             call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
 
@@ -2781,23 +2781,23 @@ class Adapter:
                 inst_error = self.getRequestError(instantiation_request_id)
 
 
-                logging.error ("The request is in error status")
-                logging.error (inst_error)
+                LOG.error( ("The request is in error status")
+                LOG.error( (inst_error)
                 error_string = inst_error.__str__()
-                logging.error (error_string)
+                LOG.error( (error_string)
                 try:
-                    callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + error_string + "\"}' " + callback        
+                    callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + error_string + "\"}' " + callback        
                     LOG.debug(callback_post)		
                     call = subprocess.check_output([callback_post], shell=True)
                     LOG.debug(call)
 
                     monitoring_callback = self.getMonitoringURLs()
-                    monitoring_callback_post = "curl -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
+                    monitoring_callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
                     LOG.debug(monitoring_callback_post)		
                     call_mon = subprocess.check_output([monitoring_callback_post], shell=True)  
 
                 except:
-                    logging.error ("error sending the instantiation error callbacks")
+                    LOG.error( ("error sending the instantiation error callbacks")
 
         LOG.info("sonata instantiate callback ends")        
 
@@ -2993,7 +2993,7 @@ class Adapter:
         url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'
         url_2 = url.replace("http","https")
         LOG.debug(url_2)        
-        nsds = "curl  --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        nsds = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
         nsds_2 = nsds +token + "\"  " + url_2 
         LOG.debug(nsds_2)
         response = None
@@ -3054,15 +3054,15 @@ class Adapter:
             LOG.debug(f)
             with open(f) as file_in_array:
                     file = yaml.load(file_in_array)      
-                    #print (file)
+                    #LOG.debug(file)
                     try:
                         vnfd = file['vnfd:vnfd-catalog']
-                        #print ("this file is an osm vnfd")
+                        #LOG.debug("this file is an osm vnfd")
                         functions_array.append(f)
                     except:
                         try:
                                 nsd = file['nsd:nsd-catalog']
-                                #print ("this file is an osm nsd")
+                                #LOG.debug("this file is an osm nsd")
                                 services_array.append(f)                  
                         except:
                                 LOG.debug("this files is not an OSM vnfd or nsd")
@@ -3089,15 +3089,15 @@ class Adapter:
             LOG.debug(f)
             with open(f) as file_in_array:
                     file = yaml.load(file_in_array)      
-                    #print (file)
+                    #LOG.debug(file)
                     try:
                         vnfd = file['vnfd:vnfd-catalog']
-                        #print ("this file is an osm vnfd")
+                        #LOG.debug("this file is an osm vnfd")
                         functions_array.append(f)
                     except:
                         try:
                                 nsd = file['nsd:nsd-catalog']
-                                #print ("this file is an osm nsd")
+                                #LOG.debug("this file is an osm nsd")
                                 services_array.append(f)                  
                         except:
                                 LOG.debug("this files is not an OSM vnfd or nsd")
@@ -3308,7 +3308,7 @@ class Adapter:
         LOG.debug(token)  
         url = sp_host_2.replace("http","https")      
         url_2 = url + ':9999/osm//admin/v1/vim_accounts/' + vim_id      
-        vim_info = "curl  --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        vim_info = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
         vim_info_2 = vim_info +token + "\"  " + url_2 
         LOG.debug(vim_info_2)       
 
@@ -3337,8 +3337,8 @@ class Adapter:
             url = sp_host_2 + ':32002/api/v3/requests'
             LOG.debug(url)
             LOG.debug(request)            
-            #print (request)
-            #print (type(request))
+            #LOG.debug(request)
+            #LOG.debug(type(request))
             
             content = json.loads(request)
             instance_uuid = content['instance_uuid']    
@@ -3349,7 +3349,7 @@ class Adapter:
             terminate_str = "{\"instance_uuid\": \"" + instance_uuid + "\",\"sla_id\": \"\",\"request_type\":\"TERMINATE_SERVICE\"}"
             
             LOG.debug(terminate_str)            
-            delete_ns = "curl -X POST --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -d '" + terminate_str + "' " + url
+            delete_ns = "curl -s -X POST --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -d '" + terminate_str + "' " + url
             LOG.debug(delete_ns)
             terminate = subprocess.check_output([delete_ns], shell=True)
             LOG.debug(terminate)
@@ -3361,13 +3361,13 @@ class Adapter:
             LOG.debug(ns_id)
             '''
             url_monitoring = self.getMonitoringURLs()
-            terminate_string = "curl -X DELETE -H \"Content-type: application/json\" "  + url_monitoring + "/" + ns_id 
+            terminate_string = "curl -s -X DELETE -H \"Content-type: application/json\" "  + url_monitoring + "/" + ns_id 
             LOG.debug(terminate_string)   
             try: 
                 terminate_monitoring = subprocess.check_output([terminate_string], shell=True)
-                print (terminate_monitoring)
+                LOG.debug(terminate_monitoring)
             except:
-                print (terminate_monitoring)
+                LOG.debug(terminate_monitoring)
             '''
 
             # deleting the descriptors
@@ -3416,7 +3416,7 @@ class Adapter:
             LOG.debug(ns_id)
                         
             LOG.debug(ns_id)
-            delete_ns = "curl -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+            delete_ns = "curl -s -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             delete_ns_2 = delete_ns +token + "\" "
             delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
             LOG.debug(delete_ns_3)
