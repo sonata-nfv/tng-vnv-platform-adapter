@@ -1465,7 +1465,7 @@ class Adapter:
         operational_status = instance_json['operational-status']
         #LOG.debug(operational_status)
         status = None             
-        while ( operational_status != 'running' and operational_status != 'error' ):               
+        while ( operational_status != 'running' and operational_status != 'error' and operational_status != 'failed' ):               
             try:
                 status = data['config-status']                    
                 LOG.debug(status)
