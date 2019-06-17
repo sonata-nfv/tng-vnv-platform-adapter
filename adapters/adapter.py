@@ -2667,10 +2667,9 @@ class Adapter:
                         upload_service = self.uploadOSMService(service_file_path)
                         LOG.debug(upload_service)
                         package_uploaded = True
-
                     except:
                         if upload_service.find("CONFLICT"):
-                        LOG.debug("This Service is already in the SP")
+                            LOG.debug("This Service is already in the SP")
                     
                     service_id = self.getUploadedOSMServiceId(upload_service)
                     LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
