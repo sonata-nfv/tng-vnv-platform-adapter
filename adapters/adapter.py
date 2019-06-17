@@ -2599,13 +2599,13 @@ class Adapter:
             LOG.debug(package_path)
             '''
             
+
             try:
                 # verify if the service is in the SP
                 service_id = self.getOSMServiceId(name,vendor,version)
                 LOG.debug(service_id)
-                if service_id == 'error':
+                if service_id is not None:
                     LOG.debug("The Service is already in the SP")
-                    raise Exception('The Service descriptor is in the SP or the list is empty') 
             except:
                 logging.debug:("The Service is not in the SP  ") 
                 # if the service is not in the SP, we need to upload it
