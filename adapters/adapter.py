@@ -2667,11 +2667,15 @@ class Adapter:
                         upload_service = self.uploadOSMService(service_file_path)
                         LOG.debug(upload_service)
                         package_uploaded = True
+                        service_id = self.getUploadedOSMServiceId(upload_service)
+
                     except:
                         if upload_service.find("CONFLICT"):
                             LOG.debug("This Service is already in the SP")
                     
-                    service_id = self.getUploadedOSMServiceId(upload_service)
+                    #service_id = self.getUploadedOSMServiceId(upload_service)
+                    service_id = self.getOSMServiceId(name,vendor,version)
+
                     LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
                     LOG.debug(service_id)
                     #return service_id
@@ -3043,6 +3047,10 @@ class Adapter:
     def getUploadedOSMServiceId(self,upload_service):
         LOG.debug("This is the upload service response:")
         LOG.debug(upload_service)
+        if upload_service.find("CONFLICT"):
+            service_id = "CONFLICT"
+            return service_id
+        
         service_id = None
         json = yaml.load(upload_service) 
         service_id = json['id']
