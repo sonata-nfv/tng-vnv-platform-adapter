@@ -2605,6 +2605,7 @@ class Adapter:
                 service_id = self.getOSMServiceId(name,vendor,version)
                 LOG.debug(service_id)
                 if service_id is not None:
+                #if service_id.find("CONFLICT"):
                     LOG.debug("The Service is already in the SP")
             except:
                 logging.debug:("The Service is not in the SP  ") 
@@ -2645,9 +2646,13 @@ class Adapter:
                     LOG.debug(function_json)
                     LOG.debug(function_json['function'])
                     function_file_path = function_json['function']
-                   
-                    upload_function = self.uploadOSMFunction(function_file_path)
-                    LOG.debug(upload_function)
+
+                    try:                   
+                        upload_function = self.uploadOSMFunction(function_file_path)
+                        LOG.debug(upload_function)
+                    except:
+                        if upload_function.find("CONFLICT"):
+                            LOG.debug("This function is already in the SP")
                 
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
@@ -2658,15 +2663,20 @@ class Adapter:
                     LOG.debug(service_json['service'])
                     service_file_path = service_json['service']
 
-                    upload_service = self.uploadOSMService(service_file_path)
-                    LOG.debug(upload_service)
+                    try:
+                        upload_service = self.uploadOSMService(service_file_path)
+                        LOG.debug(upload_service)
+                        package_uploaded = True
+                    except:
+                        if upload_service.find("CONFLICT"):
+                            LOG.debug("This Service is already in the SP")
                     
                     service_id = self.getUploadedOSMServiceId(upload_service)
                     LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
                     LOG.debug(service_id)
                     #return service_id
                 
-                package_uploaded = True
+                #package_uploaded = True
                 
             time.sleep(2)
 
