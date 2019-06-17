@@ -1464,6 +1464,7 @@ class Adapter:
         #LOG.debug(config_status)
         operational_status = instance_json['operational-status']
         #LOG.debug(operational_status)
+        detailed_status = instance_json['detailed-status']
         status = None             
         while ( operational_status != 'running' and operational_status != 'error' and operational_status != 'failed' ):               
             try:
@@ -1480,12 +1481,57 @@ class Adapter:
                 LOG.debug(config_status)
                 operational_status = instance_json['operational-status']
                 LOG.debug(operational_status)
+                detailed_status = instance_json['detailed-status']
+                LOG.debug(detailed_status)
 
+        callback_msg = None
+
+        if operational_status == 'failed':
+            #callback_msg = detailed_status.__str__()
+            callback_msg = str(detailed_status)
+            LOG.debug(detailed_status)
+            callback_msg = "{\"error\": \"Error instantiating, check the logs\"}"
+
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url                
+            LOG.debug(callback_post)
+            call = subprocess.check_output([callback_post], shell=True)
+            LOG.debug(call)
+
+
+            callback_url_monitoring = self.getMonitoringURLs()
+            callback_post_monitoring = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url_monitoring            
+            LOG.debug(callback_post_monitoring)
+            call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
+            LOG.debug(call_monitoring)
+
+        if operational_status == 'running':             
+            status = config_status
+            LOG.debug(status)
+            callback_msg = self.instantiationInfoCurator(service_id)
+            LOG.debug(callback_msg)  
+
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url
+            LOG.debug(callback_post)
+            call = subprocess.check_output([callback_post], shell=True)
+            LOG.debug(call)
+
+            #Monitoring callback       
+            callback_msg = self.instantiationInfoMonitoring(service_id)
+            callback_url_monitoring = self.getMonitoringURLs()
+            callback_post_monitoring = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url_monitoring
+            LOG.debug(callback_post_monitoring)
+            call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
+            LOG.debug(call_monitoring)
+        
+        LOG.debug("callback ends")            
+
+        '''
         status = config_status
         LOG.debug(status)
         #callback_msg='{\"Message\":\"The service ' + service_id + ' is in status: ' + status + '\"}'
         callback_msg = self.instantiationInfoCurator(service_id)
         LOG.debug(callback_msg)
+        
         #callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + str(callback_msg) + "'" + " " + callback_url
         callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url
         LOG.debug(callback_post)
@@ -1500,6 +1546,7 @@ class Adapter:
         call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
         LOG.debug(call_monitoring)
         LOG.debug("callback ends")
+        '''
 
     def OSMTerminateStatus(self,url_2,ns_id):
         LOG.info("osm terminate status starts")        
@@ -2666,12 +2713,18 @@ class Adapter:
                     try:
                         upload_service = self.uploadOSMService(service_file_path)
                         LOG.debug(upload_service)
-                        package_uploaded = True
+                        if upload_service == 'CONFLICT':
+                            LOG.debug("This Service is already in the SP")       
+                        if upload_service != 'CONFLICT':
+                            LOG.debug("This Service is not in the SP")                                   
+                            package_uploaded = True
+                            service_id = self.getUploadedOSMServiceId(upload_service)
                     except:
-                        if upload_service.find("CONFLICT"):
-                            LOG.debug("This Service is already in the SP")
+                        LOG.debug("problem uploading the service to osm")
                     
-                    service_id = self.getUploadedOSMServiceId(upload_service)
+                    #service_id = self.getUploadedOSMServiceId(upload_service)
+                    service_id = self.getOSMServiceId(name,vendor,version)
+
                     LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
                     LOG.debug(service_id)
                     #return service_id
@@ -2721,7 +2774,7 @@ class Adapter:
             request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"   
   
             LOG.debug(request_response)   
-            return (request_response)	                                   
+            return (request_response)	            
 
     def SonataInstantiateCallback(self,callback,instantiation_call):
         LOG.info("sonata instantiate callback starts")
@@ -2873,7 +2926,7 @@ class Adapter:
 
             LOG.debug(request_response)   
             return (request_response)
-
+        '''
         if my_type == 'osm':
             LOG.debug("This SP is osm")
             service_id = None
@@ -2882,9 +2935,9 @@ class Adapter:
             vnv_service_id = None
 
             LOG.debug("instantiation for osm SPs stars")
-
+        
             ### package operations
-            '''          
+                     
             vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
             package_id = self.getPackageIdfromServiceId(vnv_service_id)            
             LOG.debug(package_id)
@@ -2902,20 +2955,82 @@ class Adapter:
             
             #package_path = '/app/packages/' + package_id
             package_path = unzip
-            '''
-            package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
-            LOG.debug(package_path)
             
+            #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+            #LOG.debug(package_path)
+        '''
+
+        if my_type == 'osm':
+            LOG.debug("This SP is osm")
+            service_id = None
+            package_id = "package_id"
+            package_path = None
+            vnv_service_id = None
+
+            LOG.debug("instantion for osm SPs stars")
+
+            ### package operations
+
+            '''         
+            vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
+            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+            LOG.debug(package_id)
+            download_pkg = self.downloadPackageTGO(package_id)
+            LOG.debug(download_pkg)            
+            download_pkg_json = json.loads(download_pkg)
+        
+            download_pkg = self.downloadPackageTGO(package_id)
+            download_pkg_json = json.loads(download_pkg)        
+            package_path_downloaded = download_pkg_json['package'] 
+
+            unzip = self.unzipPackage(package_path_downloaded)  
+
+            LOG.debug(unzip)       
+            
+            #package_path = '/app/packages/' + package_id
+            package_path = unzip
+            
+            #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+            LOG.debug(package_path)
+            '''
+            
+
             try:
                 # verify if the service is in the SP
                 service_id = self.getOSMServiceId(name,vendor,version)
                 LOG.debug(service_id)
-                if service_id == 'error':
+                if service_id is not None:
+                #if service_id.find("CONFLICT"):
                     LOG.debug("The Service is already in the SP")
-                    raise Exception('The Service descriptor is in the SP or the list is empty') 
             except:
                 logging.debug:("The Service is not in the SP  ") 
                 # if the service is not in the SP, we need to upload it
+
+                '''
+                vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
+                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                LOG.debug(package_id)
+                download_pkg = self.downloadPackageTGO(package_id)
+                LOG.debug(download_pkg)            
+                download_pkg_json = json.loads(download_pkg)
+            
+                download_pkg = self.downloadPackageTGO(package_id)
+                download_pkg_json = json.loads(download_pkg)        
+                package_path_downloaded = download_pkg_json['package'] 
+
+                unzip = self.unzipPackage(package_path_downloaded)  
+
+                LOG.debug(unzip)       
+                '''
+                #package_path = '/app/packages/' + package_id
+                #package_path = unzip
+
+                package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+                LOG.debug(package_path)
+
+
+
+
                 functions_array = self.createFunctionsArray(package_path)
                 services_array = self.createServicesArray(package_path)
                 
@@ -2926,9 +3041,13 @@ class Adapter:
                     LOG.debug(function_json)
                     LOG.debug(function_json['function'])
                     function_file_path = function_json['function']
-                   
-                    upload_function = self.uploadOSMFunction(function_file_path)
-                    LOG.debug(upload_function)
+
+                    try:                   
+                        upload_function = self.uploadOSMFunction(function_file_path)
+                        LOG.debug(upload_function)
+                    except:
+                        if upload_function.find("CONFLICT"):
+                            LOG.debug("This function is already in the SP")
                 
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
@@ -2939,24 +3058,32 @@ class Adapter:
                     LOG.debug(service_json['service'])
                     service_file_path = service_json['service']
 
-                    upload_service = self.uploadOSMService(service_file_path)
-                    LOG.debug(upload_service)
+                    try:
+                        upload_service = self.uploadOSMService(service_file_path)
+                        LOG.debug(upload_service)
+                        if upload_service == 'CONFLICT':
+                            LOG.debug("This Service is already in the SP")       
+                        if upload_service != 'CONFLICT':
+                            LOG.debug("This Service is not in the SP")                                   
+                            package_uploaded = True
+                            service_id = self.getUploadedOSMServiceId(upload_service)
+                    except:
+                        LOG.debug("problem uploading the service to osm")
                     
-                    service_id = self.getUploadedOSMServiceId(upload_service)
+                    #service_id = self.getUploadedOSMServiceId(upload_service)
+                    service_id = self.getOSMServiceId(name,vendor,version)
+
                     LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
                     LOG.debug(service_id)
                     #return service_id
-                package_uploaded = True
+                
+                #package_uploaded = True
                 
             time.sleep(2)
-            
 
-            #return "hola"
-            
-            ## INSTANCIANDO
-            nsd_name = service_id            
-            #ns_name = service_id
-            ns_name = content['instance_name']            
+            nsd_name = service_id
+
+            ns_name = content['instance_name']
             vim_account = self.getVimAccount()
 
             LOG.debug(nsd_name)
@@ -2966,8 +3093,12 @@ class Adapter:
             instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
             LOG.debug("THIS IS THE INSTANTIATE STRING FOR OSM")
             LOG.debug("aaaaaaaaaaa")
+
             
             LOG.debug(instantiate_str)
+
+
+            LOG.debug("aaaaaaaaaaa")
 
             instantiation_call = self.instantiation(instantiate_str)    
             LOG.debug(instantiation_call)
@@ -2979,18 +3110,19 @@ class Adapter:
             instantiation_call_json = json.loads(instantiation_call_str)  
             LOG.debug(instantiation_call_json)
             instantiation_id = instantiation_call_json['id']
-            LOG.debug(instantiation_id)
-            
-            string_inicial = "{\"package_id\": \"" + "111111111111" + "\","                
+            LOG.debug(instantiation_id) 
+
+            string_inicial = "{\"package_id\": \"" + package_id + "\","
+            #LOG.debug(string_inicial)                                  
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
             if package_uploaded == True:
                 string_replaced = string_inicial.replace("\"True\"","true")                            
             if package_uploaded == False:
                 string_replaced = string_inicial.replace("\"False\"","false")            
-            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"            
-            
+            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"   
+  
             LOG.debug(request_response)   
-            return (request_response)	            
+            return (request_response)	                 
                  
 
     def getOSMServiceId(self,name,vendor,version):
@@ -3022,18 +3154,22 @@ class Adapter:
         LOG.debug(name)
         LOG.debug(vendor)
         LOG.debug(version)
+        LOG.debug("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
         for x in jjson:
-            LOG.debug(x)
-            LOG.debug(x['name'])
-            LOG.debug(x['vendor'])
-            LOG.debug(x['version'])
-            LOG.debug(x['_id'])
-        
-            if ( x['name'] == name and x['vendor'] == vendor and x['version'] == version ):
+            try:
+                LOG.debug(x)
                 LOG.debug(x['name'])
-                service_id = x['_id']
-                exists = 'YES' 
+                LOG.debug(x['vendor'])
+                LOG.debug(x['version'])
+                LOG.debug(x['_id'])
+
+                if ( x['name'] == name and x['vendor'] == vendor and x['version'] == version ):
+                    LOG.debug(x['name'])
+                    service_id = x['_id']
+                    exists = 'YES' 
+            except:
+                LOG.debug("service not readeble")
         
         if service_id == None: 
             service_id = "error"
@@ -3043,6 +3179,10 @@ class Adapter:
     def getUploadedOSMServiceId(self,upload_service):
         LOG.debug("This is the upload service response:")
         LOG.debug(upload_service)
+        if upload_service.find("CONFLICT"):
+            service_id = "CONFLICT"
+            return service_id
+        
         service_id = None
         json = yaml.load(upload_service) 
         service_id = json['id']
