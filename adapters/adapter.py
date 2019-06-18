@@ -2715,10 +2715,21 @@ class Adapter:
 
                     try:                   
                         upload_function = self.uploadOSMFunction(function_file_path)
-                        LOG.debug(upload_function)
+                        LOG.debug (upload_function)
+                        upload_function_str = upload_function.__str__()
+                        LOG.debug (upload_function_str)
+                        if upload_function_str.__str__().find('CONFLICT'):
+                            msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"" + upload_function_str + "\"}"
+                            return msg 
+                        if upload_function_str.__str__().find('BAD_REQUEST'):
+                            #msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"}"
+                            msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"" + upload_function_str + "\"}"
+                            return msg  
+                        LOG.debug("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")                           
+                        LOG.debug("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
                     except:
-                        if upload_function.find("CONFLICT"):
-                            LOG.debug("This function is already in the SP")
+                        LOG.debug("problem uploading the function to the SP")
+
                 
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
@@ -3042,7 +3053,10 @@ class Adapter:
                 #package_path = '/app/packages/' + package_id
                 #package_path = unzip
 
-                package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+                
+                
+                #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+                package_path = '/home/luis/mob'
                 LOG.debug(package_path)
 
 
@@ -3061,10 +3075,21 @@ class Adapter:
 
                     try:                   
                         upload_function = self.uploadOSMFunction(function_file_path)
-                        LOG.debug(upload_function)
+                        LOG.debug (upload_function)
+                        upload_function_str = upload_function.__str__()
+                        LOG.debug (upload_function_str)
+                        if upload_function_str.__str__().find('CONFLICT'):
+                            msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"" + upload_function_str + "\"}"
+                            return msg 
+                        if upload_function_str.__str__().find('BAD_REQUEST'):
+                            #msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"}"
+                            msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"" + upload_function_str + "\"}"
+                            return msg  
+                        LOG.debug("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")                           
+                        LOG.debug("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
                     except:
-                        if upload_function.find("CONFLICT"):
-                            LOG.debug("This function is already in the SP")
+                        LOG.debug("problem uploading the function to the SP")
+  
                 
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
