@@ -1486,6 +1486,26 @@ class Adapter:
 
         callback_msg = None
 
+        while ( config_status == 'init' ) : 
+            try:
+                status = data['config-status']                    
+                LOG.debug(status)
+            except:
+                LOG.debug("Retraying in 3 sec")
+                LOG.debug(status)
+                time.sleep(3)
+                status_curl = subprocess.check_output([status_url], shell=True)
+                LOG.debug(status_curl)
+                instance_json = json.loads(status_curl)
+                config_status = instance_json['config-status']
+                LOG.debug(config_status)
+                operational_status = instance_json['operational-status']
+                LOG.debug(operational_status)
+                detailed_status = instance_json['detailed-status']
+                LOG.debug(detailed_status)                    
+
+
+
         if operational_status == 'failed':
             #callback_msg = detailed_status.__str__()
             callback_msg = str(detailed_status)
@@ -1504,7 +1524,8 @@ class Adapter:
             call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
             LOG.debug(call_monitoring)
 
-        if operational_status == 'running':             
+        #if operational_status == 'running':             
+        if ( operational_status == 'running' and config_status == 'configured' ) :             
             status = config_status
             LOG.debug(status)
             callback_msg = self.instantiationInfoCurator(service_id)
