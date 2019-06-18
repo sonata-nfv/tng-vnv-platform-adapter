@@ -2648,12 +2648,10 @@ class Adapter:
             
 
             try:
-                # verify if the service is in the SP
                 service_id = self.getOSMServiceId(name,vendor,version)
                 LOG.debug(service_id)
-                if service_id is not None:
-                #if service_id.find("CONFLICT"):
-                    LOG.debug("The Service is already in the SP")
+                if service_id == 'error':
+                    raise Exception('raising exception') 
             except:
                 logging.debug:("The Service is not in the SP  ") 
                 # if the service is not in the SP, we need to upload it
@@ -2996,12 +2994,10 @@ class Adapter:
             
 
             try:
-                # verify if the service is in the SP
                 service_id = self.getOSMServiceId(name,vendor,version)
                 LOG.debug(service_id)
-                if service_id is not None:
-                #if service_id.find("CONFLICT"):
-                    LOG.debug("The Service is already in the SP")
+                if service_id == 'error':
+                    raise Exception('raising exception') 
             except:
                 logging.debug:("The Service is not in the SP  ") 
                 # if the service is not in the SP, we need to upload it
