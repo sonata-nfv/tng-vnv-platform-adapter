@@ -2291,7 +2291,14 @@ class Adapter:
                 function_request = self.functionRecordOSM(vnfr_id)
                 function_request_json =  json.loads(function_request)
                 LOG.debug(function_request_json)
-                vnfd_name = function_request_json['vnfd-ref']                
+                
+                #vnfd_name = function_request_json['vnfd-ref']  
+
+                vnfd_id = function_request_json['vnfd-id'] 
+                vnfd_request = self.functionDescriptorOSM(vnfd_id)
+                vnfd_request_json = json.loads(vnfd_request)
+                vnfd_name = vnfd_request_json['name']  
+
                 response_function = response_function + "\"name\": \"" + vnfd_name + "\","
                 response_function = response_function + "\"endpoints\": ["
                 vdur = function_request_json['vdur']                                
@@ -2342,7 +2349,23 @@ class Adapter:
         vnfr = subprocess.check_output([status_ns_3], shell=True)
         vnfr = subprocess.check_output([status_ns_3], shell=True)
         LOG.debug(vnfr)
-        return (vnfr)                  
+        return (vnfr)  
+
+    def functionDescriptorOSM(self, vnfd_id):
+        url = self.getHostIp()
+        token = self.getOSMToken(vnfd_id)
+        LOG.debug(token)
+        url = url + ':9999/osm/vnfpkgm/v1/vnf_packages'        
+        url_2 = url.replace("http","https")
+        status_ns = "curl -s --insecure  -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        status_ns_2 = status_ns +token + "\" "
+        status_ns_3 = status_ns_2 + " " + url_2 + "/" + vnfd_id          
+        LOG.debug(status_ns_3)
+        vnfd = subprocess.check_output([status_ns_3], shell=True)
+        vnfd = subprocess.check_output([status_ns_3], shell=True)
+        LOG.debug(vnfd)
+        return (vnfd)     
+
 
     def wait_for_instantiation(self,id):
         LOG.info("wait for instantiation starts")
