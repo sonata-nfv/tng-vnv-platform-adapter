@@ -536,7 +536,7 @@ class Adapter:
             url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages_content'
             url_2 = url.replace("http","https")
 
-            upload_nsd = "curl -s -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
+            upload_nsd = "curl -s -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +file_to_upload+ "\" " + url_2
@@ -2737,21 +2737,21 @@ class Adapter:
                     function_file_path = function_json['function']
 
                     try:                   
-                        upload_function = self.uploadOSMFunction(function_file_path)
+                        upload_function = self.uploadOSMFunction(function_file_path)                     
                         LOG.debug (upload_function)
-                        upload_function_str = upload_function.__str__()
+                        upload_function_str = upload_function
                         LOG.debug (upload_function_str)
+
                         if upload_function_str.__str__().find('CONFLICT'):
-                            msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"" + upload_function_str + "\"}"
+                            upload_function_str_json = json.loads(upload_function_str)
+                            print (upload_function_str_json['detail'])
+                            msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg 
                         if upload_function_str.__str__().find('BAD_REQUEST'):
-                            #msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"}"
-                            msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"" + upload_function_str + "\"}"
+                            upload_function_str_json = json.loads(upload_function_str)
+                            print (upload_function_str_json['detail'])
+                            msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg  
-                        LOG.debug("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")                           
-                        LOG.debug("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
-                    except:
-                        LOG.debug("problem uploading the function to the SP")
 
                 
                 for service in services_array:
@@ -3078,8 +3078,8 @@ class Adapter:
 
                 
                 
-                #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
-                package_path = '/home/luis/mob'
+                package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+                #package_path = '/home/luis/mob'
                 LOG.debug(package_path)
 
 
@@ -3097,19 +3097,22 @@ class Adapter:
                     function_file_path = function_json['function']
 
                     try:                   
-                        upload_function = self.uploadOSMFunction(function_file_path)
+                        upload_function = self.uploadOSMFunction(function_file_path)                     
                         LOG.debug (upload_function)
-                        upload_function_str = upload_function.__str__()
+                        upload_function_str = upload_function
                         LOG.debug (upload_function_str)
+
                         if upload_function_str.__str__().find('CONFLICT'):
-                            msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"" + upload_function_str + "\"}"
+                            upload_function_str_json = json.loads(upload_function_str)
+                            print (upload_function_str_json['detail'])
+                            msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg 
                         if upload_function_str.__str__().find('BAD_REQUEST'):
-                            #msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"}"
-                            msg = "{\"error\": \"problem uploading the function to the SP, check the logs:\"" + upload_function_str + "\"}"
+                            upload_function_str_json = json.loads(upload_function_str)
+                            print (upload_function_str_json['detail'])
+                            msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg  
-                        LOG.debug("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")                           
-                        LOG.debug("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
+
                     except:
                         LOG.debug("problem uploading the function to the SP")
   
