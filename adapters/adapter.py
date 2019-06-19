@@ -2753,6 +2753,9 @@ class Adapter:
                             msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg  
 
+                    except:
+                        LOG.debug("problem uploading the function to the SP")
+
                 
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
