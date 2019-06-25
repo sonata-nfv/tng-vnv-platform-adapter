@@ -2889,7 +2889,7 @@ class Adapter:
                     except:
                         LOG.debug("problem uploading the function to the SP")
 
-                
+                time.sleep(3)
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
 
@@ -3187,7 +3187,7 @@ class Adapter:
   
                 services_array = self.createServicesArray(package_path)
                 print(services_array)  
-                
+                time.sleep(3)
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
 
