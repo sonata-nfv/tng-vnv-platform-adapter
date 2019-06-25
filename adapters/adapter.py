@@ -546,10 +546,11 @@ class Adapter:
 
 
     def getOSMFunctionFiles(self,function_file_path,package_path):
-        function_name = self.getOSMFunctionName(function_file_path)
+        print ("getOSMFunctionFiles starts")
+        print (function_file_path)
+        print (package_path)
         function_with_files = None
-        function_with_files = []
-        has_cloud_init = 'no'
+        function_with_files = []        
         function_name = self.getOSMFunctionName(function_file_path)
         napd_path = package_path + '/TOSCA-Metadata/NAPD.yaml'
         print (napd_path)
@@ -568,16 +569,18 @@ class Adapter:
                 function_tags = pc['tags']
                 for ft in function_tags:
                     print (ft)
-                    function_tags_array = ft.split('/')	
-                    print (function_tags_array[1])
-                    if function_tags_array[0] == 'file-ref:cloud_init':	
-                        has_cloud_init = 'yes'			
-                        print (function_tags_array[0])
-                        function_file_path = '/cloud_init/' + function_tags_array[1]
-                        print (function_file_path)
+                    try:
+                        function_tags_array = ft.split('/')	
+                        print (function_tags_array[1])
+                        if function_tags_array[0] == 'file-ref:cloud_init':	                        			
+                            print (function_tags_array[0])
+                            function_file_path = '/cloud_init/' + function_tags_array[1]
+                            print (function_file_path)
 
-                        #function_with_files.append(function_name)
-                        function_with_files.append(function_file_path)
+                            #function_with_files.append(function_name)
+                            function_with_files.append(function_file_path)
+                    except:
+                        print ("split failed, trying next tag")
 
         print (" ")
         print (function_with_files)
@@ -608,14 +611,22 @@ class Adapter:
     def uploadOSMFunctionAndFiles(self,function_file_path,package_path):
         LOG.info("upload osm and files function starts")
 
-        function_with_files = self.getOSMFunctionFiles(function_file_path,package_path)
-        print ("function_with_files")
-        print (function_with_files)
+        try:
+            function_with_files = self.getOSMFunctionFiles(function_file_path,package_path)
+            print ("function_with_files")
+            print (function_with_files)
+        except:
+            print ("error in function_with_files")
+            sys.exit()
  
-        create = self.createTarOSMFunction(function_with_files,package_path)
-        print (create)
+        try:
+            create = self.createTarOSMFunction(function_with_files,package_path)
+            print (create)
+        except:
+            print ("error creating tar")
+            sys.exit()            
         
-        tar_file_path = '/packages/test.tar.gz'
+        tar_file_path = '/app/packages/test.tar.gz'
 
         sp_host_2 = self.getHostIp()
         token = self.getOSMToken(function_file_path)
@@ -629,6 +640,8 @@ class Adapter:
         upload_nsd_3 = upload_nsd_2 + " --data-binary "
         upload_nsd_4 = upload_nsd_3 + "\"@" +tar_file_path+ "\" " + url_2
         LOG.debug(upload_nsd_4)
+        print ("AQUI AQUI")
+        print (upload_nsd_4)
         upload = subprocess.call([upload_nsd_4], shell=True)
         #upload = subprocess.check_output([upload_nsd_4], shell=True)
         
@@ -2870,8 +2883,8 @@ class Adapter:
                     function_file_path = function_json['function']
 
                     try:                   
-                        upload_function = self.uploadOSMFunction(function_file_path)  
-                        #upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)                     
+                        #upload_function = self.uploadOSMFunction(function_file_path)  
+                        upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)                     
                         LOG.debug (upload_function)
                         upload_function_str = upload_function
                         LOG.debug (upload_function_str)
@@ -3938,31 +3951,7 @@ class Adapter:
             LOG.debug("instantion for osm SPs stars")
 
             ### package operations
-
-            '''         
-            vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
-            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-            LOG.debug(package_id)
-            download_pkg = self.downloadPackageTGO(package_id)
-            LOG.debug(download_pkg)            
-            download_pkg_json = json.loads(download_pkg)
         
-            download_pkg = self.downloadPackageTGO(package_id)
-            download_pkg_json = json.loads(download_pkg)        
-            package_path_downloaded = download_pkg_json['package'] 
-
-            unzip = self.unzipPackage(package_path_downloaded)  
-
-            LOG.debug(unzip)       
-            
-            #package_path = '/app/packages/' + package_id
-            package_path = unzip
-            
-            #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
-            LOG.debug(package_path)
-            '''
-            
-
             try:
                 service_id = self.getOSMServiceId(name,vendor,version)
                 LOG.debug(service_id)
