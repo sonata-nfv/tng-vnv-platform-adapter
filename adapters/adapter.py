@@ -589,6 +589,7 @@ class Adapter:
 
 
     def createTarOSMFunction(self,function_with_files,package_path):
+        LOG.info("createTarOSMFunction starts")
         print(function_with_files)
         print(package_path)
         package_folder = self.getDownloadedPackageFolder(package_path)
