@@ -600,7 +600,7 @@ class Adapter:
             tarring = tarring + package_folder + '/' + fc + ' '      
         print (tarring)     
         print(function_with_files)
-        create_tar = subprocess.check_output([tarring], cwd="/packages", shell=True)
+        create_tar = subprocess.check_output([tarring], cwd="/app/packages", shell=True)
         print (create_tar)
         return (create_tar)
  
