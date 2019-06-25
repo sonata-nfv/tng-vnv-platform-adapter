@@ -3749,3 +3749,358 @@ class Adapter:
         delete_descriptors = self.deletePackagefromService(name,vendor,version)                
         LOG.debug(delete_descriptors)  
               
+
+
+    def instantiateServiceRemoteTest(self,request): 
+        LOG.info("instantiate service starts")
+        content = request.get_json()
+        LOG.debug(content)
+        name = content['service_name']
+        vendor = content['service_vendor']
+        version = content['service_version']        
+        callback = content['callback']
+        vnv_service_id = None
+        package_id = None
+        download_pkg = None
+        package_path = None
+        thing = None
+        service_id = None
+        upload_pkg = None
+        package_uploaded = False
+
+        my_type =  self.getDBType()      
+        if my_type == 'sonata':
+            '''
+            try:
+                vnv_service_id = self.getVnVServiceId(name,vendor,version)
+                LOG.debug("this is the service id in the vnv")
+                print(vnv_service_id)
+            except:
+                msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
+                return msg 
+
+            try:
+                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                LOG.debug(package_id)
+            except:                
+                msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
+                LOG.debug(msg)
+                return msg 
+            
+            try:
+                download_pkg = self.downloadPackageTGO(package_id)
+                LOG.debug(download_pkg)            
+                download_pkg_json = json.loads(download_pkg)
+            
+                download_pkg = self.downloadPackageTGO(package_id)
+                download_pkg_json = json.loads(download_pkg)        
+                package_path_downloaded = download_pkg_json['package']
+            except:
+                msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
+                LOG.debug(msg)
+                return msg              
+            '''
+
+
+            ###### commented for try test ffor when the service already exists in the SP
+            try:
+                service_id = self.getServiceId(name,vendor,version)
+                if service_id is not None:
+                    LOG.debug("The Service is already in the SP")
+            except:
+                LOG.debug("The Service is not in the SP  ") 
+
+                try:
+                    vnv_service_id = self.getVnVServiceId(name,vendor,version)
+                    LOG.debug("this is the service id in the vnv")
+                    print(vnv_service_id)
+                except:
+                    msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
+                    return msg 
+
+                try:
+                    package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                    LOG.debug(package_id)
+                except:                
+                    msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
+                    LOG.debug(msg)
+                    return msg 
+                
+                try:
+                    download_pkg = self.downloadPackageTGO(package_id)
+                    LOG.debug(download_pkg)            
+                    download_pkg_json = json.loads(download_pkg)
+                
+                    download_pkg = self.downloadPackageTGO(package_id)
+                    download_pkg_json = json.loads(download_pkg)        
+                    package_path_downloaded = download_pkg_json['package']
+                except:
+                    msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
+                    LOG.debug(msg)
+                    return msg 
+
+                upload_pkg = self.uploadPackage(package_path_downloaded)
+                time.sleep(7) 
+                package_uploaded = True
+                LOG.debug("upload package response")
+                LOG.debug(upload_pkg)
+                upload_pkg_json =  json.loads(upload_pkg)
+                upload_pkg_json_process_uuid =  upload_pkg_json['package_process_uuid']
+                upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)
+                LOG.debug(upload_pkg_status)
+
+                while upload_pkg_status == 'running':
+                    upload_pkg_status = self.uploadPackageStatus(upload_pkg_json_process_uuid)                    
+                    LOG.debug(upload_pkg_status)
+                    if upload_pkg_status == 'running':
+                        time.sleep(3)  
+                    if upload_pkg_status == 'error':             
+                        return "error uploading package"             
+
+
+            try:
+                service_id = self.getServiceId(name,vendor,version)
+                LOG.debug(service_id)
+            except:
+                LOG.error("The service is not in the SP. Was the package uploaded?")
+
+            time.sleep(5)
+            try:
+                instance_name = content['instance_name']
+            except:
+                LOG.debug("No instance name found")
+
+            instantiate_str = "{\"service_uuid\": \"" + service_id + "\", \"name\": \"" + instance_name + "\"}"
+            LOG.debug(instantiate_str)
+
+            instantiation_call = None
+            try:
+                instantiation_call = self.instantiation(instantiate_str)  
+                LOG.debug(instantiation_call)     
+            except:
+                msg = "{\"error\": \"error in the instantiation process, check the SP logs\"}"
+                return msg  
+            
+            LOG.debug(instantiation_call)
+            try:
+                _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            except:
+                msg = "{\"error\": \"error in the instantiation process, callback aborted\"}"
+                return msg                 
+            '''
+            instantiation_call_str = instantiation_call.__str__()
+            instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
+            instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
+
+            #package_id = self.getSPPackageIdfromServiceId(service_id)
+            string_inicial = "{\"package_id\": \"" + package_id + "\","
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
+            LOG.debug(string_inicial)
+
+            request_response = string_inicial + instantiation_call_str_replaced_2
+
+            LOG.debug(request_response)   
+            return (request_response)	
+            '''
+            instantiation_call_str = instantiation_call.__str__()
+            instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
+            instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
+
+            package_id = self.getSPPackageIdfromServiceId(service_id)
+            #string_inicial = "{\"package_id\": \"" + package_id + "\","
+            #request_response = string_inicial + instantiation_call_str_replaced_2
+
+
+
+
+            string_inicial = "{\"package_id\": \"" + package_id + "\","            
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")                        
+            request_response = string_replaced + instantiation_call_str_replaced_2
+
+
+
+
+            LOG.debug(request_response)   
+            return (request_response)            
+	
+
+        if my_type == 'osm':
+            LOG.debug("This SP is osm")
+            service_id = None
+            package_id = "package_id"
+            package_path = None
+            vnv_service_id = None
+
+            LOG.debug("instantion for osm SPs stars")
+
+            ### package operations
+
+            '''         
+            vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
+            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+            LOG.debug(package_id)
+            download_pkg = self.downloadPackageTGO(package_id)
+            LOG.debug(download_pkg)            
+            download_pkg_json = json.loads(download_pkg)
+        
+            download_pkg = self.downloadPackageTGO(package_id)
+            download_pkg_json = json.loads(download_pkg)        
+            package_path_downloaded = download_pkg_json['package'] 
+
+            unzip = self.unzipPackage(package_path_downloaded)  
+
+            LOG.debug(unzip)       
+            
+            #package_path = '/app/packages/' + package_id
+            package_path = unzip
+            
+            #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+            LOG.debug(package_path)
+            '''
+            
+
+            try:
+                service_id = self.getOSMServiceId(name,vendor,version)
+                LOG.debug(service_id)
+                if service_id == 'error':
+                    raise Exception('raising exception') 
+            except:
+                logging.debug:("The Service is not in the SP  ") 
+                # if the service is not in the SP, we need to upload it
+
+
+                vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
+                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                LOG.debug(package_id)
+                download_pkg = self.downloadPackageTGO(package_id)
+                LOG.debug(download_pkg)            
+                download_pkg_json = json.loads(download_pkg)
+            
+                download_pkg = self.downloadPackageTGO(package_id)
+                download_pkg_json = json.loads(download_pkg)        
+                package_path_downloaded = download_pkg_json['package'] 
+
+                unzip = self.unzipPackage(package_path_downloaded)  
+
+                LOG.debug(unzip)       
+                
+                #package_path = '/app/packages/' + package_id
+                package_path = unzip
+                
+                #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+                LOG.debug(package_path)
+
+
+
+
+                functions_array = self.createFunctionsArray(package_path)
+                services_array = self.createServicesArray(package_path)
+                
+                for function in functions_array:
+                    function_str = "{\"function\": \"" + function + "\"}"
+                    LOG.debug(function_str)                                        
+                    function_json = json.loads(function_str.__str__())
+                    LOG.debug(function_json)
+                    LOG.debug(function_json['function'])
+                    function_file_path = function_json['function']
+
+                    try:                   
+                        upload_function = self.uploadOSMFunction(function_file_path)  
+                        #upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)                     
+                        LOG.debug (upload_function)
+                        upload_function_str = upload_function
+                        LOG.debug (upload_function_str)
+
+                        if upload_function_str.__str__().find('CONFLICT'):
+                            upload_function_str_json = json.loads(upload_function_str)
+                            print (upload_function_str_json['detail'])
+                            msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
+                            return msg 
+                        if upload_function_str.__str__().find('BAD_REQUEST'):
+                            upload_function_str_json = json.loads(upload_function_str)
+                            print (upload_function_str_json['detail'])
+                            msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
+                            return msg  
+
+                    except:
+                        LOG.debug("problem uploading the function to the SP")
+
+                time.sleep(3)
+                for service in services_array:
+                    service_str = "{\"service\": \"" + service + "\"}"
+
+                    LOG.debug(service_str)                                        
+                    service_json = json.loads(service_str.__str__())
+                    LOG.debug(service_json)
+                    LOG.debug(service_json['service'])
+                    service_file_path = service_json['service']
+
+                    try:
+                        upload_service = self.uploadOSMService(service_file_path)
+                        LOG.debug(upload_service)
+                        if upload_service == 'CONFLICT':
+                            LOG.debug("This Service is already in the SP")       
+                        if upload_service != 'CONFLICT':
+                            LOG.debug("This Service is not in the SP")                                   
+                            package_uploaded = True
+                            service_id = self.getUploadedOSMServiceId(upload_service)
+                    except:
+                        LOG.debug("problem uploading the service to osm")
+                    
+                    #service_id = self.getUploadedOSMServiceId(upload_service)
+                    service_id = self.getOSMServiceId(name,vendor,version)
+
+                    LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
+                    LOG.debug(service_id)
+                    #return service_id
+                
+                #package_uploaded = True
+                
+            time.sleep(2)
+
+            nsd_name = service_id
+
+            ns_name = content['instance_name']
+            vim_account = self.getVimAccount()
+
+            LOG.debug(nsd_name)
+            LOG.debug(ns_name)
+            LOG.debug(vim_account)            
+
+            instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
+            LOG.debug("THIS IS THE INSTANTIATE STRING FOR OSM")
+            LOG.debug("aaaaaaaaaaa")
+
+            
+            LOG.debug(instantiate_str)
+
+
+            LOG.debug("aaaaaaaaaaa")
+
+            instantiation_call = self.instantiation(instantiate_str)    
+            LOG.debug(instantiation_call)
+
+            _thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
+
+            instantiation_call_str = instantiation_call
+            LOG.debug(instantiation_call_str)   
+            instantiation_call_json = json.loads(instantiation_call_str)  
+            LOG.debug(instantiation_call_json)
+            instantiation_id = instantiation_call_json['id']
+            LOG.debug(instantiation_id) 
+
+            string_inicial = "{\"package_id\": \"" + package_id + "\","
+            #LOG.debug(string_inicial)                                  
+            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
+            if package_uploaded == True:
+                string_replaced = string_inicial.replace("\"True\"","true")                            
+            if package_uploaded == False:
+                string_replaced = string_inicial.replace("\"False\"","false")            
+            request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"   
+  
+            LOG.debug(request_response)   
+            return (request_response)	                
