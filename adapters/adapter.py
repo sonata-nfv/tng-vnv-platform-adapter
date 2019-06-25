@@ -516,7 +516,139 @@ class Adapter:
             LOG.debug(upload)
             return (upload)
 
-      
+
+    def getOSMFunctionName(self,function_file_path):
+        print (function_file_path)
+        function_name_array = function_file_path.split('/')
+        print (function_name_array)
+        function_name = function_name_array[-1]
+        #function_path_without_function = function_name_array[-2]
+        print (function_name) 
+        return function_name   
+
+    def getOSMFunctionPath(self,function_file_path):
+        print (function_file_path)
+        function_name_array = function_file_path.split('/')
+        print (function_name_array)
+        #function_name = function_name_array[-1]
+        function_path_without_function = function_name_array[-2]
+        print (function_path_without_function) 
+        return function_path_without_function          
+    
+    def getDownloadedPackageFolder(self,package_path):
+        print(package_path)
+        package_path_array = package_path.split('/')
+        print(package_path_array)
+        package_folder = package_path_array[-1]
+        print(package_folder)
+        return package_folder
+    
+
+
+    def getOSMFunctionFiles(self,function_file_path,package_path):
+        function_name = self.getOSMFunctionName(function_file_path)
+        function_with_files = None
+        function_with_files = []
+        has_cloud_init = 'no'
+        function_name = self.getOSMFunctionName(function_file_path)
+        napd_path = package_path + '/TOSCA-Metadata/NAPD.yaml'
+        print (napd_path)
+        with open(napd_path) as n:
+            napd = yaml.load(n)
+        print (napd)
+
+        function_with_files.append(function_name)
+
+        package_content = napd['package_content']
+
+        for pc in package_content:
+            print(pc)
+            if pc['source'] == function_name:
+                print("this is the function")
+                function_tags = pc['tags']
+                for ft in function_tags:
+                    print (ft)
+                    function_tags_array = ft.split('/')	
+                    print (function_tags_array[1])
+                    if function_tags_array[0] == 'file-ref:cloud_init':	
+                        has_cloud_init = 'yes'			
+                        print (function_tags_array[0])
+                        function_file_path = '/cloud_init/' + function_tags_array[1]
+                        print (function_file_path)
+
+                        #function_with_files.append(function_name)
+                        function_with_files.append(function_file_path)
+
+        print (" ")
+        print (function_with_files)
+        print (" ")
+
+        return function_with_files 
+
+
+
+
+    def createTarOSMFunction(self,function_with_files,package_path):
+        print(function_with_files)
+        print(package_path)
+        package_folder = self.getDownloadedPackageFolder(package_path)
+        print (package_folder)
+        tarring = 'tar -czvf test.tar.gz '
+        for fc in function_with_files:
+            print (fc)
+            tarring = tarring + package_folder + '/' + fc + ' '      
+        print (tarring)     
+        print(function_with_files)
+        create_tar = subprocess.check_output([tarring], cwd="/packages", shell=True)
+        print (create_tar)
+        return (create_tar)
+ 
+
+    def uploadOSMFunctionAndFiles(self,function_file_path,package_path):
+        LOG.info("upload osm and files function starts")
+
+        function_with_files = self.getOSMFunctionFiles(function_file_path,package_path)
+        print ("function_with_files")
+        print (function_with_files)
+ 
+        create = self.createTarOSMFunction(function_with_files,package_path)
+        print (create)
+        
+        tar_file_path = '/packages/test.tar.gz'
+
+        sp_host_2 = self.getHostIp()
+        token = self.getOSMToken(function_file_path)
+        LOG.debug(token)
+        
+        url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages_content'
+        url_2 = url.replace("http","https")
+
+        upload_nsd = "curl -s -X POST --insecure -H \"Content-type: application/gzip\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+        upload_nsd_2 = upload_nsd +token + "\" "
+        upload_nsd_3 = upload_nsd_2 + " --data-binary "
+        upload_nsd_4 = upload_nsd_3 + "\"@" +tar_file_path+ "\" " + url_2
+        LOG.debug(upload_nsd_4)
+        upload = subprocess.call([upload_nsd_4], shell=True)
+        #upload = subprocess.check_output([upload_nsd_4], shell=True)
+        
+        '''
+        try:
+            callback_url = content['callback']
+            LOG.debug("Callback url specified")
+            _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,upload))
+        except:
+            LOG.debug("No callback url specified")                
+        '''
+        return (upload)   
+          
+
+
+
+
+
+
+
+
 
     def uploadOSMFunction(self,request):
         LOG.info("upload osm function starts")
@@ -2922,7 +3054,7 @@ class Adapter:
 
 
     def instantiateServiceTest(self,request): 
-        LOG.info("instantiate service starts")
+        LOG.info("instantiate service TESTS starts")
         content = request.get_json()        
         LOG.debug(content)
         name = content['service_name']
@@ -2982,39 +3114,7 @@ class Adapter:
 
             LOG.debug(request_response)   
             return (request_response)
-        '''
-        if my_type == 'osm':
-            LOG.debug("This SP is osm")
-            service_id = None
-            package_id = None
-            package_path = None
-            vnv_service_id = None
 
-            LOG.debug("instantiation for osm SPs stars")
-        
-            ### package operations
-                     
-            vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
-            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-            LOG.debug(package_id)
-            download_pkg = self.downloadPackageTGO(package_id)
-            LOG.debug(download_pkg)            
-            download_pkg_json = json.loads(download_pkg)
-        
-            download_pkg = self.downloadPackageTGO(package_id)
-            download_pkg_json = json.loads(download_pkg)        
-            package_path_downloaded = download_pkg_json['package'] 
-
-            unzip = self.unzipPackage(package_path_downloaded)  
-
-            print(unzip)       
-            
-            #package_path = '/app/packages/' + package_id
-            package_path = unzip
-            
-            #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
-            #LOG.debug(package_path)
-        '''
 
         if my_type == 'osm':
             LOG.debug("This SP is osm")
@@ -3025,30 +3125,6 @@ class Adapter:
 
             LOG.debug("instantion for osm SPs stars")
 
-            ### package operations
-
-            '''         
-            vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
-            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-            LOG.debug(package_id)
-            download_pkg = self.downloadPackageTGO(package_id)
-            LOG.debug(download_pkg)            
-            download_pkg_json = json.loads(download_pkg)
-        
-            download_pkg = self.downloadPackageTGO(package_id)
-            download_pkg_json = json.loads(download_pkg)        
-            package_path_downloaded = download_pkg_json['package'] 
-
-            unzip = self.unzipPackage(package_path_downloaded)  
-
-            LOG.debug(unzip)       
-            
-            #package_path = '/app/packages/' + package_id
-            package_path = unzip
-            
-            #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
-            LOG.debug(package_path)
-            '''
             
 
             try:
@@ -3057,51 +3133,39 @@ class Adapter:
                 if service_id == 'error':
                     raise Exception('raising exception') 
             except:
-                logging.debug:("The Service is not in the SP  ") 
-                # if the service is not in the SP, we need to upload it
+                logging.debug("The Service is not in the SP  ") 
+ 
 
-                '''
-                vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
-                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-                LOG.debug(package_id)
-                download_pkg = self.downloadPackageTGO(package_id)
-                LOG.debug(download_pkg)            
-                download_pkg_json = json.loads(download_pkg)
-            
-                download_pkg = self.downloadPackageTGO(package_id)
-                download_pkg_json = json.loads(download_pkg)        
-                package_path_downloaded = download_pkg_json['package'] 
 
-                unzip = self.unzipPackage(package_path_downloaded)  
-
-                LOG.debug(unzip)       
-                '''
-                #package_path = '/app/packages/' + package_id
-                #package_path = unzip
-
-                
-                
-                package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
+                #package_path = '/packages/cirros_osm_sin_cloud_init'
+                package_path = '/packages/cirros_osm'
                 #package_path = '/home/luis/mob'
                 LOG.debug(package_path)
-
-
-
-
-                functions_array = self.createFunctionsArray(package_path)
-                services_array = self.createServicesArray(package_path)
                 
+
+
+
+                
+                functions_array = self.createFunctionsArray(package_path)
+                print(functions_array)                                        
+
                 for function in functions_array:
+                    print (function)
+                    
                     function_str = "{\"function\": \"" + function + "\"}"
                     LOG.debug(function_str)                                        
                     function_json = json.loads(function_str.__str__())
                     LOG.debug(function_json)
                     LOG.debug(function_json['function'])
                     function_file_path = function_json['function']
+                    
 
                     try:                   
-                        upload_function = self.uploadOSMFunction(function_file_path)                     
+                        #upload_function = self.uploadOSMFunction(function_file_path)                     
+                        upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)  
+
                         LOG.debug (upload_function)
+
                         upload_function_str = upload_function
                         LOG.debug (upload_function_str)
 
@@ -3117,8 +3181,11 @@ class Adapter:
                             return msg  
 
                     except:
+                        
                         LOG.debug("problem uploading the function to the SP")
   
+                services_array = self.createServicesArray(package_path)
+                print(services_array)  
                 
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
