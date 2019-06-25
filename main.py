@@ -510,7 +510,16 @@ def adapter_instatiate_service_tests():
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
     LOG.debug(content) 
-    return ad.instantiateServiceTest(request)      
+    return ad.instantiateServiceTest(request)     
+
+@app.route('/adapters/instantiate_service/remotetests', methods=['POST'])
+def adapter_instatiate_service_remote_tests():
+    LOG.debug(request.is_json)
+    content = request.get_json()
+    sp = content['service_platform']
+    ad = adapter.Adapter(sp) 
+    LOG.debug(content) 
+    return ad.instantiateServiceRemoteTest(request)  
 
 @app.route('/adapters/download-upload-test', methods=['POST'])
 def adapterDownloadUploadTest():
