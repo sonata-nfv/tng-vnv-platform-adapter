@@ -2846,27 +2846,29 @@ class Adapter:
                 logging.debug:("The Service is not in the SP  ") 
                 # if the service is not in the SP, we need to upload it
 
-
-                vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
-                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-                LOG.debug(package_id)
-                download_pkg = self.downloadPackageTGO(package_id)
-                LOG.debug(download_pkg)            
-                download_pkg_json = json.loads(download_pkg)
-            
-                download_pkg = self.downloadPackageTGO(package_id)
-                download_pkg_json = json.loads(download_pkg)        
-                package_path_downloaded = download_pkg_json['package'] 
-
-                unzip = self.unzipPackage(package_path_downloaded)  
-
-                LOG.debug(unzip)       
+                try:
+                    vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
+                    package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                    LOG.debug(package_id)
+                    download_pkg = self.downloadPackageTGO(package_id)
+                    LOG.debug(download_pkg)            
+                    download_pkg_json = json.loads(download_pkg)
                 
-                #package_path = '/app/packages/' + package_id
-                package_path = unzip
-                
-                #package_path = '/home/luis/Escritorio/cirros/tgos_osm/basic_osm'
-                LOG.debug(package_path)
+                    download_pkg = self.downloadPackageTGO(package_id)
+                    download_pkg_json = json.loads(download_pkg)        
+                    package_path_downloaded = download_pkg_json['package'] 
+                except:
+                    msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
+                    return msg 
+
+                try:
+                    unzip = self.unzipPackage(package_path_downloaded)
+                    LOG.debug(unzip)                       
+                    package_path = unzip
+                    LOG.debug(package_path)
+                except:
+                    msg = "{\"error\": \"error decompressing the tgo file\"}"
+                    return msg 
 
 
 
@@ -2925,12 +2927,15 @@ class Adapter:
                     except:
                         LOG.debug("problem uploading the service to osm")
                     
-                    #service_id = self.getUploadedOSMServiceId(upload_service)
-                    service_id = self.getOSMServiceId(name,vendor,version)
-
-                    LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
-                    LOG.debug(service_id)
-                    #return service_id
+                    try:
+                        #service_id = self.getUploadedOSMServiceId(upload_service)
+                        service_id = self.getOSMServiceId(name,vendor,version)
+                        LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
+                        LOG.debug(service_id)
+                        #return service_id
+                    except:
+                        msg = "{\"error\": \"error getting the service id from the SP Catalog\"}"
+                        return msg 
                 
                 #package_uploaded = True
                 
@@ -2946,17 +2951,15 @@ class Adapter:
             LOG.debug(vim_account)            
 
             instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
-            LOG.debug("THIS IS THE INSTANTIATE STRING FOR OSM")
-            LOG.debug("aaaaaaaaaaa")
 
-            
-            LOG.debug(instantiate_str)
+            instantiation_call = None
 
-
-            LOG.debug("aaaaaaaaaaa")
-
-            instantiation_call = self.instantiation(instantiate_str)    
-            LOG.debug(instantiation_call)
+            try:
+                instantiation_call = self.instantiation(instantiate_str)    
+                LOG.debug(instantiation_call)
+            except:
+                msg = "{\"error\": \"error instantiating, check the logs\"}"
+                return msg 
 
             _thread.start_new_thread(self.OSMInstantiateCallback, (callback,instantiation_call))
 
