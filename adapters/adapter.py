@@ -588,6 +588,65 @@ class Adapter:
 
         return function_with_files 
 
+    def getOSMFunctionTarFile(self,function_file_path,package_path):
+        print ("getOSMFunctionTarFiles starts")
+        print (function_file_path)
+        print (package_path)
+        function_with_files = None
+        function_with_files = []        
+        function_name = self.getOSMFunctionName(function_file_path)
+        napd_path = package_path + '/TOSCA-Metadata/NAPD.yaml'
+        print (napd_path)
+        with open(napd_path) as n:
+            napd = yaml.load(n)
+        print (napd)
+        print ("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        #function_with_files.append(function_name)
+
+        package_content = napd['package_content']
+
+        for pc in package_content:
+            print(pc)
+            if pc['source'] == function_name:
+                print("this is the function")
+                function_tags = pc['tags']
+                print (function_tags)
+                for ft in function_tags:
+                    print (ft)
+                    try:       
+                        function_tags_array = ft.split('/')	            
+                        if function_tags_array[0] == 'files':	                            	
+                            print (function_tags_array[0])                          			
+                            print (function_tags_array[1])
+                            function_file_path =  function_tags_array[1]
+                            print (function_file_path)
+
+                            #function_with_files.append(function_name)
+                            function_with_files.append(function_file_path)                            
+                    except:
+                        function_with_files.append(function_name)
+                        print ("split failed, trying next tag")
+
+        print (" ")
+        print (function_with_files)
+        print (" ")
+
+        return function_with_files[0]         
+
 
 
 
@@ -655,6 +714,61 @@ class Adapter:
         '''
         return (upload)   
           
+
+    def uploadOSMFunctionAndTarFiles(self,function_file_path,package_path):
+        LOG.info("upload osm vnfd tar files function starts")
+        print ("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")  
+        print (function_file_path)              
+
+        try:            
+            function_tar_file = self.getOSMFunctionTarFile(function_file_path,package_path)
+            print ("function_tar_file")
+            print (function_tar_file)
+            tar_file_path = package_path + '/files/' + function_tar_file
+            print (tar_file_path)
+            sp_host_2 = self.getHostIp()
+            token = self.getOSMToken(function_file_path)
+            LOG.debug(token)        
+            url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages_content'
+            url_2 = url.replace("http","https")
+            upload_nsd = "curl -s -X POST --insecure -H \"Content-type: application/gzip\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+            upload_nsd_2 = upload_nsd +token + "\" "
+            upload_nsd_3 = upload_nsd_2 + " --data-binary "
+            upload_nsd_4 = upload_nsd_3 + "\"@" +tar_file_path+ "\" " + url_2
+            print (upload_nsd_4)
+            upload = subprocess.call([upload_nsd_4], shell=True)
+            return (upload)  
+
+        except:
+            print ("there is not tar file")
+            print (function_file_path)             
+            sp_host_2 = self.getHostIp()
+            token = self.getOSMToken(function_file_path)
+            LOG.debug(token)        
+            url = sp_host_2 + ':9999/osm/vnfpkgm/v1/vnf_packages_content'
+            url_2 = url.replace("http","https")
+            upload_nsd = "curl -s -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
+            upload_nsd_2 = upload_nsd +token + "\" "
+            upload_nsd_3 = upload_nsd_2 + " --data-binary "
+            upload_nsd_4 = upload_nsd_3 + "\"@" +function_file_path+ "\" " + url_2
+            print (upload_nsd_4)
+            upload = subprocess.call([upload_nsd_4], shell=True)
+            return (upload)              
+
+
+
 
 
 
@@ -3156,7 +3270,8 @@ class Adapter:
 
 
                 #package_path = '/packages/cirros_osm_sin_cloud_init'
-                package_path = '/packages/cirros_osm'
+                package_path = '/packages/cirros_osm_juju_charms'
+                
                 #package_path = '/home/luis/mob'
                 LOG.debug(package_path)
                 
@@ -3171,21 +3286,35 @@ class Adapter:
                     print (function)
                     
                     function_str = "{\"function\": \"" + function + "\"}"
-                    LOG.debug(function_str)                                        
+                    print(function_str)                                        
                     function_json = json.loads(function_str.__str__())
-                    LOG.debug(function_json)
-                    LOG.debug(function_json['function'])
+                    print(function_json)
+                    print(function_json['function'])
                     function_file_path = function_json['function']
                     
 
                     try:                   
                         #upload_function = self.uploadOSMFunction(function_file_path)                     
-                        upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)  
+                        #upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)  
+                        upload_function = self.uploadOSMFunctionAndTarFiles(function_file_path,package_path)  
 
-                        LOG.debug (upload_function)
+                        print (upload_function)
+                        print ("11111111111111111111111111111111111111111111111111111")
+                        print ("")
+                        print ("")
+                        print ("")
+                        print ("")
+                        print ("")
+                        print ("")
+                        print ("")
+                        print ("")
+                        print ("")
+                        print ("")
+                        print ("")
+
 
                         upload_function_str = upload_function
-                        LOG.debug (upload_function_str)
+                        print (upload_function_str)
 
                         if upload_function_str.__str__().find('CONFLICT'):
                             upload_function_str_json = json.loads(upload_function_str)
@@ -3200,7 +3329,7 @@ class Adapter:
 
                     except:
                         
-                        LOG.debug("problem uploading the function to the SP")
+                        print("problem uploading the function to the SP")
   
                 services_array = self.createServicesArray(package_path)
                 print(services_array)  
@@ -3208,29 +3337,29 @@ class Adapter:
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
 
-                    LOG.debug(service_str)                                        
+                    print(service_str)                                        
                     service_json = json.loads(service_str.__str__())
-                    LOG.debug(service_json)
-                    LOG.debug(service_json['service'])
+                    print(service_json)
+                    print(service_json['service'])
                     service_file_path = service_json['service']
 
                     try:
                         upload_service = self.uploadOSMService(service_file_path)
-                        LOG.debug(upload_service)
+                        print(upload_service)
                         if upload_service == 'CONFLICT':
-                            LOG.debug("This Service is already in the SP")       
+                            print("This Service is already in the SP")       
                         if upload_service != 'CONFLICT':
-                            LOG.debug("This Service is not in the SP")                                   
+                            print("This Service is not in the SP")                                   
                             package_uploaded = True
                             service_id = self.getUploadedOSMServiceId(upload_service)
                     except:
-                        LOG.debug("problem uploading the service to osm")
+                        print("problem uploading the service to osm")
                     
                     #service_id = self.getUploadedOSMServiceId(upload_service)
                     service_id = self.getOSMServiceId(name,vendor,version)
 
-                    LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
-                    LOG.debug(service_id)
+                    print("THIS IS THE NEW UPLOADED SERVICE ID")
+                    print(service_id)
                     #return service_id
                 
                 #package_uploaded = True
@@ -3242,15 +3371,15 @@ class Adapter:
             ns_name = content['instance_name']
             vim_account = self.getVimAccount()
 
-            LOG.debug(nsd_name)
-            LOG.debug(ns_name)
-            LOG.debug(vim_account)            
+            print(nsd_name)
+            print(ns_name)
+            print(vim_account)            
 
             instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
-            LOG.debug("THIS IS THE INSTANTIATE STRING FOR OSM")
-            LOG.debug("aaaaaaaaaaa")
+            print("THIS IS THE INSTANTIATE STRING FOR OSM")
+            print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
-            
+            '''
             LOG.debug(instantiate_str)
 
 
@@ -3278,7 +3407,9 @@ class Adapter:
             request_response = string_replaced + "\"id\": \"" + instantiation_id + "\"}"   
   
             LOG.debug(request_response)   
-            return (request_response)	                 
+            return (request_response)	
+            '''
+            return (instantiate_str)                 
                  
 
     def getOSMServiceId(self,name,vendor,version):
@@ -4002,7 +4133,8 @@ class Adapter:
 
                     try:                   
                         #upload_function = self.uploadOSMFunction(function_file_path)  
-                        upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)                     
+                        #upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path) 
+                        upload_function = self.uploadOSMFunctionAndTarFiles(function_file_path,package_path)                      
                         LOG.debug (upload_function)
                         upload_function_str = upload_function
                         LOG.debug (upload_function_str)
