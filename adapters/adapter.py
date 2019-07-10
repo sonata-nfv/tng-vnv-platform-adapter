@@ -4133,7 +4133,8 @@ class Adapter:
 
                     try:                   
                         #upload_function = self.uploadOSMFunction(function_file_path)  
-                        upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)                     
+                        #upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path) 
+                        upload_function = self.uploadOSMFunctionAndTarFiles(function_file_path,package_path)                      
                         LOG.debug (upload_function)
                         upload_function_str = upload_function
                         LOG.debug (upload_function_str)
