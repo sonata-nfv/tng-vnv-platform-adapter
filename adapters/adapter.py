@@ -2655,7 +2655,7 @@ class Adapter:
         return status
         
     def getRequestError(self,id):
-        LOG.info("get request status starts")        
+        LOG.info("get request error starts")        
         status_call = self.instantiationStatus(id)
         LOG.debug(status_call)
         instantiation_request_json_dumps = json.dumps(status_call)
@@ -3172,7 +3172,7 @@ class Adapter:
                 inst_error = self.getRequestError(instantiation_request_id)
 
 
-                LOG.error("The request is in error status")
+                LOG.error("l")
                 LOG.error(inst_error)
                 error_string = inst_error.__str__()
                 LOG.error(error_string)
@@ -3925,38 +3925,6 @@ class Adapter:
 
         my_type =  self.getDBType()      
         if my_type == 'sonata':
-            '''
-            try:
-                vnv_service_id = self.getVnVServiceId(name,vendor,version)
-                LOG.debug("this is the service id in the vnv")
-                print(vnv_service_id)
-            except:
-                msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
-                return msg 
-
-            try:
-                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-                LOG.debug(package_id)
-            except:                
-                msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
-                LOG.debug(msg)
-                return msg 
-            
-            try:
-                download_pkg = self.downloadPackageTGO(package_id)
-                LOG.debug(download_pkg)            
-                download_pkg_json = json.loads(download_pkg)
-            
-                download_pkg = self.downloadPackageTGO(package_id)
-                download_pkg_json = json.loads(download_pkg)        
-                package_path_downloaded = download_pkg_json['package']
-            except:
-                msg = "{\"error\": \"error downloading the package from the VnV Catalog\"}"
-                LOG.debug(msg)
-                return msg              
-            '''
-
-
             ###### commented for try test ffor when the service already exists in the SP
             try:
                 service_id = self.getServiceId(name,vendor,version)
@@ -4038,34 +4006,17 @@ class Adapter:
             
             LOG.debug(instantiation_call)
             try:
-                _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+                _thread.start_new_thread(self.SonataInstantiateCallbackTest, (callback,instantiation_call))
             except:
                 msg = "{\"error\": \"error in the instantiation process, callback aborted\"}"
                 return msg                 
-            '''
-            instantiation_call_str = instantiation_call.__str__()
-            instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
-            instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
 
-            #package_id = self.getSPPackageIdfromServiceId(service_id)
-            string_inicial = "{\"package_id\": \"" + package_id + "\","
-            string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
-            LOG.debug(string_inicial)
 
-            request_response = string_inicial + instantiation_call_str_replaced_2
-
-            LOG.debug(request_response)   
-            return (request_response)	
-            '''
             instantiation_call_str = instantiation_call.__str__()
             instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
             instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
 
             package_id = self.getSPPackageIdfromServiceId(service_id)
-            #string_inicial = "{\"package_id\": \"" + package_id + "\","
-            #request_response = string_inicial + instantiation_call_str_replaced_2
-
-
 
 
             string_inicial = "{\"package_id\": \"" + package_id + "\","            
@@ -4236,3 +4187,77 @@ class Adapter:
   
             LOG.debug(request_response)   
             return (request_response)	                
+
+    def SonataInstantiateCallbackTest (self,callback,instantiation_call):
+        LOG.info("sonata instantiate callback starts")
+        LOG.debug(instantiation_call)
+        instance_status = None
+
+        try:
+            instantiation_request_json_dumps = json.dumps(instantiation_call)
+            LOG.debug(instantiation_request_json_dumps)
+            instantiation_request_json = json.loads(instantiation_call)
+            LOG.debug(instantiation_request_json)
+            LOG.debug(instantiation_request_json['id'])
+            instantiation_request_id = instantiation_request_json['id']        
+            LOG.debug(instantiation_request_id)
+            time.sleep(2)
+            instance_status = self.wait_for_instantiation(instantiation_request_id)
+            LOG.debug(instance_status)
+        except:
+            msg = "{\"error\": \"error getting request status\"}"
+
+            msg_str = msg.__str__()
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  msg_str  +  "' " + callback        
+            LOG.debug(callback_post)		
+            call = subprocess.check_output([callback_post], shell=True)
+            LOG.debug(call)	
+
+            return msg  
+            
+
+        if instance_status == 'READY':
+            instantiation_info = self.instantiationInfoCurator(instantiation_request_id)
+            LOG.debug(instantiation_info) 
+            instantiation_info_str = instantiation_info.__str__()
+            string_replaced = instantiation_info_str.replace("'","\"")        
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  string_replaced  +  "' " + callback        
+            LOG.debug(callback_post)		
+            call = subprocess.check_output([callback_post], shell=True)
+            LOG.debug(call)	
+
+            monitoring_callback = self.getMonitoringURLs()
+            info_monitoring =self.instantiationInfoMonitoring(instantiation_request_id)	
+            LOG.debug(info_monitoring) 
+            info_monitoring_str = info_monitoring.__str__()
+            monitoring_string_replaced = info_monitoring_str.replace("'","\"")        
+            monitoring_callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
+            LOG.debug(monitoring_callback_post)		
+            call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
+
+
+
+        if instance_status == 'ERROR': 
+
+            inst_error = None 
+
+            instantiation_request_json_dumps = json.dumps(instantiation_call)
+            LOG.debug(instantiation_request_json_dumps)
+            instantiation_request_json = json.loads(instantiation_call)
+            LOG.debug(instantiation_request_json)
+            LOG.debug(instantiation_request_json['id'])
+            instantiation_request_id = instantiation_request_json['id']        
+            LOG.debug(instantiation_request_id)
+            time.sleep(2)
+
+            inst_error = self.getRequestError(instantiation_request_id)
+            LOG.debug("This is the request error)
+            LOG.debug(inst_error)
+
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
+            LOG.debug(callback_post)
+            call = subprocess.check_output([callback_post], shell=True)
+            LOG.debug(call)
+            
+        LOG.info("sonata instantiate callback ends")  
+
