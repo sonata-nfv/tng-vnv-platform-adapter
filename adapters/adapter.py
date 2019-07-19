@@ -4251,7 +4251,7 @@ class Adapter:
             time.sleep(2)
 
             inst_error = self.getRequestError(instantiation_request_id)
-            LOG.debug("This is the request error)
+            LOG.debug("This is the request error")
             LOG.debug(inst_error)
 
             callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
