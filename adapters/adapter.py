@@ -3145,7 +3145,6 @@ class Adapter:
             call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
 
 
-
         if instance_status == 'ERROR': 
 
             inst_error = None 
@@ -3160,35 +3159,13 @@ class Adapter:
             time.sleep(2)
 
             inst_error = self.getRequestError(instantiation_request_id)
+            LOG.debug("This is the request error")
+            LOG.debug(inst_error)
 
             callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
             LOG.debug(callback_post)
             call = subprocess.check_output([callback_post], shell=True)
             LOG.debug(call)
-            
-            try:
-                inst_error = self.getRequestError(instantiation_request_id)    
-            except:
-                inst_error = self.getRequestError(instantiation_request_id)
-
-
-                LOG.error("l")
-                LOG.error(inst_error)
-                error_string = inst_error.__str__()
-                LOG.error(error_string)
-                try:
-                    callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + error_string + "\"}' " + callback        
-                    LOG.debug(callback_post)		
-                    call = subprocess.check_output([callback_post], shell=True)
-                    LOG.debug(call)
-
-                    monitoring_callback = self.getMonitoringURLs()
-                    monitoring_callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + monitoring_callback	                        
-                    LOG.debug(monitoring_callback_post)		
-                    call_mon = subprocess.check_output([monitoring_callback_post], shell=True)  
-
-                except:
-                    LOG.error("error sending the instantiation error callbacks")
 
         LOG.info("sonata instantiate callback ends")        
 
