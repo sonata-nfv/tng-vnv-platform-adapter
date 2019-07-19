@@ -3158,6 +3158,13 @@ class Adapter:
             instantiation_request_id = instantiation_request_json['id']        
             LOG.debug(instantiation_request_id)
             time.sleep(2)
+
+            inst_error = self.getRequestError(instantiation_request_id)
+
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
+            LOG.debug(callback_post)
+            call = subprocess.check_output([callback_post], shell=True)
+            LOG.debug(call)
             
             try:
                 inst_error = self.getRequestError(instantiation_request_id)    
