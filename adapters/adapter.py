@@ -4238,3 +4238,86 @@ class Adapter:
             
         LOG.info("sonata instantiate callback ends")  
 
+
+
+
+    def uploadPackageOnap (self,pkg_path):
+        LOG.info("upload onap package starts")
+                      
+        sp_host_2 = self.getHostIp()
+        user_id = self.getDBUserName()
+
+        url = sp_host_2 + '8443:/sdc1/feProxy/onboarding-api/v1.0/vendor-software-products//versions//orchestration-template-candidate'                       
+        upload_pkg = "curl -s -X POST --insecure -H \"Accept: application/json\" -H \"Content-Type: application/x-www-form-urlencoded\" -H \"X-FromAppId: robot-ete\" -H \"X-TransactionId: robot-ete-ba84612d-c1c6-4c53-9967-7b1dff276c7a\" -H \"cache-control: no-cache\" -H \"content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW\" "
+        upload_pkg_2 = upload_pkg + "-H \"USER_ID: \"" + user_id + " "
+        upload_pkg_3 = upload_pkg_2 + " -F upload=@" + pkg_path
+        
+        LOG.debug(upload_pkg_3)
+        upload = subprocess.check_output([upload_pkg_3], shell=True)
+
+        '''
+        try:
+            callback_url = content['callback']
+            LOG.debug("Callback url specified")
+            _thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,upload))
+        except:
+            LOG.debug("No callback url specified")
+        '''
+
+        LOG.debug(upload)
+        return (upload)
+
+
+
+    def getVnVONAPServiceId(self,name,vendor,version):    
+        LOG.info("get vnv onap service id starts")
+        uuid = None
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
+                 
+        url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
+        response = requests.get(url,headers=JSON_CONTENT_HEADER)
+        LOG.debug(response)
+        response_json = response.content
+        jjson = json.loads(response_json)
+        for x in jjson:
+            LOG.debug(x)            
+            try:
+                osm_name = x['nsd']['nsd:nsd-catalog']['nsd']['name']
+                LOG.debug("ONAP service descriptor, checking if is the one we are searching:") 
+                if ( x['nsd']['nsd:nsd-catalog']['nsd']['name'] == name and x['nsd']['nsd:nsd-catalog']['nsd']['vendor'] == vendor and x['nsd']['nsd:nsd-catalog']['nsd']['version'] == version ) :
+                    LOG.debug("same name")
+                    uuid = x['uuid']
+                    LOG.debug(uuid)  
+            except:
+                LOG.debug("this descriptor is not an ONAP one")       
+
+        LOG.debug(uuid)
+        return uuid    
+
+    
+    def getSPONAPServiceId(self,name,vendor,version):        
+        LOG.info("get sp onap service id starts")
+        uuid = None
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}          
+
+        
+
+        return uuid
+
+
+    def getONAPInstance(self,instance_id,service_name):        
+        LOG.info("get onap instance object starts")
+        uuid = None
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        sp_host_2 = self.getHostIp()
+        customer_name = self.getDBUserName()
+
+        url = sp_host_2 + ':8443/nbi/api/v3/service/'    
+        url = url + instance_id + '/'
+        url = url + '?relatedParty.id='
+        url = url + customer_name
+        url = url + '&serviceSpecification.name='
+        url = url + service_name
+        response = requests.get(url,headers=JSON_CONTENT_HEADER)
+        LOG.debug(response)
+        return response        
