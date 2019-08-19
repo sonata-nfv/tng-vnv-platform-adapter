@@ -3159,7 +3159,16 @@ class Adapter:
             LOG.debug(instantiation_request_id)
 
             time.sleep(2)
-            inst_error = instantiation_request_json['error'] 
+
+            instantiation_request_content = self.getSonataRequest(instantiation_request_id)
+            LOG.debug(instantiation_request_content)
+
+            instantiation_request_content_dumps = json.dumps(instantiation_request_content)
+            LOG.debug(instantiation_request_content_dumps)
+            instantiation_request_content_json = json.loads(instantiation_request_content_dumps)
+            LOG.debug(instantiation_request_content_json)                        
+
+            inst_error = instantiation_request_content_json['error'] 
             #inst_error = self.getRequestError(instantiation_request_id)
             LOG.debug("This is the request error")
             LOG.debug(inst_error)
@@ -3170,6 +3179,25 @@ class Adapter:
             LOG.debug(call)
 
         LOG.info("sonata instantiate callback ends")        
+
+    def getSonataRequest(self,id):    
+        LOG.info("instantiation status starts")
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        sp_host_2 = self.getHostIp()
+
+        url = sp_host_2 + ':32002/api/v3/requests/' +  id            
+        time.sleep(2)
+        LOG.debug(url)
+        response = requests.get(url,headers=JSON_CONTENT_HEADER)
+        LOG.debug(response) 
+        LOG.debug(response.text) 
+        response_json = response.content
+        LOG.debug(response_json)            
+        LOG.debug(response.text)
+        return (response.text)
+
 
 
     def instantiateServiceTest(self,request): 
