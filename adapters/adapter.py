@@ -3168,7 +3168,8 @@ class Adapter:
             instantiation_request_content_json = json.loads(instantiation_request_content)
             LOG.debug(instantiation_request_content_json)                        
 
-            inst_error = instantiation_request_content_json['error'] 
+            inst_error = instantiation_request_content['error'] 
+            #inst_error = instantiation_request_content_json['error'] 
             #inst_error = self.getRequestError(instantiation_request_id)
             LOG.debug("This is the request error")
             LOG.debug(inst_error)
