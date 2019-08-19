@@ -3160,7 +3160,7 @@ class Adapter:
 
             time.sleep(2)
 
-            instantiation_request_content = sel.getSonataRequest(instantiation_request_id)
+            instantiation_request_content = self.getSonataRequest(instantiation_request_id)
             LOG.debug(instantiation_request_content)
 
             instantiation_request_content_dumps = json.dumps(instantiation_request_content)
