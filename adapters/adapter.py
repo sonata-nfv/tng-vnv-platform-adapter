@@ -4321,3 +4321,83 @@ class Adapter:
         response = requests.get(url,headers=JSON_CONTENT_HEADER)
         LOG.debug(response)
         return response        
+
+    def instantiateONAP(self,externalId, service_instance_name, auto_service_id):
+        
+        sp_host_2 = self.getHostIp()
+        customer_name = self.getDBUserName()
+        url = sp_host_2 + '/serviceOrder'
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json', 'Accept':'application/json'} 
+
+        DATA = {
+            "externalId": "{{externalId}}",
+            "priority": "1",
+            "description": "{{service}} order for generic customer via Postman",
+            "category": "Consumer",
+            "requestedStartDate": "2018-04-26T08:33:37.299Z",
+            "requestedCompletionDate": "2018-04-26T08:33:37.299Z",
+            "relatedParty": [
+                {
+                "id": "{{customer_name}}",
+                "role": "ONAPcustomer",
+                "name": "{{customer_name}}"
+                }
+            ],
+            "orderItem": [
+                {
+                "id": "1",
+                "action": "add",
+                "service": {
+                    "name": "{{service_instance_name}}",
+                    "serviceState": "active",
+                    "serviceSpecification": {
+                    "id": "{{auto_service_id}}"
+                    }
+                }
+                }
+            ]
+            }        
+
+        response = requests.post(url,data=DATA, headers=JSON_CONTENT_HEADER)
+        LOG.debug(response)
+        return response       
+
+    def terminateONAP(self,externalId, service_instance_name, auto_service_id):
+        
+        sp_host_2 = self.getHostIp()
+        customer_name = self.getDBUserName()
+        url = sp_host_2 + '/serviceOrder'
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json', 'Accept':'application/json'} 
+
+        DATA = {
+            "externalId": "{{externalId}}",
+            "priority": "1",
+            "description": "{{service}} ordering on generic customer via Postman",
+            "category": "Consumer",
+            "requestedStartDate": "2018-04-26T08:33:37.299Z",
+            "requestedCompletionDate": "2018-04-26T08:33:37.299Z",
+            "relatedParty": [
+                {
+                "id": "{{customer_name}}",
+                "role": "ONAPcustomer",
+                "name": "{{customer_name}}"
+                }
+            ],
+            "orderItem": [
+                {
+                "id": "1",
+                "action": "delete",
+                "service": {
+                    "id": "{{auto_service_instance_id}}",
+                    "serviceState": "active",
+                    "serviceSpecification": {
+                    "id": "{{auto_service_id}}"
+                    }
+                }
+                }
+            ]
+            }               
+
+        response = requests.post(url,data=DATA, headers=JSON_CONTENT_HEADER)
+        LOG.debug(response)
+        return response   
