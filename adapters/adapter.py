@@ -3157,13 +3157,14 @@ class Adapter:
             LOG.debug(instantiation_request_json['id'])
             instantiation_request_id = instantiation_request_json['id']        
             LOG.debug(instantiation_request_id)
-            time.sleep(2)
 
+            time.sleep(2)
+            #inst_error = instantiation_request_json['error'] 
             inst_error = self.getRequestError(instantiation_request_id)
             LOG.debug("This is the request error")
             LOG.debug(inst_error)
 
-            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '{\"error\": \"" + inst_error + "\"}' " + callback        
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  inst_error  +  "' " + callback         
             LOG.debug(callback_post)
             call = subprocess.check_output([callback_post], shell=True)
             LOG.debug(call)
@@ -4331,17 +4332,17 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json', 'Accept':'application/json'} 
 
         DATA = {
-            "externalId": "{{externalId}}",
+            "externalId": "{{" + externalId + "}}",
             "priority": "1",
-            "description": "{{service}} order for generic customer via Postman",
+            "description": "order for generic customer via Postman",
             "category": "Consumer",
             "requestedStartDate": "2018-04-26T08:33:37.299Z",
             "requestedCompletionDate": "2018-04-26T08:33:37.299Z",
             "relatedParty": [
                 {
-                "id": "{{customer_name}}",
+                "id": "{{" + customer_name + "}}",
                 "role": "ONAPcustomer",
-                "name": "{{customer_name}}"
+                "name": "{{" + customer_name + "}}"
                 }
             ],
             "orderItem": [
@@ -4349,10 +4350,10 @@ class Adapter:
                 "id": "1",
                 "action": "add",
                 "service": {
-                    "name": "{{service_instance_name}}",
+                    "name": "{{" + service_instance_name + "}}",
                     "serviceState": "active",
                     "serviceSpecification": {
-                    "id": "{{auto_service_id}}"
+                    "id": "{{" + auto_service_id + "}}"
                     }
                 }
                 }
@@ -4371,17 +4372,17 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json', 'Accept':'application/json'} 
 
         DATA = {
-            "externalId": "{{externalId}}",
+            "externalId": "{{" + externalId + "}}",
             "priority": "1",
-            "description": "{{service}} ordering on generic customer via Postman",
+            "description": "ordering on generic customer via Postman",
             "category": "Consumer",
             "requestedStartDate": "2018-04-26T08:33:37.299Z",
             "requestedCompletionDate": "2018-04-26T08:33:37.299Z",
             "relatedParty": [
                 {
-                "id": "{{customer_name}}",
+                "id": "{{" + customer_name + "}}",
                 "role": "ONAPcustomer",
-                "name": "{{customer_name}}"
+                "name": "{{" + customer_name + "}}"
                 }
             ],
             "orderItem": [
@@ -4389,10 +4390,10 @@ class Adapter:
                 "id": "1",
                 "action": "delete",
                 "service": {
-                    "id": "{{auto_service_instance_id}}",
+                    "id": "{{" + auto_service_instance_id + "}}",
                     "serviceState": "active",
                     "serviceSpecification": {
-                    "id": "{{auto_service_id}}"
+                    "id": "{{" + auto_service_id + "}}"
                     }
                 }
                 }
