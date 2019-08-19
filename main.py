@@ -542,6 +542,14 @@ def getOSMServiceIdTest():
     LOG.debug(s_id)
     return  s_id
 
+@app.route('/adapters/<service_platform>/requests/<id>', methods=['GET'])
+def getSonataRequest(service_platform,id):   
+    ad = adapter.Adapter(service_platform) 
+    #return ad.getSonataRequest(id)       
+    cosa =  ad.getSonataRequest(id)
+    cosa_json = json.loads(cosa)       
+    return cosa_json['error']
+
 
 from flask_cors import CORS
 CORS(app)
