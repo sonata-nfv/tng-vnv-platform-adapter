@@ -3175,9 +3175,11 @@ class Adapter:
 
             try:
                 callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' --data '" +  inst_error +  "' " + callback         
-            LOG.debug(callback_post)
-            call = subprocess.check_output([callback_post], shell=True)
-            LOG.debug(call)
+                LOG.debug(callback_post)
+                call = subprocess.check_output([callback_post], shell=True)
+                LOG.debug(call)
+            except:
+                LOG.debug("Error sending the callback to the curator")
 
         LOG.info("sonata instantiate callback ends")        
 
