@@ -2655,7 +2655,8 @@ class Adapter:
         return status
         
     def getRequestError(self,id):
-        LOG.info("get request error starts")        
+        LOG.info("get request error starts")
+        time.sleep(5)        
         status_call = self.instantiationStatus(id)
         LOG.debug(status_call)
         instantiation_request_json_dumps = json.dumps(status_call)
