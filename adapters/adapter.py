@@ -3173,7 +3173,8 @@ class Adapter:
             LOG.debug("This is the request error")
             LOG.debug(inst_error)
 
-            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' --data '" +  inst_error.__str__()  +  "' " + callback         
+            try:
+                callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' --data '" +  inst_error +  "' " + callback         
             LOG.debug(callback_post)
             call = subprocess.check_output([callback_post], shell=True)
             LOG.debug(call)
