@@ -549,7 +549,7 @@ def getSonataRequest(service_platform,id):
     cosa =  ad.getSonataRequest(id)
     cosa_json = json.loads(cosa)       
     #return cosa_json['error']
-    cosa_string = 'error: ' + cosa_json['error']
+    cosa_string = '\"error\": \"' + cosa_json['error'] + '\"'
     return cosa_string
 
 
