@@ -548,7 +548,9 @@ def getSonataRequest(service_platform,id):
     #return ad.getSonataRequest(id)       
     cosa =  ad.getSonataRequest(id)
     cosa_json = json.loads(cosa)       
-    return cosa_json['error']
+    #return cosa_json['error']
+    cosa_string = 'error: ' + cosa_json['error']
+    return cosa_string
 
 
 from flask_cors import CORS
