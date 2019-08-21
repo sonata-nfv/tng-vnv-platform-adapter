@@ -31,7 +31,7 @@ from logger import TangoLogger
 LOG = TangoLogger.getLogger("adapter", log_level=logging.DEBUG, log_json=True)
 
 LOG.setLevel(logging.DEBUG)
-LOG.info("Hello world.")
+#LOG.info("Hello world.")
 
 FILE = "db-config.cfg"
 
@@ -119,7 +119,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    #print("PostgreSQL connection is closed") 
+                    #LOG.debug("PostgreSQL connection is closed") 
 
     def getVimAccount(self):
         LOG.info("getdbtype starts")
@@ -147,7 +147,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    #print("PostgreSQL connection is closed")                     
+                    #LOG.debug("PostgreSQL connection is closed")                     
 
 
 
@@ -168,11 +168,11 @@ class Adapter:
             cursor.execute(get_username)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            print(type_0)
+            LOG.debug(type_0)
             type_1 = type_0[3:]            
-            print(type_1)            
+            LOG.debug(type_1)            
             type_2 = type_1[:-4]            
-            print(type_2)                  
+            LOG.debug(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
@@ -183,7 +183,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    print("PostgreSQL connection is closed")
+                    LOG.debug("PostgreSQL connection is closed")
 
 
     def getDBProjectName(self):
@@ -202,11 +202,11 @@ class Adapter:
             cursor.execute(get_project_name)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            #print(type_0)
+            #LOG.debug(type_0)
             type_1 = type_0[3:]            
-            #print(type_1)            
+            #LOG.debug(type_1)            
             type_2 = type_1[:-4]            
-            #print(type_2)                  
+            #LOG.debug(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
@@ -216,7 +216,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    #print("PostgreSQL connection is closed")                    
+                    #LOG.debug("PostgreSQL connection is closed")                    
 
 
     def getDBPassword(self):
@@ -235,11 +235,11 @@ class Adapter:
             cursor.execute(get_password)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            #print(type_0)
+            #LOG.debug(type_0)
             type_1 = type_0[3:]            
-            #print(type_1)            
+            #LOG.debug(type_1)            
             type_2 = type_1[:-4]            
-            #print(type_2)                  
+            #LOG.debug(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
@@ -249,7 +249,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    #print("PostgreSQL connection is closed")      
+                    #LOG.debug("PostgreSQL connection is closed")      
 
 
     def getDBProject(self):
@@ -268,11 +268,11 @@ class Adapter:
             cursor.execute(get_password)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            #print(type_0)
+            #LOG.debug(type_0)
             type_1 = type_0[3:]            
-            #print(type_1)            
+            #LOG.debug(type_1)            
             type_2 = type_1[:-4]            
-            #print(type_2)                  
+            #LOG.debug(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             #LOG.debug(error)
@@ -283,7 +283,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    #print("PostgreSQL connection is closed")                                    
+                    #LOG.debug("PostgreSQL connection is closed")                                    
 
 
 
@@ -314,7 +314,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    #print("PostgreSQL connection is closed") 
+                    #LOG.debug("PostgreSQL connection is closed") 
 
 
     def getMonitoringURLs(self):
@@ -333,11 +333,11 @@ class Adapter:
             cursor.execute(get_type)
             all = cursor.fetchall()
             type_0 = all.__str__()
-            #print(type_0)
+            #LOG.debug(type_0)
             type_1 = type_0[3:]            
-            #print(type_1)            
+            #LOG.debug(type_1)            
             type_2 = type_1[:-4]            
-            #print(type_2)                  
+            #LOG.debug(type_2)                  
             return type_2
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
@@ -347,7 +347,7 @@ class Adapter:
                 if(connection):
                     cursor.close()
                     connection.close()
-                    #print("PostgreSQL connection is closed")                     
+                    #LOG.debug("PostgreSQL connection is closed")                     
 
 
     def getPackages(self):    
@@ -466,8 +466,8 @@ class Adapter:
         if my_type == 'onap':               
             sp_host_2 = self.getHostIp()
             url = sp_host_2 + '/sdc/v1/catalog/services/{uuid}/resourceInstances/{resourceInstanceNormalizedName}/artifacts'            
-            print(package)
-            print(url)
+            LOG.debug(package)
+            LOG.debug(url)
             files = {'package': open(package,'rb')}
             upload = requests.post(url, files=files)
             if request.method == 'POST':
@@ -518,132 +518,132 @@ class Adapter:
 
 
     def getOSMFunctionName(self,function_file_path):
-        print (function_file_path)
+        LOG.debug (function_file_path)
         function_name_array = function_file_path.split('/')
-        print (function_name_array)
+        LOG.debug (function_name_array)
         function_name = function_name_array[-1]
         #function_path_without_function = function_name_array[-2]
-        print (function_name) 
+        LOG.debug (function_name) 
         return function_name   
 
     def getOSMFunctionPath(self,function_file_path):
-        print (function_file_path)
+        LOG.debug (function_file_path)
         function_name_array = function_file_path.split('/')
-        print (function_name_array)
+        LOG.debug (function_name_array)
         #function_name = function_name_array[-1]
         function_path_without_function = function_name_array[-2]
-        print (function_path_without_function) 
+        LOG.debug (function_path_without_function) 
         return function_path_without_function          
     
     def getDownloadedPackageFolder(self,package_path):
-        print(package_path)
+        LOG.debug(package_path)
         package_path_array = package_path.split('/')
-        print(package_path_array)
+        LOG.debug(package_path_array)
         package_folder = package_path_array[-1]
-        print(package_folder)
+        LOG.debug(package_folder)
         return package_folder
     
 
 
     def getOSMFunctionFiles(self,function_file_path,package_path):
-        print ("getOSMFunctionFiles starts")
-        print (function_file_path)
-        print (package_path)
+        LOG.debug ("getOSMFunctionFiles starts")
+        LOG.debug (function_file_path)
+        LOG.debug (package_path)
         function_with_files = None
         function_with_files = []        
         function_name = self.getOSMFunctionName(function_file_path)
         napd_path = package_path + '/TOSCA-Metadata/NAPD.yaml'
-        print (napd_path)
+        LOG.debug (napd_path)
         with open(napd_path) as n:
             napd = yaml.load(n)
-        print (napd)
+        LOG.debug (napd)
 
         function_with_files.append(function_name)
 
         package_content = napd['package_content']
 
         for pc in package_content:
-            print(pc)
+            LOG.debug(pc)
             if pc['source'] == function_name:
-                print("this is the function")
+                LOG.debug("this is the function")
                 function_tags = pc['tags']
                 for ft in function_tags:
-                    print (ft)
+                    LOG.debug (ft)
                     try:
                         function_tags_array = ft.split('/')	
-                        print (function_tags_array[1])
+                        LOG.debug (function_tags_array[1])
                         if function_tags_array[0] == 'file-ref:cloud_init':	                        			
-                            print (function_tags_array[0])
+                            LOG.debug (function_tags_array[0])
                             function_file_path = '/cloud_init/' + function_tags_array[1]
-                            print (function_file_path)
+                            LOG.debug (function_file_path)
 
                             #function_with_files.append(function_name)
                             function_with_files.append(function_file_path)
                     except:
-                        print ("split failed, trying next tag")
+                        LOG.debug ("split failed, trying next tag")
 
-        print (" ")
-        print (function_with_files)
-        print (" ")
+        LOG.debug (" ")
+        LOG.debug (function_with_files)
+        LOG.debug (" ")
 
         return function_with_files 
 
     def getOSMFunctionTarFile(self,function_file_path,package_path):
-        print ("getOSMFunctionTarFiles starts")
-        print (function_file_path)
-        print (package_path)
+        LOG.debug ("getOSMFunctionTarFiles starts")
+        LOG.debug (function_file_path)
+        LOG.debug (package_path)
         function_with_files = None
         function_with_files = []        
         function_name = self.getOSMFunctionName(function_file_path)
         napd_path = package_path + '/TOSCA-Metadata/NAPD.yaml'
-        print (napd_path)
+        LOG.debug (napd_path)
         with open(napd_path) as n:
             napd = yaml.load(n)
-        print (napd)
-        print ("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
+        LOG.debug (napd)
+        LOG.debug ("ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
         #function_with_files.append(function_name)
 
         package_content = napd['package_content']
 
         for pc in package_content:
-            print(pc)
+            LOG.debug(pc)
             if pc['source'] == function_name:
-                print("this is the function")
+                LOG.debug("this is the function")
                 function_tags = pc['tags']
-                print (function_tags)
+                LOG.debug (function_tags)
                 for ft in function_tags:
-                    print (ft)
+                    LOG.debug (ft)
                     try:       
                         function_tags_array = ft.split('/')	            
                         if function_tags_array[0] == 'files':	                            	
-                            print (function_tags_array[0])                          			
-                            print (function_tags_array[1])
+                            LOG.debug (function_tags_array[0])                          			
+                            LOG.debug (function_tags_array[1])
                             function_file_path =  function_tags_array[1]
-                            print (function_file_path)
+                            LOG.debug (function_file_path)
 
                             #function_with_files.append(function_name)
                             function_with_files.append(function_file_path)                            
                     except:
                         function_with_files.append(function_name)
-                        print ("split failed, trying next tag")
+                        LOG.debug ("split failed, trying next tag")
 
-        print (" ")
-        print (function_with_files)
-        print (" ")
+        LOG.debug (" ")
+        LOG.debug (function_with_files)
+        LOG.debug (" ")
 
         return function_with_files[0]         
 
@@ -652,18 +652,18 @@ class Adapter:
 
     def createTarOSMFunction(self,function_with_files,package_path):
         LOG.info("createTarOSMFunction starts")
-        print(function_with_files)
-        print(package_path)
+        LOG.debug(function_with_files)
+        LOG.debug(package_path)
         package_folder = self.getDownloadedPackageFolder(package_path)
-        print (package_folder)
+        LOG.debug (package_folder)
         tarring = 'tar -czvf test.tar.gz '
         for fc in function_with_files:
-            print (fc)
+            LOG.debug (fc)
             tarring = tarring + package_folder + '/' + fc + ' '      
-        print (tarring)     
-        print(function_with_files)
+        LOG.debug (tarring)     
+        LOG.debug(function_with_files)
         create_tar = subprocess.check_output([tarring], cwd="/app/packages", shell=True)
-        print (create_tar)
+        LOG.debug (create_tar)
         return (create_tar)
  
 
@@ -672,17 +672,17 @@ class Adapter:
 
         try:
             function_with_files = self.getOSMFunctionFiles(function_file_path,package_path)
-            print ("function_with_files")
-            print (function_with_files)
+            LOG.debug ("function_with_files")
+            LOG.debug (function_with_files)
         except:
-            print ("error in function_with_files")
+            LOG.debug ("error in function_with_files")
             sys.exit()
  
         try:
             create = self.createTarOSMFunction(function_with_files,package_path)
-            print (create)
+            LOG.debug (create)
         except:
-            print ("error creating tar")
+            LOG.debug ("error creating tar")
             sys.exit()            
         
         tar_file_path = '/app/packages/test.tar.gz'
@@ -699,8 +699,8 @@ class Adapter:
         upload_nsd_3 = upload_nsd_2 + " --data-binary "
         upload_nsd_4 = upload_nsd_3 + "\"@" +tar_file_path+ "\" " + url_2
         LOG.debug(upload_nsd_4)
-        print ("AQUI AQUI")
-        print (upload_nsd_4)
+        LOG.debug ("AQUI AQUI")
+        LOG.debug (upload_nsd_4)
         upload = subprocess.call([upload_nsd_4], shell=True)
         #upload = subprocess.check_output([upload_nsd_4], shell=True)
         
@@ -717,27 +717,27 @@ class Adapter:
 
     def uploadOSMFunctionAndTarFiles(self,function_file_path,package_path):
         LOG.info("upload osm vnfd tar files function starts")
-        print ("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")  
-        print (function_file_path)              
+        LOG.debug ("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")
+        LOG.debug (" ")  
+        LOG.debug (function_file_path)              
 
         try:            
             function_tar_file = self.getOSMFunctionTarFile(function_file_path,package_path)
-            print ("function_tar_file")
-            print (function_tar_file)
+            LOG.debug ("function_tar_file")
+            LOG.debug (function_tar_file)
             tar_file_path = package_path + '/files/' + function_tar_file
-            print (tar_file_path)
+            LOG.debug (tar_file_path)
             sp_host_2 = self.getHostIp()
             token = self.getOSMToken(function_file_path)
             LOG.debug(token)        
@@ -747,13 +747,13 @@ class Adapter:
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +tar_file_path+ "\" " + url_2
-            print (upload_nsd_4)
+            LOG.debug (upload_nsd_4)
             upload = subprocess.call([upload_nsd_4], shell=True)
             return (upload)  
 
         except:
-            print ("there is not tar file")
-            print (function_file_path)             
+            LOG.debug ("there is not tar file")
+            LOG.debug (function_file_path)             
             sp_host_2 = self.getHostIp()
             token = self.getOSMToken(function_file_path)
             LOG.debug(token)        
@@ -763,7 +763,7 @@ class Adapter:
             upload_nsd_2 = upload_nsd +token + "\" "
             upload_nsd_3 = upload_nsd_2 + " --data-binary "
             upload_nsd_4 = upload_nsd_3 + "\"@" +function_file_path+ "\" " + url_2
-            print (upload_nsd_4)
+            LOG.debug (upload_nsd_4)
             upload = subprocess.call([upload_nsd_4], shell=True)
             return (upload)              
 
@@ -1070,15 +1070,15 @@ class Adapter:
 
         if my_type == 'onap':
             '''
-            print('this SP is ONAP')
+            LOG.debug('this SP is ONAP')
             sp_host_2 = self.getHostIp()
             LOG.debug("sp2 es: ")
             LOG.debug(sp_host_2)
             url = sp_host_2 + '}/serviceInstances/v4'
             LOG.debug(url)
-            print(request_str.get_json())
+            LOG.debug(request_str.get_json())
             data = request_str.get_json()
-            print(url)
+            LOG.debug(url)
             LOG.debug(data)
             instantiate = requests.post( url, data=json.dumps(data), headers=JSON_CONTENT_HEADER)            
             LOG.debug(instantiate)
@@ -1101,7 +1101,7 @@ class Adapter:
                 return msg                  
 
         if my_type == 'osm':
-            #print('this SP is a OSM')  
+            #LOG.debug('this SP is a OSM')  
             sp_host_2 = self.getHostIp()
             sp_host_3 = sp_host_2[7:]
             url = sp_host_3
@@ -1273,7 +1273,7 @@ class Adapter:
             LOG.debug(package_uploaded)
             if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
                 instance_status = self.OSMTerminateStatus(url_2,ns_id)
-                print(instance_status)
+                LOG.debug(instance_status)
                 while instance_status != 'terminated':
                     time.sleep(2)
                     instance_status = self.OSMTerminateStatus(url_2,ns_id)
@@ -2232,7 +2232,7 @@ class Adapter:
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
                     LOG.debug(function_vdu_array)
                     for vdu in function_vdu_array:
-                        #print(vdu['vim_id'])
+                        #LOG.debug(vdu['vim_id'])
                         function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
                         #LOG.debug(function_vim)
@@ -2764,7 +2764,7 @@ class Adapter:
             try:
                 vnv_service_id = self.getVnVServiceId(name,vendor,version)
                 LOG.debug("this is the service id in the vnv")
-                print(vnv_service_id)
+                LOG.debug(vnv_service_id)
             except:
                 msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
                 return msg 
@@ -2803,7 +2803,7 @@ class Adapter:
                 try:
                     vnv_service_id = self.getVnVServiceId(name,vendor,version)
                     LOG.debug("this is the service id in the vnv")
-                    print(vnv_service_id)
+                    LOG.debug(vnv_service_id)
                 except:
                     msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
                     return msg 
@@ -3009,12 +3009,12 @@ class Adapter:
 
                         if upload_function_str.__str__().find('CONFLICT'):
                             upload_function_str_json = json.loads(upload_function_str)
-                            print (upload_function_str_json['detail'])
+                            LOG.debug (upload_function_str_json['detail'])
                             msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg 
                         if upload_function_str.__str__().find('BAD_REQUEST'):
                             upload_function_str_json = json.loads(upload_function_str)
-                            print (upload_function_str_json['detail'])
+                            LOG.debug (upload_function_str_json['detail'])
                             msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg  
 
@@ -3301,16 +3301,16 @@ class Adapter:
 
                 
                 functions_array = self.createFunctionsArray(package_path)
-                print(functions_array)                                        
+                LOG.debug(functions_array)                                        
 
                 for function in functions_array:
-                    print (function)
+                    LOG.debug (function)
                     
                     function_str = "{\"function\": \"" + function + "\"}"
-                    print(function_str)                                        
+                    LOG.debug(function_str)                                        
                     function_json = json.loads(function_str.__str__())
-                    print(function_json)
-                    print(function_json['function'])
+                    LOG.debug(function_json)
+                    LOG.debug(function_json['function'])
                     function_file_path = function_json['function']
                     
 
@@ -3319,68 +3319,68 @@ class Adapter:
                         #upload_function = self.uploadOSMFunctionAndFiles(function_file_path,package_path)  
                         upload_function = self.uploadOSMFunctionAndTarFiles(function_file_path,package_path)  
 
-                        print (upload_function)
-                        print ("11111111111111111111111111111111111111111111111111111")
-                        print ("")
-                        print ("")
-                        print ("")
-                        print ("")
-                        print ("")
-                        print ("")
-                        print ("")
-                        print ("")
-                        print ("")
-                        print ("")
-                        print ("")
+                        LOG.debug (upload_function)
+                        LOG.debug ("11111111111111111111111111111111111111111111111111111")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
+                        LOG.debug ("")
 
 
                         upload_function_str = upload_function
-                        print (upload_function_str)
+                        LOG.debug (upload_function_str)
 
                         if upload_function_str.__str__().find('CONFLICT'):
                             upload_function_str_json = json.loads(upload_function_str)
-                            print (upload_function_str_json['detail'])
+                            LOG.debug (upload_function_str_json['detail'])
                             msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg 
                         if upload_function_str.__str__().find('BAD_REQUEST'):
                             upload_function_str_json = json.loads(upload_function_str)
-                            print (upload_function_str_json['detail'])
+                            LOG.debug (upload_function_str_json['detail'])
                             msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg  
 
                     except:
                         
-                        print("problem uploading the function to the SP")
+                        LOG.debug("problem uploading the function to the SP")
   
                 services_array = self.createServicesArray(package_path)
-                print(services_array)  
+                LOG.debug(services_array)  
                 time.sleep(3)
                 for service in services_array:
                     service_str = "{\"service\": \"" + service + "\"}"
 
-                    print(service_str)                                        
+                    LOG.debug(service_str)                                        
                     service_json = json.loads(service_str.__str__())
-                    print(service_json)
-                    print(service_json['service'])
+                    LOG.debug(service_json)
+                    LOG.debug(service_json['service'])
                     service_file_path = service_json['service']
 
                     try:
                         upload_service = self.uploadOSMService(service_file_path)
-                        print(upload_service)
+                        LOG.debug(upload_service)
                         if upload_service == 'CONFLICT':
-                            print("This Service is already in the SP")       
+                            LOG.debug("This Service is already in the SP")       
                         if upload_service != 'CONFLICT':
-                            print("This Service is not in the SP")                                   
+                            LOG.debug("This Service is not in the SP")                                   
                             package_uploaded = True
                             service_id = self.getUploadedOSMServiceId(upload_service)
                     except:
-                        print("problem uploading the service to osm")
+                        LOG.debug("problem uploading the service to osm")
                     
                     #service_id = self.getUploadedOSMServiceId(upload_service)
                     service_id = self.getOSMServiceId(name,vendor,version)
 
-                    print("THIS IS THE NEW UPLOADED SERVICE ID")
-                    print(service_id)
+                    LOG.debug("THIS IS THE NEW UPLOADED SERVICE ID")
+                    LOG.debug(service_id)
                     #return service_id
                 
                 #package_uploaded = True
@@ -3392,13 +3392,13 @@ class Adapter:
             ns_name = content['instance_name']
             vim_account = self.getVimAccount()
 
-            print(nsd_name)
-            print(ns_name)
-            print(vim_account)            
+            LOG.debug(nsd_name)
+            LOG.debug(ns_name)
+            LOG.debug(vim_account)            
 
             instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
-            print("THIS IS THE INSTANTIATE STRING FOR OSM")
-            print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            LOG.debug("THIS IS THE INSTANTIATE STRING FOR OSM")
+            LOG.debug("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
             '''
             LOG.debug(instantiate_str)
@@ -3951,7 +3951,7 @@ class Adapter:
                 try:
                     vnv_service_id = self.getVnVServiceId(name,vendor,version)
                     LOG.debug("this is the service id in the vnv")
-                    print(vnv_service_id)
+                    LOG.debug(vnv_service_id)
                 except:
                     msg = "{\"error\": \"error getting the service from the VnV Catalog\"}"
                     return msg 
@@ -4115,12 +4115,12 @@ class Adapter:
 
                         if upload_function_str.__str__().find('CONFLICT'):
                             upload_function_str_json = json.loads(upload_function_str)
-                            print (upload_function_str_json['detail'])
+                            LOG.debug (upload_function_str_json['detail'])
                             msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg 
                         if upload_function_str.__str__().find('BAD_REQUEST'):
                             upload_function_str_json = json.loads(upload_function_str)
-                            print (upload_function_str_json['detail'])
+                            LOG.debug (upload_function_str_json['detail'])
                             msg = "{\"error\": \"" + upload_function_str_json['detail'] + "\"}"
                             return msg  
 
