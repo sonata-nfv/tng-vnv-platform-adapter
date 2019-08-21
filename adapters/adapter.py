@@ -3686,7 +3686,8 @@ class Adapter:
         uuid = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
                  
-        url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
+        #url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services' 
+        url = 'http://tng-sec-gtw/api/v3/services'   
         response = requests.get(url,headers=JSON_CONTENT_HEADER)
         LOG.debug(response)
         response_json = response.content
@@ -3712,7 +3713,8 @@ class Adapter:
         uuid = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
                  
-        url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
+        #url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
+        url = 'http://tng-sec-gtw/api/v3/services'  
         response = requests.get(url,headers=JSON_CONTENT_HEADER)
         LOG.debug(response)
         response_json = response.content
@@ -4310,7 +4312,8 @@ class Adapter:
         uuid = None
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}  
                  
-        url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
+        #url = 'http://pre-int-vnv-bcn.5gtango.eu:32002/api/v3/services'  
+        url = 'http://tng-sec-gtw/api/v3/services'  
         response = requests.get(url,headers=JSON_CONTENT_HEADER)
         LOG.debug(response)
         response_json = response.content
