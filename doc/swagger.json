@@ -1,0 +1,169 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Api Documentation",
+      "version": "1.0",
+      "title": "Api Documentation",
+      "termsOfService": "urn:tos",
+      "contact": {},
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0"
+      }
+    },
+    "host": "pre-int-vnv-bcn.5gtango.eu:5001",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "service-platforms",
+        "description": "Service Platforms Controller"
+      },
+      {
+        "name": "adapters",
+        "description": "Adapter Controller"
+      }
+    ],
+    "paths": {
+      "/service_platforms": {
+        "post": {
+          "tags": [
+            "service-platforms"
+          ],
+          "summary": "Register a new Service Platform",
+          "description": "Register a new Service Platform",
+          "operationId": "onChangeUsingPOST",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "body",
+              "required": true,
+              "schema": {
+                "$ref": "null"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "null"
+                }
+              }
+            },
+            "404": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "SP already registered"
+            }
+          },
+          "deprecated": false
+        },
+        "get": {
+          "tags": [
+            "service-platforms"
+          ],
+          "summary": "Retrieve all SPs",
+          "description": "Retrieve all SPs",
+          "operationId": "listAllSPUsingGET",
+          "produces": [
+            "*/*"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Error in the instantiation process, check the SP logs"
+            }
+          },
+          "deprecated": false
+  
+        }        
+      },
+      "/adapters/instantiate_service": {
+        "post": {
+          "tags": [
+            "adapters"
+          ],
+          "summary": "Instantiate a service",
+          "operationId": "onChangeUsingPOST_1",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "parameters": [
+            {
+                "name": "service_name",
+                "in": "query",
+                "description": "service_name",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "service_vendor",
+                "in": "query",
+                "description": "service_vendor",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "service_version",
+                "in": "query",
+                "description": "service_version",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "service_platform",
+                "in": "query",
+                "description": "service platform for instantiating",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "instance_name",
+                "in": "query",
+                "description": "instance_name",
+                "required": true,
+                "type": "string"
+              },
+              {
+                "name": "callback",
+                "in": "query",
+                "description": "callback to curator",
+                "required": true,
+                "type": "string"
+              }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK"
+            },
+            "400": {
+              "description": "Bad Request"
+            },
+            "500": {
+              "description": "Error in the instantiation process, check the SP logs"
+            }
+          },
+          "deprecated": false
+        }
+      }
+    }
+
+  }
