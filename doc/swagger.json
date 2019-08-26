@@ -202,6 +202,13 @@
         ],
         "parameters": [
           {
+            "name": "service_platform",
+            "in": "path",
+            "description": "service_platform",
+            "required": true,
+            "type": "string"
+          },          
+          {
               "name": "instance_uuid",
               "in": "query",
               "description": "instance_uuid",
