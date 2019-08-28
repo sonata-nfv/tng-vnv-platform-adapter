@@ -109,32 +109,9 @@ def sp(service_platform):
     if request.method == 'PATCH':    
         LOG.debug(request.is_json)
         content = request.get_json()
-        LOG.debug(content)  
-        try:      
-            mon_urls = content['monitoring_urls']
-            LOG.debug("mon_url exists")
-            try:
-                pr = content['project_name']
-                LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
-                return sp.patchServicePlatform()
-            except:
-                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
-                return sp.patchServicePlatform()
-        except:
-            LOG.debug("mon_url does not exists")
-            try:
-                pr = content['project_name']
-                LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
-                return sp.patchServicePlatform() 
-            except:
-                LOG.debug("project name does not exists")
-                sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
-                return sp.patchServicePlatform()           
-
-
-
+        LOG.debug(content) 
+        sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],content['vim_account'],content['service_token'],content['monitoring_urls'])
+        return sp.patchServicePlatform()
 
 
 ##### ADAPTER GENERIC ROUTES #####
