@@ -110,7 +110,29 @@ def sp(service_platform):
         LOG.debug(request.is_json)
         content = request.get_json()
         LOG.debug(content) 
-        sp = serviceplatform.ServicePlatform(service_platform,content['host'],content['type'],content['username'],content['password'],content['project_name'],content['vim_account'],content['service_token'],content['monitoring_urls'])
+
+        old_sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+        old_sp_response =  old_sp.getServicePlatform()         
+        old_sp_content = json.loads(old_sp_response[0])
+
+        try:
+            host = content['host']
+        except:
+            host = old_sp_content['host']
+        try:
+            username = content['username']
+        except:
+            username = old_sp_content['username']
+        try:
+            password = content['password']
+        except:
+            password = old_sp_content['password']
+        try:
+            monitoring_urls = content['monitoring_urls']
+        except:
+            monitoring_urls = old_sp_content['monitoring_urls']
+
+        sp = serviceplatform.ServicePlatform(service_platform,host,old_sp_content['type'],username,password,old_sp_content['project_name'],old_sp_content['vim_account'],old_sp_content['service_token'],monitoring_urls)
         return sp.patchServicePlatform()
 
 
