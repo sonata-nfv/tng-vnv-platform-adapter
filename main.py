@@ -9,6 +9,8 @@ from adapters import serviceplatform as serviceplatform
 from models import utils
 from models import users
 import psycopg2
+#from validator_collection import validators, checkers
+import validators
 
 
 from logger import TangoLogger as TangoLogger
@@ -33,6 +35,14 @@ def sps():
         LOG.debug(request.is_json)
         vim_account = None
         content = request.get_json()
+
+        is_url = validators.url(content['host'])
+        if is_url == True:
+            print ("The host is valid")
+        if is_url != True:
+            print ("the host is invalid") 
+            msg = "{\"error\": \"The host is invalid, please check\"}"           
+            return msg
 
         try:
             vim_account = content['vim_account']
