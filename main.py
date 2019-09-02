@@ -25,6 +25,12 @@ LOG.setLevel(logging.DEBUG)
 #LOG.info("Hello world.")
 
 ##### SERVICE PLATFORMS ROUTES #####
+@app.route('/service_platforms/count', methods=['GET'])
+def countSPs():
+    sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+    return sp.countServicePlatforms()
+    
+
 @app.route('/service_platforms', methods=['GET','POST','OPTIONS','DELETE','PATCH'])
 def sps():
     if request.method == 'GET':

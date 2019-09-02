@@ -355,6 +355,64 @@ class ServicePlatform:
                     print("PostgreSQL connection is closed")   
 
 
+    def countServicePlatforms(self):
+        try:
+            connection = psycopg2.connect(user = "sonatatest",
+                                        password = "sonata",
+                                        host = "son-postgres",
+                                        port = "5432",
+                                        database = "gatekeeper")
+            cursor = connection.cursor()   
+            print ( connection.get_dsn_parameters(),"\n")
+            #cursor.execute("SELECT * FROM service_platforms")
+            #cursor.execute("SELECT to_json(row) FROM (SELECT * FROM service_platforms) row")
+            #sql = "SELECT row_to_json(row) FROM (SELECT * FROM service_platforms) row"
+            #cursor.execute(sql)
+            #all = cursor.fetchall()
+
+            #print (all)
+
+            sql = "SELECT count(*) from service_platforms WHERE type = \'sonata\';"
+            cursor.execute(sql)
+            results = cursor.fetchone()
+            print (results)
+            print (results[0])
+            sonata = results[0]
+
+            sql = "SELECT count(*) from service_platforms WHERE type = \'osm\';"
+            cursor.execute(sql)
+            results = cursor.fetchone()
+            print (results)
+            print (results[0])
+            osm = results[0]
+
+            sql = "SELECT count(*) from service_platforms WHERE type = \'onap\';"
+            cursor.execute(sql)
+            results = cursor.fetchone()
+            print (results)
+            print (results[0])
+            onap = results[0]
+
+            json = {
+                'SONATA': sonata,
+                'OSM': osm,
+                'ONAP': onap
+                }
+            json_replaced = json.__str__().replace("\'","\"")
+            print (json_replaced)
+
+            return json_replaced, 200 
+            #return json.dumps(list(all)), 200
+        except (Exception, psycopg2.Error) as error :
+            print ("Error while connecting to PostgreSQL", error)
+        finally:
+            #closing database connection.
+                if(connection):
+                    cursor.close()
+                    connection.close()
+                    print("PostgreSQL connection is closed")                      
+
+
 
 
     def getServicePlatform(self):
