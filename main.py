@@ -51,26 +51,26 @@ def sps():
         
         LOG.debug(content)  
         try:      
-            mon_urls = content['monitoring_urls']
+            mon_urls = 'http://son-vnv-monitor-manager:8000/api/v2/services'
             LOG.debug("mon_url exists")
             try:
                 pr = content['project_name']
                 LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",mon_urls)
                 return sp.registerServicePlatform()
             except:
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",mon_urls)
                 return sp.registerServicePlatform()
         except:
             LOG.debug("mon_url does not exists")
             try:
                 pr = content['project_name']
                 LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",mon_urls)
                 return sp.registerServicePlatform() 
             except:
                 LOG.debug("project name does not exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",mon_urls)
                 return sp.registerServicePlatform()         
 
     if request.method == 'OPTIONS':
@@ -89,21 +89,21 @@ def sps():
             try:
                 pr = content['project_name']
                 LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
                 return sp.patchServicePlatform()
             except:
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",content['monitoring_urls'])
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
                 return sp.patchServicePlatform()
         except:
             LOG.debug("mon_url does not exists")
             try:
                 pr = content['project_name']
                 LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
                 return sp.patchServicePlatform() 
             except:
                 LOG.debug("project name does not exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","monitoring_urls")
+                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
                 return sp.patchServicePlatform() 
 
 
