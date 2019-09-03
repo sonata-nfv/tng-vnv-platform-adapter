@@ -33,7 +33,7 @@ pipeline {
       parallel {
         stage('Deployment in Pre-Integration') {
           steps {
-            echo 'Deploying in integration...'
+            echo 'Deploying in pre-integration...'
           }
         }
         stage('Deploying') {
@@ -47,6 +47,24 @@ pipeline {
         }
       }
     }
+    stage('Deployment in Integration') {
+      parallel {
+        stage('Deployment in Integration') {
+          steps {
+            echo 'Deploying in integration...'
+          }
+        }
+        stage('Deploying') {
+          steps {
+            sh 'rm -rf tng-devops || true'
+            sh 'git clone https://github.com/sonata-nfv/tng-devops.git'
+            dir(path: 'tng-devops') {
+              sh 'ansible-playbook roles/vnv.yml -i environments -e "target=int-vnv.5gtango.eu component=tng-vnv-platform-adapter"'
+            }
+          }
+        }
+      }
+    }    
     stage('Smoke Tests') {
       steps {
         echo 'TODO: Performing Smoke Tests....'
