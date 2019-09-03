@@ -1746,6 +1746,7 @@ class Adapter:
 
         callback_msg = None
 
+        '''
         while ( config_status == 'init' ) : 
             try:
                 status = data['config-status']                    
@@ -1762,7 +1763,8 @@ class Adapter:
                 operational_status = instance_json['operational-status']
                 LOG.debug(operational_status)
                 detailed_status = instance_json['detailed-status']
-                LOG.debug(detailed_status)                    
+                LOG.debug(detailed_status)   
+        '''                
 
 
 
@@ -1783,6 +1785,24 @@ class Adapter:
             LOG.debug(callback_post_monitoring)
             call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
             LOG.debug(call_monitoring)
+
+        if operational_status == 'error':
+            #callback_msg = detailed_status.__str__()
+            callback_msg = str(detailed_status)
+            LOG.debug(detailed_status)
+            callback_msg = "{\"error\": \"Error instantiating, check the logs\"}"
+
+            callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url                
+            LOG.debug(callback_post)
+            call = subprocess.check_output([callback_post], shell=True)
+            LOG.debug(call)
+
+
+            callback_url_monitoring = self.getMonitoringURLs()
+            callback_post_monitoring = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url_monitoring            
+            LOG.debug(callback_post_monitoring)
+            call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
+            LOG.debug(call_monitoring)            
 
         #if operational_status == 'running':             
         if ( operational_status == 'running' and config_status == 'configured' ) :             
