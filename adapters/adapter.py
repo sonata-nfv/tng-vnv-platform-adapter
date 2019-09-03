@@ -2214,6 +2214,100 @@ class Adapter:
         return url
 
 
+    def instantiationInfoMonitoringTest(self,id):    
+        LOG.info("instantiation info monitoring starts")
+        JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
+        my_type =  self.getDBType()
+
+        if my_type == 'sonata':
+            instance_request = self.instantiationStatus(id) 
+            print(instance_request)               
+            instance_request_json = json.loads(instance_request)
+            instance_uuid = instance_request_json['instance_uuid']
+            print(instance_uuid)
+
+            url = self.getHostIp()
+            print(url)
+
+            response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
+
+            url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
+            service_record = requests.get(url_records_services,headers=JSON_CONTENT_HEADER)
+            print(service_record.text)
+            service_record_json = json.loads(service_record.text)
+            vnfr_array = service_record_json['network_functions']
+            print(vnfr_array)
+            for vnf in vnfr_array:
+                function_record_uuid = vnf['vnfr_id']
+                print(function_record_uuid)
+
+
+
+
+                #response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
+
+
+
+
+                url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
+                function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
+                function_record_json = json.loads(function_record.text)
+                print(function_record_json)
+                try:
+                    function_vdu_array = function_record_json['cloudnative_deployment_units']
+                    print(function_vdu_array)
+                    for vdu in function_vdu_array:
+                        #LOG.debug(vdu['vim_id'])
+                        function_vim = vdu['vim_id']
+                        cdu_reference = vdu['cdu_reference']
+                        #LOG.debug(function_vim)
+                        print(cdu_reference)
+                        cdu_reference_splitted = cdu_reference.split(":")
+                        #cnf_name = cdu_reference[0: cdu_reference.find(":") ]
+                        cnf_name = cdu_reference_splitted[1]
+                        container_name = cnf_name
+                        print(cnf_name)
+
+                        response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
+
+                        response = response + "\"container_name\": \"" + cnf_name + "\","
+                        response = response + "\"pod_name\": \"" + cdu_reference + "\","
+                        #response = response + "\"pod_name\": \"" + cnf_name + "\","
+                        #response = response + "\"pod_name\": \"" + cdu_reference + "\","
+                        response = response + "\"vim_id\": \"" + function_vim + "\","
+                        vim_object= self.getVim(function_vim)
+                        vim_json = json.loads(vim_object)
+                        vim_endpoint = vim_json['endpoint']
+                        response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
+                except:                    
+                    function_vdu_array = function_record_json['virtual_deployment_units']
+                    print(function_vdu_array)
+                    for x in function_vdu_array:
+                        print(x)
+                        vi = x['vnfc_instance']
+                        print(vi)
+                        for y in vi:  
+                            print(y)                                                                       
+                            function_vim = y['vim_id']
+                            function_vc = y['vc_id']
+                            print(function_vim)
+                            print(function_vc)
+                            response = response + "\"vc_id\": \"" + function_vc + "\","
+                            response = response + "\"vim_id\": \"" + function_vim + "\","
+                            vim_object= self.getVim(function_vim)
+                            vim_json = json.loads(vim_object)
+                            vim_endpoint = vim_json['endpoint']
+                            response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"
+
+                response_2 = response[:-1]                
+                response_2 = response_2 + "]"
+                response_2 = response_2 + ",\"test_id\": \"null\""
+
+            response_2 = response_2 + "}"
+            return response_2
+
+
+
 
     def instantiationInfoMonitoring(self,id):    
         LOG.info("instantiation info monitoring starts")
@@ -2242,7 +2336,7 @@ class Adapter:
                 function_record_uuid = vnf['vnfr_id']
                 LOG.debug(function_record_uuid)
 
-                response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
+                #response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
 
                 url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
                 function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
@@ -2262,6 +2356,8 @@ class Adapter:
                         cnf_name = cdu_reference_splitted[1]
                         container_name = cnf_name
                         LOG.debug(cnf_name)
+
+                        response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
 
                         response = response + "\"container_name\": \"" + cnf_name + "\","
                         response = response + "\"pod_name\": \"" + cdu_reference + "\","
