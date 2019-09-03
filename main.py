@@ -321,6 +321,11 @@ def serviceInstantiationInfoMonitoring(service_platform,id):
     ad = adapter.Adapter(service_platform)
     return ad.instantiationInfoMonitoring(id)  
 
+@app.route('/adapters/<service_platform>/instantiations/<id>/monitoring/tests', methods=['GET'])
+def serviceInstantiationInfoMonitoringTest(service_platform,id):
+    ad = adapter.Adapter(service_platform)
+    return ad.instantiationInfoMonitoringTest(id)     
+
 @app.route('/adapters/<service_platform>/instantiations/<id>/curator', methods=['GET'])
 def serviceInstantiationInfoCurator(service_platform,id):
     ad = adapter.Adapter(service_platform)
