@@ -70,6 +70,7 @@ pipeline {
       when {
          branch 'v5.0'
       }
+      stages{ 
         stage('Generating release') {
           steps {
             sh 'docker tag registry.sonata-nfv.eu:5000/tng-vnv-platform-adapter:latest registry.sonata-nfv.eu:5000/tng-vnv-platform-adapter:v5.0'
@@ -87,6 +88,7 @@ pipeline {
           }
         }
 		    }
+      }
     }   
 
     stage('Smoke Tests') {
