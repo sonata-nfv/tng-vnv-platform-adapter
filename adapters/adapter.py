@@ -4459,6 +4459,8 @@ class Adapter:
 
         return uuid
 
+      
+
 
     def getONAPInstance(self,instance_id,service_name):        
         LOG.info("get onap instance object starts")
@@ -4556,3 +4558,20 @@ class Adapter:
         response = requests.post(url,data=DATA, headers=JSON_CONTENT_HEADER)
         LOG.debug(response)
         return response   
+
+
+    def getSPIp(self):        
+        LOG.info("get sp ip starts")
+        sp_host = self.getHostIp() 
+        sp_host_2 = sp_host[7:]       
+        ping_string = "getent ahostsv4 " + sp_host_2 + " | awk '{print $1}' | head -1"
+        LOG.debug(ping_string)
+        print ("  ")
+        print ("  ")
+        print (ping_string)
+        print ("  ")
+        print ("  ")
+        print ("  ")
+        ip = subprocess.check_output([ping_string], shell=True)
+        LOG.debug(ip)         
+        return ip  
