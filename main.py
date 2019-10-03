@@ -572,6 +572,16 @@ def getSonataRequest(service_platform,id):
     cosa_string = '\"error\": \"' + cosa_json['error'] + '\"'
     return cosa_string
 
+@app.route('/service_platforms/<service_platform>/ip', methods=['GET'])
+def get_sp_ip(service_platform):
+    #LOG.debug(request.is_json)
+    #content = request.get_json()
+    #LOG.debug(content)
+    ad = adapter.Adapter(service_platform)  
+    #LOG.debug(ad.name)         
+    return ad.getSPIp()    
+
+
 
 from flask_cors import CORS
 CORS(app)
