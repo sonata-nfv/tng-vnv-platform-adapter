@@ -2493,6 +2493,11 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
+        sp_ip = self.getSPIp()   
+        sp_ip_str =  sp_ip.__str__()
+        sp_ip_str_1 =  sp_ip_str[2:]   
+        sp_ip =  sp_ip_str_1[:-3]   
+
         if my_type == 'sonata':
             instance_request = self.instantiationStatus(id) 
             LOG.debug(instance_request)               
@@ -2509,8 +2514,13 @@ class Adapter:
 
             url = self.getHostIp()
             LOG.debug(url)
+
             response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\","                
             response = response + "\"platform_type\": \"" + my_type + "\","
+
+            #response = response + "\"platform_ip\": \"" + sp_ip.__str__() + "\","
+            response = response + "\"platform_ip\": \"" + sp_ip + "\","
+
             response = response + "\"functions\":["    
 
             url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
@@ -2654,6 +2664,9 @@ class Adapter:
 
             response = "{\"ns_instance_uuid\": \"" + ns_id + "\","
             response = response + "\"platform_type\": \"osm\","
+
+            response = response + "\"platform_ip\": \"" + sp_ip.__str__() + "\","
+
             response = response + "\"functions\": ["
 
             vnfr_array = instance_request_json['constituent-vnfr-ref']
