@@ -2494,9 +2494,17 @@ class Adapter:
         my_type =  self.getDBType()
 
         sp_ip = self.getSPIp()   
-        sp_ip_str =  sp_ip.__str__()
-        sp_ip_str_1 =  sp_ip_str[2:]   
-        sp_ip =  sp_ip_str_1[:-3]   
+        print (" ")
+        print (" ")
+        print (" ")
+        print (sp_ip)
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+        print (" ")
+
+  
 
         if my_type == 'sonata':
             instance_request = self.instantiationStatus(id) 
@@ -2665,7 +2673,7 @@ class Adapter:
             response = "{\"ns_instance_uuid\": \"" + ns_id + "\","
             response = response + "\"platform_type\": \"osm\","
 
-            response = response + "\"platform_ip\": \"" + sp_ip.__str__() + "\","
+            response = response + "\"platform_ip\": \"" + sp_ip + "\","
 
             response = response + "\"functions\": ["
 
@@ -4576,15 +4584,13 @@ class Adapter:
     def getSPIp(self):        
         LOG.info("get sp ip starts")
         sp_host = self.getHostIp() 
-        sp_host_2 = sp_host[7:]       
+        sp_host_2 = sp_host[7:]  
+            
         ping_string = "getent ahostsv4 " + sp_host_2 + " | awk '{print $1}' | head -1"
         LOG.debug(ping_string)
-        print ("  ")
-        print ("  ")
-        print (ping_string)
-        print ("  ")
-        print ("  ")
-        print ("  ")
         ip = subprocess.check_output([ping_string], shell=True)
-        LOG.debug(ip)         
-        return ip  
+        LOG.debug(ip)       
+        ip_decoded = ip.decode('utf-8', 'ignore')    
+        LOG.debug (ip_decoded) 
+        ip_decoded_replaced = ip_decoded.strip()         
+        return ip_decoded_replaced  
