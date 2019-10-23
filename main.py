@@ -518,6 +518,7 @@ def monitoring(service_platform):
 def adapter_instatiate_service():
     LOG.debug(request.is_json)
     content = request.get_json()
+    LOG.debug("Request: {}".format(content))
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
     LOG.debug(content) 
