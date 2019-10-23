@@ -2210,7 +2210,7 @@ class Adapter:
         sp_host_1 = sp_host[4:]
         sp_host_2 = sp_host_1[:-10]
         url = sp_host_2
-        LOG.debug(url)
+        LOG.debug("getHostIp: {}".format(url))
         return url
 
 
@@ -2907,7 +2907,7 @@ class Adapter:
                 return msg 
 
             try:
-                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+                package_id, msg = self.getPackageIdfromServiceId(vnv_service_id)            
                 LOG.debug(package_id)
             except:                
                 msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
@@ -2932,6 +2932,7 @@ class Adapter:
             ###### commented for try test ffor when the service already exists in the SP
             try:
                 service_id = self.getServiceId(name,vendor,version)
+                LOG.debug("Getting service ID: {} from vendor: {}, name: {}, version: {}".format(service_id, vendor, name, version))
                 if service_id is not None:
                     LOG.debug("The Service is already in the SP")
             except:
@@ -2946,8 +2947,8 @@ class Adapter:
                     return msg 
 
                 try:
-                    package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-                    LOG.debug(package_id)
+                    package_id, msg = self.getPackageIdfromServiceId(vnv_service_id)
+                    LOG.debug("Package_id: {}".format(package_id))
                 except:                
                     msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
                     LOG.debug(msg)
@@ -3010,7 +3011,7 @@ class Adapter:
             
             LOG.debug(instantiation_call)
             try:
-                _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+                _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call,content))
             except:
                 msg = "{\"error\": \"error in the instantiation process, callback aborted\"}"
                 return msg                 
@@ -3032,13 +3033,10 @@ class Adapter:
             instantiation_call_str = instantiation_call.__str__()
             instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
             instantiation_call_str_replaced_2 = instantiation_call_str_replaced[1:]
-
+            LOG.debug("Instantiation call: {}".format(instantiation_call_str))
             package_id = self.getSPPackageIdfromServiceId(service_id)
             #string_inicial = "{\"package_id\": \"" + package_id + "\","
             #request_response = string_inicial + instantiation_call_str_replaced_2
-
-
-
 
             string_inicial = "{\"package_id\": \"" + package_id + "\","            
             string_inicial = string_inicial + "\"package_uploaded\" : \"" + package_uploaded.__str__() + "\","
@@ -3047,9 +3045,6 @@ class Adapter:
             if package_uploaded == False:
                 string_replaced = string_inicial.replace("\"False\"","false")                        
             request_response = string_replaced + instantiation_call_str_replaced_2
-
-
-
 
             LOG.debug(request_response)   
             return (request_response)            
@@ -3068,7 +3063,7 @@ class Adapter:
 
             '''         
             vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
-            package_id = self.getPackageIdfromServiceId(vnv_service_id)            
+            package_id, msg = self.getPackageIdfromServiceId(vnv_service_id)            
             LOG.debug(package_id)
             download_pkg = self.downloadPackageTGO(package_id)
             LOG.debug(download_pkg)            
@@ -3096,13 +3091,13 @@ class Adapter:
                 if service_id == 'error':
                     raise Exception('raising exception') 
             except:
-                logging.debug:("The Service is not in the SP  ") 
+                logging.debug("The Service is not in the SP  ")
                 # if the service is not in the SP, we need to upload it
 
                 try:
                     vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
-                    package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-                    LOG.debug(package_id)
+                    package_id, msg = self.getPackageIdfromServiceId(vnv_service_id)            
+                    LOG.debug("Package_id: {}".format(package_id))
                     download_pkg = self.downloadPackageTGO(package_id)
                     LOG.debug(download_pkg)            
                     download_pkg_json = json.loads(download_pkg)
@@ -3235,7 +3230,13 @@ class Adapter:
             LOG.debug(request_response)   
             return (request_response)	            
 
-    def SonataInstantiateCallback(self,callback,instantiation_call):
+    def get_request(self, request_uuid):
+        LOG.debug("Getting request: {}".format(request_uuid))
+        response = requests.get("{}/api/v3/requests/{}".format(self.getHostIp(), request_uuid), verify=False)
+        LOG.debug("Request: {}".format(response.json()))
+        return response.json()
+
+    def SonataInstantiateCallback(self,callback,instantiation_call, content):
         LOG.info("sonata instantiate callback starts")
         LOG.debug(instantiation_call)
         instance_status = None
@@ -3250,7 +3251,8 @@ class Adapter:
             LOG.debug(instantiation_request_id)
             time.sleep(2)
             instance_status = self.wait_for_instantiation(instantiation_request_id)
-            LOG.debug(instance_status)
+            instantiation_request_json = self.get_request(instantiation_request_id)
+            LOG.debug("Instance Status: {}".format(instance_status))
         except:
             msg = "{\"error\": \"error getting request status\"}"
 
@@ -3280,7 +3282,14 @@ class Adapter:
             monitoring_string_replaced = info_monitoring_str.replace("'","\"")        
             monitoring_callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json'" + " --data '" +  monitoring_string_replaced  +  "' " + monitoring_callback        
             LOG.debug(monitoring_callback_post)		
-            call_mon = subprocess.check_output([monitoring_callback_post], shell=True)            
+            call_mon = subprocess.check_output([monitoring_callback_post], shell=True)
+            LOG.debug("instantiation_request_json: {}".format(instantiation_request_json))
+            instance_uuid = instantiation_request_json.get("instance_uuid")
+            LOG.debug("Instance uuid: {}".format(instance_uuid))
+            if content.get('policy_id') and instance_uuid:
+                LOG.debug("Get_Host_IP: {}".format(self.getHostIp()))
+                response = requests.get("{}/api/v3/policies/activate/{}/{}".format(self.getHostIp(), instance_uuid, content['policy_id']), verify=False)
+                LOG.debug("Policy activation result code: {} with text: {}".format(response.status_code, response.text ))
 
 
         if instance_status == 'ERROR': 
@@ -3349,7 +3358,8 @@ class Adapter:
         LOG.debug(content)
         name = content['service_name']
         vendor = content['service_vendor']
-        version = content['service_version']        
+        version = content['service_version']
+        policy_id = content.get('policy_id')
         callback = content['callback']
         my_type =  self.getDBType()  
         package_uploaded = False
@@ -3378,7 +3388,7 @@ class Adapter:
                 return msg  
             
             LOG.debug(instantiation_call)
-            _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call))
+            _thread.start_new_thread(self.SonataInstantiateCallback, (callback,instantiation_call,content))
             
             instantiation_call_str = instantiation_call.__str__()
             instantiation_call_str_replaced = instantiation_call_str.replace("'","\"")
@@ -3708,29 +3718,30 @@ class Adapter:
 
     def getPackageIdfromServiceId (self,service_id):
         LOG.info("get package id from service id starts")
-        package_id = None        
+        package_id = None
+        msg = ""
         vnv_packages = self.getVnVPackages()
+        LOG.debug("VnV packages: {}".format(vnv_packages))
         vnv_packages_json = json.loads(vnv_packages)
-        LOG.debug(vnv_packages_json)        
 
         for package in vnv_packages_json:
-            LOG.debug(package['uuid'])
+            LOG.debug("Package uuid: {}".format(package['uuid']))
             package_pd = package['pd']
             package_content = package_pd['package_content']
-            #LOG.debug(package_content)
+            LOG.debug("Package content: {}".format(package_content))
             for pc in package_content:
                 nsd_uuid = pc['uuid']
-                LOG.debug(nsd_uuid)
+                LOG.debug("nsd_uuid: {} == service_id: {}".format(nsd_uuid, service_id))
                 if nsd_uuid == service_id:                    
                     package_id = package['uuid']
 
-                    LOG.debug(package_id)
+                    LOG.debug("Package_id: {}".format(package_id))
                     LOG.info("get package id from service id finishing")
-                    return package_id
+                    return package_id, msg
         
         if package_id == None:
             msg = "error getting the id from the packages list"
-            return msg
+            return package_id, msg
         
 
     def backupgetPackageIdfromServiceId (self,service_id):
@@ -4094,8 +4105,8 @@ class Adapter:
                     return msg 
 
                 try:
-                    package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-                    LOG.debug(package_id)
+                    package_id, msg = self.getPackageIdfromServiceId(vnv_service_id)            
+                    LOG.debug("Package_id: {}".format(package_id))
                 except:                
                     msg = "{\"error\": \"error getting the package from the VnV Catalog\"}"
                     LOG.debug(msg)
@@ -4208,8 +4219,8 @@ class Adapter:
 
 
                 vnv_service_id = self.getVnVOSMServiceId(name,vendor,version)
-                package_id = self.getPackageIdfromServiceId(vnv_service_id)            
-                LOG.debug(package_id)
+                package_id, msg = self.getPackageIdfromServiceId(vnv_service_id)    
+                LOG.debug("Package_id: {}".format(package_id))
                 download_pkg = self.downloadPackageTGO(package_id)
                 LOG.debug(download_pkg)            
                 download_pkg_json = json.loads(download_pkg)
