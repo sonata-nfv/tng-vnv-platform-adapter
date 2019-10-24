@@ -506,6 +506,11 @@ def monitoring_tests(service_platform):
     ad = adapter.Adapter(service_platform)  
     return ad.monitoringTests("cpu_utilization")  
 
+@app.route('/adapters/policies', methods=['GET'])
+def get_policies():        
+    sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+    return jsonify(sp.get_policies_sonata())
+
 @app.route('/adapters/<service_platform>/monitoring', methods=['POST'])
 def monitoring(service_platform):  
     LOG.debug(request.is_json)

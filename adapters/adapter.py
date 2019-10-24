@@ -752,8 +752,8 @@ class Adapter:
             return (upload)  
 
         except:
-            LOG.debug ("there is not tar file")
-            LOG.debug (function_file_path)             
+            LOG.debug("there is not tar file")
+            LOG.debug("Function path: {}".format(function_file_path))             
             sp_host_2 = self.getHostIp()
             token = self.getOSMToken(function_file_path)
             LOG.debug(token)        

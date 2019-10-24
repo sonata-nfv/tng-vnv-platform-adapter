@@ -6,7 +6,11 @@ import requests
 from flask import Flask, request, jsonify, render_template
 import os, sys, logging, json, argparse 
 from configparser import ConfigParser
+from logger import TangoLogger
 
+LOG = TangoLogger.getLogger("adapter", log_level=logging.DEBUG, log_json=True)
+
+LOG.setLevel(logging.DEBUG)
 
 
 
@@ -354,6 +358,43 @@ class ServicePlatform:
                     connection.close()
                     print("PostgreSQL connection is closed")   
 
+    def get_runtime_policies(self, host):
+        LOG.debug("Getting policies from {}".format(host))
+        response = requests.get("{}/api/v3/policies".format(host), verify=False)
+        return response.json()
+
+    def get_policies_sonata(self):
+        try:
+            connection = psycopg2.connect(user = "sonatatest",
+                                        password = "sonata",
+                                        host = "son-postgres",
+                                        port = "5432",
+                                        database = "gatekeeper")
+            cursor = connection.cursor()
+            cursor.execute("SELECT name, host FROM service_platforms WHERE type = 'sonata';")
+            sonata_sps = cursor.fetchall()
+            # Saving the results
+            connection.commit()
+            LOG.debug("Sonata sps: {}".format(sonata_sps))
+
+            policies = []
+            for name, host in sonata_sps:
+                policy = self.get_runtime_policies(host)
+                LOG.debug("SP {} returns the policies: {}".format(name, policy))
+                policies.append({"platform_name": name, "policies": policy})
+
+            return policies
+
+        except (Exception, psycopg2.Error) as error:
+            if connection:
+                connection.rollback()
+            print("Error while connecting to PostgreSQL {}".format(error))
+
+        finally:
+            #closing database connection.
+            if connection:
+                cursor.close()
+                connection.close()
 
     def countServicePlatforms(self):
         try:
