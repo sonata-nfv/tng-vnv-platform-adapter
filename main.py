@@ -38,17 +38,16 @@ def sps():
         return sp.getServicePlatforms()
 
     if request.method == 'POST':
-        LOG.debug(request.is_json)
+        msg = {}
+        LOG.debug("Request: {}".format(request.is_json))
         vim_account = None
         content = request.get_json()
 
         is_url = validators.url(content['host'])
-        if is_url == True:
-            print ("The host is valid")
-        if is_url != True:
-            print ("the host is invalid") 
-            msg = "{\"error\": \"The host is invalid, please check\"}"           
-            return msg
+        if not is_url:
+            LOG.debug("The host provided is not valid")
+            msg['error'] = "The host provided is not valid. Format: 'http://<sp_ip>'"
+            return msg, 400
 
         try:
             vim_account = content['vim_account']
