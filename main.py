@@ -38,17 +38,16 @@ def sps():
         return sp.getServicePlatforms()
 
     if request.method == 'POST':
-        LOG.debug(request.is_json)
+        msg = {}
+        LOG.debug("Request: {}".format(request.is_json))
         vim_account = None
         content = request.get_json()
 
         is_url = validators.url(content['host'])
-        if is_url == True:
-            print ("The host is valid")
-        if is_url != True:
-            print ("the host is invalid") 
-            msg = "{\"error\": \"The host is invalid, please check\"}"           
-            return msg
+        if not is_url:
+            LOG.debug("The host provided is not valid")
+            msg['error'] = "The host provided is not valid. Format: 'http://<sp_ip>'"
+            return msg, 400
 
         try:
             vim_account = content['vim_account']
@@ -505,6 +504,11 @@ def adapter_callback_tests():
 def monitoring_tests(service_platform):        
     ad = adapter.Adapter(service_platform)  
     return ad.monitoringTests("cpu_utilization")  
+
+@app.route('/adapters/policies', methods=['GET'])
+def get_policies():        
+    sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+    return jsonify(sp.get_policies_sonata())
 
 @app.route('/adapters/<service_platform>/monitoring', methods=['POST'])
 def monitoring(service_platform):  
