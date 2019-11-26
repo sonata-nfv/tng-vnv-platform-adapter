@@ -337,7 +337,6 @@ def OSMInstantiationGetIPs(service_platform,id):
 
 @app.route('/adapters/<service_platform>/instantiations', methods=['POST'])
 def serviceInstantiation(service_platform):
-    LOG.info("dsjfjsdhgfjsdhfg")
     content = request.get_json()
     LOG.debug("service_uuid : "+content['service_uuid'])
     service_uuid = content['service_uuid']
