@@ -20,7 +20,7 @@ class User:
         try:
             connection = psycopg2.connect(user = "sonatatest",
                                         password = "sonata",
-                                        host = "172.18.0.2",
+                                        host = "son-postgres",
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()
@@ -47,7 +47,7 @@ class User:
         try:
             connection = psycopg2.connect(user = "sonatatest",
                                         password = "sonata",
-                                        host = "172.18.0.2",
+                                        host = "son-postgres",
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()
@@ -81,7 +81,7 @@ class User:
         try:
             connection = psycopg2.connect(user = "sonatatest",
                                         password = "sonata",
-                                        host = "172.18.0.2",
+                                        host = "son-postgres",
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()   

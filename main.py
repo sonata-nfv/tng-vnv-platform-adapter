@@ -299,9 +299,7 @@ def adapter_upload_package(service_platform):
 def adapter_download_package(package_id):
     ad = adapter.Adapter("service_platform")   
     return ad.downloadPackageTGO(package_id) 
-	
-
-    
+	    
 
 #### SERVICES OPERATIONS #### 
 @app.route('/adapters/<service_platform>/instantiations', methods=['GET'])
@@ -339,14 +337,9 @@ def OSMInstantiationGetIPs(service_platform,id):
 
 @app.route('/adapters/<service_platform>/instantiations', methods=['POST'])
 def serviceInstantiation(service_platform):
-    LOG.debug(request.is_json)
-    LOG.debug(request)
     content = request.get_json()
-    LOG.debug(request.get_json())    
-    LOG.debug(content)
-    LOG.debug(content['service_uuid'])
+    LOG.debug("service_uuid : "+content['service_uuid'])
     service_uuid = content['service_uuid']
-    LOG.debug(service_uuid)
     instantiate_str = "{\"service_uuid\": \"" + service_uuid + "\"}" 
     ad = adapter.Adapter(service_platform)      
     return ad.instantiation(instantiate_str)

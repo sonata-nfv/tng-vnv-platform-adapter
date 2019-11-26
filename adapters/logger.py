@@ -37,6 +37,7 @@ import sys
 import traceback
 
 
+
 class TangoLogger(object):
     """
     5GTAGNO logger that allows to switch to "JSON mode" to creat
@@ -65,6 +66,7 @@ class TangoLogger(object):
         "timestamp":"2018-11-15 19:25:49.348161 UTC"
     }
     """
+    logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s', datefmt='%Y-%m-%d:%H:%M:%S', level=logging.DEBUG)
 
     @staticmethod
     def reconfigure_all_tango_loggers(
@@ -107,6 +109,7 @@ class TangoLogger(object):
         Create a TangoLogger logger.
         """
         # all TangoLoggers are prefixed for global setup
+        
         logger = logging.getLogger("tango.{}".format(name))
         coloredlogs.install(logger=logger)
         th = TangoJsonLogHandler()
