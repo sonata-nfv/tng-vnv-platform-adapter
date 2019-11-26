@@ -1,0 +1,18 @@
+version: "3"
+services:
+  pg:
+    image: postgres:10.0-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - pg_data:/var/lib/postgresql/data/pg_data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_PASSWORD: sonata
+      POSTGRES_DB: gatekeeper
+      POSTGRES_USER: sonatatest
+      POSTGRES_PORT: 5432
+      PGDATA: /var/lib/postgresql/data/pg_data
+      
+volumes:
+  pg_data: 

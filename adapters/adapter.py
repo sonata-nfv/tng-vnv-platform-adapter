@@ -1039,22 +1039,23 @@ class Adapter:
             LOG.debug(url)            
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
-            LOG.debug(response_json)
             if response.ok: 
                 LOG.debug(response.text)       
                 return (response.text, response.status_code, response.headers.items())
+            else:
+                LOG.debug("response ko")
         if my_type == 'osm':
             sp_host_2 = self.getHostIp()
             sp_host_3 = sp_host_2[7:]  
             url = sp_host_3                        
             token = self.getOSMToken(request)
-            LOG.debug(token)
+            LOG.debug("OSM token : "+token)
             url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances'
             url_2 = url.replace("http","https")
             LOG.debug(url_2)            
             instances_1 = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "                    
             instances_2 = instances_1 +token + "\" "  + url_2
-            LOG.debug(instances_2)        
+            LOG.debug("instances"+ instances_2)        
             ns_instances = subprocess.check_output([instances_2], shell=True)
             ns_instances = subprocess.check_output([instances_2], shell=True)
             return (ns_instances)         
@@ -2221,25 +2222,25 @@ class Adapter:
 
         if my_type == 'sonata':
             instance_request = self.instantiationStatus(id) 
-            print(instance_request)               
+            LOG.info(instance_request)               
             instance_request_json = json.loads(instance_request)
             instance_uuid = instance_request_json['instance_uuid']
-            print(instance_uuid)
+            LOG.info(instance_uuid)
 
             url = self.getHostIp()
-            print(url)
+            LOG.info(url)
 
             response = "{\"ns_instance_uuid\": \"" + instance_uuid + "\",\"functions\":["
 
             url_records_services = url + ':32002/api/v3/records/services/' + instance_uuid
             service_record = requests.get(url_records_services,headers=JSON_CONTENT_HEADER)
-            print(service_record.text)
+            LOG.info(service_record.text)
             service_record_json = json.loads(service_record.text)
             vnfr_array = service_record_json['network_functions']
-            print(vnfr_array)
+            LOG.info(vnfr_array)
             for vnf in vnfr_array:
                 function_record_uuid = vnf['vnfr_id']
-                print(function_record_uuid)
+                LOG.info(function_record_uuid)
 
 
 
@@ -2252,21 +2253,21 @@ class Adapter:
                 url_records_functions = url + ':32002/api/v3/records/functions/' + function_record_uuid
                 function_record = requests.get(url_records_functions,headers=JSON_CONTENT_HEADER)
                 function_record_json = json.loads(function_record.text)
-                print(function_record_json)
+                LOG.info(function_record_json)
                 try:
                     function_vdu_array = function_record_json['cloudnative_deployment_units']
-                    print(function_vdu_array)
+                    LOG.info(function_vdu_array)
                     for vdu in function_vdu_array:
                         #LOG.debug(vdu['vim_id'])
                         function_vim = vdu['vim_id']
                         cdu_reference = vdu['cdu_reference']
                         #LOG.debug(function_vim)
-                        print(cdu_reference)
+                        LOG.info(cdu_reference)
                         cdu_reference_splitted = cdu_reference.split(":")
                         #cnf_name = cdu_reference[0: cdu_reference.find(":") ]
                         cnf_name = cdu_reference_splitted[1]
                         container_name = cnf_name
-                        print(cnf_name)
+                        LOG.info(cnf_name)
 
                         response = response + "{\"vnfr_id\": \"" + function_record_uuid + "\","
 
@@ -2281,17 +2282,17 @@ class Adapter:
                         response = response + "\"vim_endpoint\": \"" + vim_endpoint + "\"},"                 
                 except:                    
                     function_vdu_array = function_record_json['virtual_deployment_units']
-                    print(function_vdu_array)
+                    LOG.info(function_vdu_array)
                     for x in function_vdu_array:
-                        print(x)
+                        LOG.info(x)
                         vi = x['vnfc_instance']
-                        print(vi)
+                        LOG.info(vi)
                         for y in vi:  
-                            print(y)                                                                       
+                            LOG.info(y)                                                                       
                             function_vim = y['vim_id']
                             function_vc = y['vc_id']
-                            print(function_vim)
-                            print(function_vc)
+                            LOG.info(function_vim)
+                            LOG.info(function_vc)
                             response = response + "\"vc_id\": \"" + function_vc + "\","
                             response = response + "\"vim_id\": \"" + function_vim + "\","
                             vim_object= self.getVim(function_vim)
@@ -2494,15 +2495,7 @@ class Adapter:
         my_type =  self.getDBType()
 
         sp_ip = self.getSPIp()   
-        print (" ")
-        print (" ")
-        print (" ")
-        print (sp_ip)
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
-        print (" ")
+        LOG.info ("sp ip: "+ sp_ip)
 
   
 
