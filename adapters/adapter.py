@@ -106,11 +106,10 @@ class Adapter:
             #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_type = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"            
             cursor.execute(get_type)
-            all = cursor.fetchall()            
-            type_0 = all.__str__()            
-            type_1 = type_0[3:]                       
-            type_2 = type_1[:-4]             
-            return type_2
+            type = cursor.fetchone().__str__() 
+            LOG.info("dbtype : "+type)
+            return type           
+            
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
             exception_message = str(error)
@@ -474,10 +473,7 @@ class Adapter:
         LOG.info("upload osm service starts")
         my_type =  self.getDBType()
         if my_type == 'osm':               
-            sp_host_2 = self.getHostIp()
-            sp_host_3 = sp_host_2[7:]
-            #content = request.get_json()
-            #LOG.info(content)          
+            sp_host = self.getHostIp()
             token = self.getOSMToken(request)
             LOG.debug(token)
             #file_to_upload = content['service']
@@ -491,9 +487,7 @@ class Adapter:
                 'Content-Type':'application/zip', 
                 'Authorization':'Bearer ' +token+''                
             }
-            #LOG.debug(HEADERS)
-            #url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors'
-            url = sp_host_2 + ':9999/osm/nsd/v1/ns_descriptors_content'            
+            url = sp_host + ':9999/osm/nsd/v1/ns_descriptors_content'            
             url_2 = url.replace("http","https")
         
             upload_nsd = "curl -s -X POST --insecure -H \"Content-type: application/yaml\"  -H \"Accept: application/yaml\" -H \"Authorization: Bearer "
@@ -1036,6 +1030,7 @@ class Adapter:
             LOG.debug(url)            
             response = requests.get(url,headers=JSON_CONTENT_HEADER)
             response_json = response.content
+            LOG.debug(response_json)
             if response.ok: 
                 LOG.debug(response.text)       
                 return (response.text, response.status_code, response.headers.items())
@@ -1351,12 +1346,12 @@ class Adapter:
 
     def deleteOSMDescriptors(self,instance_id):
         LOG.debug("deleteOSMDescriptors begins")
-        sp_host_2 = self.getHostIp()
-        LOG.debug(sp_host_2)
+        sp_host = self.getHostIp()
+        LOG.debug(sp_host)
         token = self.getOSMToken(request)
         LOG.debug(token)        
         #url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
-        url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+        url = sp_host + ':9999/osm/nslcm/v1/ns_instances_content'
         url_2 = url.replace("http","https")
         LOG.debug(url_2)
 
@@ -1419,10 +1414,10 @@ class Adapter:
         my_type =  self.getDBType()
 
         if my_type == 'osm':
-            sp_host_2 = self.getHostIp()
-            url = sp_host_2 + ':9999/osm/admin/v1/tokens'
-            url_2 = url.replace("http","https")
-            LOG.debug(url_2)
+            sp_host = self.getHostIp()
+            url = sp_host + ':9999/osm/admin/v1/tokens'
+            url2 = url.replace("http","https")
+            LOG.debug(url2)
             pr_name = self.getDBProjectName()
             LOG.debug("project name from DB:")
             LOG.debug(pr_name)
@@ -1441,7 +1436,7 @@ class Adapter:
             data_for_token= "{username: \'" +username_for_token+ "\', password: \'" +password_for_token+ "\', project_id: \'" +project_id_for_token+ "\'}"
             LOG.debug(data_for_token)
 
-            get_token = requests.post(url_2,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
+            get_token = requests.post(url2,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
             LOG.debug(get_token.text)
             LOG.debug(get_token.content)
             token_id = get_token.json()
@@ -1468,8 +1463,7 @@ class Adapter:
         LOG.info("get vims starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
-    
-        
+
         if my_type == 'sonata':
             url = self.getHostIp()  
             LOG.debug(url)
@@ -1512,7 +1506,7 @@ class Adapter:
         LOG.info("get vim starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
-        
+
         if my_type == 'sonata':
             url = self.getHostIp()  
             LOG.debug(url)
