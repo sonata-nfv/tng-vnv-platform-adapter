@@ -134,11 +134,8 @@ class Adapter:
             #LOG.debug( connection.get_dsn_parameters(),"\n")
             get_type = "SELECT vim_account FROM service_platforms WHERE name=\'" +self.name+ "\'"            
             cursor.execute(get_type)
-            all = cursor.fetchall()            
-            type_0 = all.__str__()            
-            type_1 = type_0[3:]                       
-            type_2 = type_1[:-4]             
-            return type_2
+            vimaccount = cursor.fetchone().__str__()             
+            return vimaccount
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
             exception_message = str(error)
@@ -303,8 +300,8 @@ class Adapter:
             get_host = "SELECT host FROM service_platforms WHERE name=\'" +self.name+ "\'"
             LOG.debug(get_host)
             cursor.execute(get_host)
-            all = cursor.fetchall()
-            return all, 200    
+            host = cursor.fetchone()
+            return host, 200    
         except (Exception, psycopg2.Error) as error :
             #LOG.debug(error)
             LOG.error(error)
@@ -1062,7 +1059,6 @@ class Adapter:
 
     def instantiation(self,request):    
         LOG.info("instantiation starts")
-        LOG.debug("INSTANTIATION FUNCTION BEGINS")
         LOG.debug(request)
         request_str = request.__str__()
         LOG.debug(request_str)
@@ -1103,9 +1099,7 @@ class Adapter:
 
         if my_type == 'osm':
             #LOG.debug('this SP is a OSM')  
-            sp_host_2 = self.getHostIp()
-            sp_host_3 = sp_host_2[7:]
-            url = sp_host_3
+            sp_host = self.getHostIp()
             #content = request.get_json()
             LOG.debug("REQUEST")
             LOG.debug(request)
@@ -1115,13 +1109,13 @@ class Adapter:
             token = self.getOSMToken(request)
             LOG.debug(token)
             #content = request.get_json()           
-            url = sp_host_2 + ':9999/osm/nslcm/v1/ns_instances_content'
+            url = sp_host + ':9999/osm/nslcm/v1/ns_instances_content'
             url_2 = url.replace("http","https")
-            LOG.debug(url_2)
+            LOG.debug("ns_instances_content endpoint : "+url_2)
             vim_account = self.getVimAccount()
             vim_id = self.getVimId(vim_account)
-            LOG.debug(vim_id)
-            LOG.debug(content['nsd_name'])
+            LOG.debug("vim_id : "+vim_id)
+            LOG.debug("nsd_name : "+content['nsd_name'])
             #nsd_id = self.getOSMNsdId(content['nsd_name'])
             nsd_id = content['nsd_name']
             ns_name = content['ns_name']
@@ -1246,8 +1240,6 @@ class Adapter:
 
         if my_type == 'osm':
             sp_host_2 = self.getHostIp()
-            sp_host_3 = sp_host_2[7:]
-            url = sp_host_3
             LOG.debug(request)
             LOG.debug(url)
             token = self.getOSMToken(request)
@@ -1446,10 +1438,8 @@ class Adapter:
             username_for_token = self.getDBUserName()
             password_for_token = self.getDBPassword()
 
-            admin_data = "{username: 'admin', password: 'admin', project_id: 'admin'}"
-            LOG.debug(admin_data)
-            
             data_for_token= "{username: \'" +username_for_token+ "\', password: \'" +password_for_token+ "\', project_id: \'" +project_id_for_token+ "\'}"
+            LOG.debug(data_for_token)
 
             get_token = requests.post(url_2,data=data_for_token,headers=JSON_CONTENT_HEADER,verify=False)
             LOG.debug(get_token.text)
@@ -1478,7 +1468,8 @@ class Adapter:
         LOG.info("get vims starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
-
+    
+        
         if my_type == 'sonata':
             url = self.getHostIp()  
             LOG.debug(url)
@@ -1521,7 +1512,7 @@ class Adapter:
         LOG.info("get vim starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
-
+        
         if my_type == 'sonata':
             url = self.getHostIp()  
             LOG.debug(url)
@@ -1533,8 +1524,6 @@ class Adapter:
 
         if my_type == 'osm':
             sp_host_2 = self.getHostIp()
-            sp_host_3 = sp_host_2[7:]  
-            url = sp_host_3                            
             token = self.getOSMToken(request)
             LOG.debug(token)
             url = sp_host_2 + ':9999/osm/admin/v1/vim_accounts'
@@ -1552,6 +1541,8 @@ class Adapter:
 
     def getVimId(self,vim):    
         LOG.info("get vim id starts")
+        username_for_token = self.getDBUserName()
+        password_for_token = self.getDBPassword()
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
 
@@ -1563,21 +1554,15 @@ class Adapter:
 
         if my_type == 'osm':
             sp_host_2 = self.getHostIp()
-            sp_host_3 = sp_host_2[7:]  
-            url = sp_host_3                       
-            get_vim = "osm --hostname " + sp_host_3 + " vim-show " + vim
+            get_vim = "osm --user "+username_for_token+" --password \""+password_for_token+"\" --hostname " + sp_host_2 + " vim-show " + vim
             LOG.debug(get_vim)
             vim_info = subprocess.check_output([get_vim], shell=True)
-            LOG.debug(vim_info)            
-            LOG.debug(type(vim_info)) 
             s = json.dumps(str(vim_info))
-            LOG.debug(s)
-            LOG.debug(type(s))                 
+            LOG.debug("vim_info: "+s+" - type: "+ type(s) )           
             start = s.find('_id')
             end = s.find('\\\" ', start)
-            LOG.debug(s[start+20:end])
             vim_id = s[start+20:end]
-            LOG.debug(vim_id)
+            LOG.debug("vim_id: "+vim_id+" - start : "+s[start+20:end])
             return vim_id
 
 
@@ -2206,13 +2191,9 @@ class Adapter:
 
     def getHostIp(self):
         LOG.info("get host ip starts")
-        sp_host_0 = self.getDBHost()
-        sp_host = sp_host_0.__str__()
-        sp_host_1 = sp_host[4:]
-        sp_host_2 = sp_host_1[:-10]
-        url = sp_host_2
-        LOG.debug("getHostIp: {}".format(url))
-        return url
+        sp_host = self.getDBHost().__str__()
+        LOG.debug("getHostIp: {}".format(sp_host))
+        return sp_host
 
 
     def instantiationInfoMonitoringTest(self,id):    
@@ -3192,7 +3173,7 @@ class Adapter:
             LOG.debug(vim_account)            
 
             instantiate_str = "{\"nsd_name\": \"" + nsd_name + "\", \"ns_name\": \"" + ns_name + "\", \"vim_account\": \"" + vim_account + "\"}"
-
+            
             instantiation_call = None
 
             try:
@@ -3602,7 +3583,6 @@ class Adapter:
         LOG.debug(name)
         LOG.debug(vendor)
         LOG.debug(version)
-        LOG.debug("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
         for x in jjson:
             try:
