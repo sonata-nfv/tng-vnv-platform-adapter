@@ -1439,24 +1439,32 @@ class Adapter:
         LOG.info("get vim id starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         
-        url = self.db_host.replace("http","https")
-        
         if self.db_type == 'sonata':
-            url = url + ':32002/api/v3/requests'  
+            url = self.db_host + ':32002/api/v3/requests'  
             LOG.debug(url)
             return url
 
         if self.db_type == 'osm':
-            get_vim = "osm --user "+self.db_username+" --password \""+self.db_password+"\" --hostname " + url + " vim-show " + vim
+            url = self.db_host.replace("http://","")
+            url = url.replace("https://","")
+            get_vim = "osm --user "+self.db_username+" --password '"+self.db_password+"' --hostname " + url + " vim-show " + vim
             LOG.debug(get_vim)
-            vim_info = subprocess.check_output([get_vim], shell=True)
-            s = json.dumps(str(vim_info))
-            LOG.debug("vim_info: "+s+" - type: "+ type(s) )           
-            start = s.find('_id')
-            end = s.find('\\\" ', start)
-            vim_id = s[start+20:end]
-            LOG.debug("vim_id: "+vim_id+" - start : "+s[start+20:end])
-            return vim_id
+            
+            try:
+                vim_info = subprocess.check_output([get_vim], shell=True)
+                s = json.dumps(str(vim_info))
+                LOG.debug("OsmCliResponse: {}".format(s))
+                start = s.find('_id')
+                end = s.find('\\\" ', start)
+                vim_id = s[start+20:end]
+                LOG.debug("vim_id: "+vim_id+" - start : "+s[start+20:end])
+                return vim_id
+        
+            except E:
+                LOG.debug("Exception during osmclient call")
+                raise
+            
+            return None
 
 
 
