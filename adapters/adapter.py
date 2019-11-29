@@ -104,9 +104,9 @@ class Adapter:
                                         database = db.database)  
             cursor = connection.cursor()
             #LOG.debug( connection.get_dsn_parameters(),"\n")
-            get_type = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"            
-            cursor.execute(get_type)
-            type = cursor.fetchone().__str__() 
+            query = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"            
+            cursor.execute(query)
+            type = cursor.fetchone()[0] 
             LOG.info("dbtype : "+type)
             return type           
             
@@ -131,9 +131,10 @@ class Adapter:
                                         database = db.database)  
             cursor = connection.cursor()
             #LOG.debug( connection.get_dsn_parameters(),"\n")
-            get_type = "SELECT vim_account FROM service_platforms WHERE name=\'" +self.name+ "\'"            
-            cursor.execute(get_type)
-            vimaccount = cursor.fetchone().__str__()             
+            query = "SELECT vim_account FROM service_platforms WHERE name=\'" +self.name+ "\'"            
+            cursor.execute(query)
+            vimaccount = cursor.fetchone()[0]   
+            LOG.debug(vimaccount)       
             return vimaccount
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
@@ -159,17 +160,12 @@ class Adapter:
                                         database = db.database)  
             cursor = connection.cursor()
             #LOG.debug( connection.get_dsn_parameters(),"\n")
-            get_username = "SELECT username FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug(get_username)
-            cursor.execute(get_username)
-            all = cursor.fetchall()
-            type_0 = all.__str__()
-            LOG.debug(type_0)
-            type_1 = type_0[3:]            
-            LOG.debug(type_1)            
-            type_2 = type_1[:-4]            
-            LOG.debug(type_2)                  
-            return type_2
+            query = "SELECT username FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            LOG.debug(query)
+            cursor.execute(query)
+            username = cursor.fetchone()[0]
+            LOG.debug(username)
+            return username
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
             exception_message = str(error)
@@ -193,17 +189,10 @@ class Adapter:
                                         database = db.database)  
             cursor = connection.cursor()
             #LOG.debug( connection.get_dsn_parameters(),"\n")
-            get_project_name = "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            #LOG.debug(get_project_name)
-            cursor.execute(get_project_name)
-            all = cursor.fetchall()
-            type_0 = all.__str__()
-            #LOG.debug(type_0)
-            type_1 = type_0[3:]            
-            #LOG.debug(type_1)            
-            type_2 = type_1[:-4]            
-            #LOG.debug(type_2)                  
-            return type_2
+            query = "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            cursor.execute(query)
+            project_name = cursor.fetchone()[0]
+            return project_name
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
             exception_message = str(error)
@@ -226,17 +215,11 @@ class Adapter:
                                         database = db.database)  
             cursor = connection.cursor()
             #LOG.debug( connection.get_dsn_parameters(),"\n")
-            get_password= "SELECT password FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug(get_password)
-            cursor.execute(get_password)
-            all = cursor.fetchall()
-            type_0 = all.__str__()
-            #LOG.debug(type_0)
-            type_1 = type_0[3:]            
-            #LOG.debug(type_1)            
-            type_2 = type_1[:-4]            
-            #LOG.debug(type_2)                  
-            return type_2
+            query= "SELECT password FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            LOG.debug(query)
+            cursor.execute(query)
+            password = cursor.fetchone()[0]
+            return password
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
             exception_message = str(error)
@@ -259,17 +242,12 @@ class Adapter:
                                         database = db.database)  
             cursor = connection.cursor()
             #LOG.debug( connection.get_dsn_parameters(),"\n")
-            get_password= "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug(get_password)
+            query= "SELECT project_name FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            LOG.debug(query)
             cursor.execute(get_password)
-            all = cursor.fetchall()
-            type_0 = all.__str__()
-            #LOG.debug(type_0)
-            type_1 = type_0[3:]            
-            #LOG.debug(type_1)            
-            type_2 = type_1[:-4]            
-            #LOG.debug(type_2)                  
-            return type_2
+            project_name = cursor.fetchone()[0]
+            LOG.debug(project_name)
+            return project_name
         except (Exception, psycopg2.Error) as error :
             #LOG.debug(error)
             LOG.error(error)
@@ -296,10 +274,11 @@ class Adapter:
             cursor = connection.cursor()
             #LOG.debug( connection.get_dsn_parameters(),"\n")
             #LOG.debug(self.name)
-            get_host = "SELECT host FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug(get_host)
-            cursor.execute(get_host)
-            host = cursor.fetchone()
+            query = "SELECT host FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            LOG.debug(query)
+            cursor.execute(query)
+            host = cursor.fetchone()[0]
+            LOG.debug(host)
             return host, 200    
         except (Exception, psycopg2.Error) as error :
             #LOG.debug(error)
@@ -324,17 +303,12 @@ class Adapter:
                                         database = db.database)  
             cursor = connection.cursor()
             #LOG.debug( connection.get_dsn_parameters(),"\n")
-            get_type = "SELECT monitoring_urls FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug(get_type)
+            query = "SELECT monitoring_urls FROM service_platforms WHERE name=\'" +self.name+ "\'"
+            LOG.debug(query)
             cursor.execute(get_type)
-            all = cursor.fetchall()
-            type_0 = all.__str__()
-            #LOG.debug(type_0)
-            type_1 = type_0[3:]            
-            #LOG.debug(type_1)            
-            type_2 = type_1[:-4]            
-            #LOG.debug(type_2)                  
-            return type_2
+            monitoring_urls = cursor.fetchone()[0]
+            LOG.debug(monitoring_urls)
+            return monitoring_urls
         except (Exception, psycopg2.Error) as error :
             LOG.error(error)
             exception_message = str(error)
