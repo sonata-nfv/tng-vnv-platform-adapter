@@ -26,6 +26,9 @@ from configparser import ConfigParser
 import requests
 import psycopg2
 
+from osmclient import client as osmcli
+from osmclient.common.exceptions import ClientException
+
 from logger import TangoLogger
 
 LOG = TangoLogger.getLogger("adapter", log_level=logging.DEBUG, log_json=True)
@@ -1585,21 +1588,19 @@ class Adapter:
         service_id = response['id']
         LOG.debug(service_id)        
         status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id 
-        LOG.debug(status_url)
+        LOG.debug("status_url: {}".format(status_url))
         status_curl = subprocess.check_output([status_url], shell=True)
-        LOG.debug(status_curl)
-
         instance_json = json.loads(status_curl)
-        config_status = instance_json['config-status']
-        #LOG.debug(config_status)
+        
         operational_status = instance_json['operational-status']
-        #LOG.debug(operational_status)
-        detailed_status = instance_json['detailed-status']
-        status = None             
+        LOG.debug("operational_status: {}".format(operational_status))
+        
+        status = None 
+                    
         while ( operational_status != 'running' and operational_status != 'error' and operational_status != 'failed' ):               
             try:
-                status = data['config-status']                    
-                LOG.debug(status)
+                status = instance_json['config-status']
+                LOG.debug("config-status: {}".format(status)) 
             except:
                 LOG.debug("Retraying in 3 sec")
                 LOG.debug(status)
@@ -1640,8 +1641,9 @@ class Adapter:
 
         if operational_status == 'failed':
             #callback_msg = detailed_status.__str__()
+            detailed_status = instance_json['detailed-status']
+            LOG.debug("detailed_status: {}".format(detailed_status)) 
             callback_msg = str(detailed_status)
-            LOG.debug(detailed_status)
             callback_msg = "{\"error\": \"Error instantiating, check the logs\"}"
 
             callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url                
@@ -1656,9 +1658,10 @@ class Adapter:
             LOG.debug(call_monitoring)
 
         if operational_status == 'error':
-            #callback_msg = detailed_status.__str__()
+            
+            detailed_status = instance_json['detailed-status']
+            LOG.debug("detailed_status: {}".format(detailed_status)) 
             callback_msg = str(detailed_status)
-            LOG.debug(detailed_status)
             callback_msg = "{\"error\": \"Error instantiating, check the logs\"}"
 
             callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url                
@@ -1674,6 +1677,7 @@ class Adapter:
 
         #if operational_status == 'running':             
         if ( operational_status == 'running' and config_status == 'configured' ) :             
+            LOG.debug("RUNNING/CONFIGURED NS")
             status = config_status
             LOG.debug(status)
             callback_msg = self.instantiationInfoCurator(service_id)
