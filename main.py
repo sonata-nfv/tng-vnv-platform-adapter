@@ -5,7 +5,7 @@ import os, sys, logging, json, argparse
 from configparser import ConfigParser
 import requests
 from adapters import adapter as adapter
-from adapters import serviceplatform as serviceplatform
+from adapters.serviceplatform import ServicePlatform
 from models import utils
 from models import users
 import psycopg2
@@ -27,14 +27,14 @@ LOG.setLevel(logging.DEBUG)
 ##### SERVICE PLATFORMS ROUTES #####
 @app.route('/service_platforms/count', methods=['GET'])
 def countSPs():
-    sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+    sp = ServicePlatform()
     return sp.countServicePlatforms()
     
 
 @app.route('/service_platforms', methods=['GET','POST','OPTIONS','DELETE','PATCH'])
 def sps():
     if request.method == 'GET':
-        sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+        sp = ServicePlatform()
         return sp.getServicePlatforms()
 
     if request.method == 'POST':
@@ -61,21 +61,21 @@ def sps():
             try:
                 pr = content['project_name']
                 LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",mon_urls)
+                sp = ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",mon_urls)
                 return sp.registerServicePlatform()
             except:
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",mon_urls)
+                sp = ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",mon_urls)
                 return sp.registerServicePlatform()
         except:
             LOG.debug("mon_url does not exists")
             try:
                 pr = content['project_name']
                 LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",mon_urls)
+                sp = ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token",mon_urls)
                 return sp.registerServicePlatform() 
             except:
                 LOG.debug("project name does not exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",mon_urls)
+                sp = ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token",mon_urls)
                 return sp.registerServicePlatform()         
 
     if request.method == 'OPTIONS':
@@ -94,21 +94,21 @@ def sps():
             try:
                 pr = content['project_name']
                 LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
+                sp = ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
                 return sp.patchServicePlatform()
             except:
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
+                sp = ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
                 return sp.patchServicePlatform()
         except:
             LOG.debug("mon_url does not exists")
             try:
                 pr = content['project_name']
                 LOG.debug("project name exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
+                sp = ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],content['project_name'],vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
                 return sp.patchServicePlatform() 
             except:
                 LOG.debug("project name does not exists")
-                sp = serviceplatform.ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
+                sp = ServicePlatform(content['name'],content['host'],content['type'],content['username'],content['password'],"project_name",vim_account,"service_token","http://son-vnv-monitor-manager:8000/api/v2/services")
                 return sp.patchServicePlatform() 
 
 
@@ -116,17 +116,17 @@ def sps():
 @app.route('/service_platforms/<service_platform>', methods=['GET','DELETE','PATCH'])
 def sp(service_platform):
     if request.method == 'GET':
-        sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+        sp = ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
         return sp.getServicePlatform() 
     if request.method == 'DELETE':          
-        sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+        sp = ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
         return sp.deleteServicePlatform()
     if request.method == 'PATCH':    
         LOG.debug(request.is_json)
         content = request.get_json()
         LOG.debug(content) 
 
-        old_sp = serviceplatform.ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+        old_sp = ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
         old_sp_response =  old_sp.getServicePlatform()         
         old_sp_content = json.loads(old_sp_response[0])
 
@@ -147,7 +147,7 @@ def sp(service_platform):
         except:
             monitoring_urls = old_sp_content['monitoring_urls']
 
-        sp = serviceplatform.ServicePlatform(service_platform,host,old_sp_content['type'],username,password,old_sp_content['project_name'],old_sp_content['vim_account'],old_sp_content['service_token'],monitoring_urls)
+        sp = ServicePlatform(service_platform,host,old_sp_content['type'],username,password,old_sp_content['project_name'],old_sp_content['vim_account'],old_sp_content['service_token'],monitoring_urls)
         return sp.patchServicePlatform()
 
 
@@ -500,7 +500,7 @@ def monitoring_tests(service_platform):
 
 @app.route('/adapters/policies', methods=['GET'])
 def get_policies():        
-    sp = serviceplatform.ServicePlatform("name","host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
+    sp = ServicePlatform()
     return jsonify(sp.get_policies_sonata())
 
 @app.route('/adapters/<service_platform>/monitoring', methods=['POST'])
@@ -518,6 +518,7 @@ def adapter_instatiate_service():
     LOG.debug("Request: {}".format(content))
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
+    LOG.debug("AdapterStoredVars: {}".format(json.dumps(ad.__dict__)))
     LOG.debug(content) 
     return ad.instantiateService(request)  
    
