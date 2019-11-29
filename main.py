@@ -518,6 +518,7 @@ def adapter_instatiate_service():
     LOG.debug("Request: {}".format(content))
     sp = content['service_platform']
     ad = adapter.Adapter(sp) 
+    LOG.debug("AdapterStoredVars: {}".format(json.dumps(ad.__dict__)))
     LOG.debug(content) 
     return ad.instantiateService(request)  
    
