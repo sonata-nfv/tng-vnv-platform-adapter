@@ -30,197 +30,11 @@ class ServicePlatform:
 
 
 
-    def getServicePlatformVimAccount(self):
-        try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "son-postgres",
-                                        port = "5432",
-                                        database = "gatekeeper")
-            cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #create table Service Platforms
-            get_sp = "SELECT vim_account FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug (get_sp)
-            cursor.execute(get_sp)
-            all = cursor.fetchall()
-            return jsonify(all), 200     
-        except (Exception, psycopg2.Error) as error :
-            LOG.debug (error)
-            exception_message = str(error)
-            return exception_message, 401
-        finally:
-            #closing database connection.
-                if(connection):
-                    cursor.close()
-                    connection.close()
-                    LOG.debug("PostgreSQL connection is closed") 
 
 
 
-    def getServicePlatformUser(self):
-        try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "son-postgres",
-                                        port = "5432",
-                                        database = "gatekeeper")
-            cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #create table Service Platforms
-            get_sp = "SELECT username FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug (get_sp)
-            cursor.execute(get_sp)
-            all = cursor.fetchall()
-            return jsonify(all), 200     
-        except (Exception, psycopg2.Error) as error :
-            LOG.debug (error)
-            exception_message = str(error)
-            return exception_message, 401
-        finally:
-            #closing database connection.
-                if(connection):
-                    cursor.close()
-                    connection.close()
-                    LOG.debug("PostgreSQL connection is closed") 
 
 
-    def getServicePlatformMonitoringUrls(self):
-        try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "son-postgres",
-                                        port = "5432",
-                                        database = "gatekeeper")
-            cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #create table Service Platforms
-            get_sp = "SELECT monitoring_urls FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug (get_sp)
-            cursor.execute(get_sp)
-            all = cursor.fetchall()
-            return jsonify(all), 200     
-        except (Exception, psycopg2.Error) as error :
-            LOG.debug (error)
-            exception_message = str(error)
-            return exception_message, 401
-        finally:
-            #closing database connection.
-                if(connection):
-                    cursor.close()
-                    connection.close()
-                    LOG.debug("PostgreSQL connection is closed") 
-
-
-
-    def getServicePlatformPassword(self):
-        try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "son-postgres",
-                                        port = "5432",
-                                        database = "gatekeeper")
-            cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #create table Service Platforms
-            get_sp = "SELECT password FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug (get_sp)
-            cursor.execute(get_sp)
-            all = cursor.fetchall()
-            return jsonify(all), 200     
-        except (Exception, psycopg2.Error) as error :
-            LOG.debug (error)
-            exception_message = str(error)
-            return exception_message, 401
-        finally:
-            #closing database connection.
-                if(connection):
-                    cursor.close()
-                    connection.close()
-                    LOG.debug("PostgreSQL connection is closed") 
-
-
-    def getServicePlatformToken(self):
-        try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "son-postgres",
-                                        port = "5432",
-                                        database = "gatekeeper")
-            cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #create table Service Platforms
-            get_sp = "SELECT service_token FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug (get_sp)
-            cursor.execute(get_sp)
-            all = cursor.fetchall()
-            return jsonify(all), 200     
-        except (Exception, psycopg2.Error) as error :
-            LOG.debug (error)
-            exception_message = str(error)
-            return exception_message, 401
-        finally:
-            #closing database connection.
-                if(connection):
-                    cursor.close()
-                    connection.close()
-                    LOG.debug("PostgreSQL connection is closed") 
-
-
-
-    def getServicePlatflormType(self):
-        try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "son-postgres",
-                                        port = "5432",
-                                        database = "gatekeeper")
-            cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #create table Service Platforms
-            get_sp = "SELECT type FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug (get_sp)
-            cursor.execute(get_sp)
-            all = cursor.fetchall()
-            return jsonify(all), 200     
-        except (Exception, psycopg2.Error) as error :
-            LOG.debug (error)
-            exception_message = str(error)
-            return exception_message, 401
-        finally:
-            #closing database connection.
-                if(connection):
-                    cursor.close()
-                    connection.close()
-                    LOG.debug("PostgreSQL connection is closed") 
-
-
-
-    def getServicePlatformOLD(self):
-        try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "son-postgres",
-                                        port = "5432",
-                                        database = "gatekeeper")
-            cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #create table Service Platforms
-            get_sp = "SELECT * FROM service_platforms WHERE name=\'" +self.name+ "\'"
-            LOG.debug (get_sp)
-            cursor.execute(get_sp)
-            all = cursor.fetchall()
-            return jsonify(all), 200     
-        except (Exception, psycopg2.Error) as error :
-            LOG.debug (error)
-            exception_message = str(error)
-            return exception_message, 401
-        finally:
-            #closing database connection.
-                if(connection):
-                    cursor.close()
-                    connection.close()
-                    LOG.debug("PostgreSQL connection is closed")   
 
     def registerServicePlatform(self):
         try:
@@ -284,33 +98,6 @@ class ServicePlatform:
                     LOG.debug("PostgreSQL connection is closed")   
 
 
-
-
-    def getServicePlatflormsByType(self):
-        try:
-            connection = psycopg2.connect(user = "sonatatest",
-                                        password = "sonata",
-                                        host = "son-postgres",
-                                        port = "5432",
-                                        database = "gatekeeper")
-            cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #create table Service Platforms
-            get_sp = "SELECT * FROM service_platforms WHERE type=\'" +self.type+ "\'"
-            LOG.debug (get_sp)
-            cursor.execute(get_sp)
-            all = cursor.fetchall()
-            return jsonify(all), 200     
-        except (Exception, psycopg2.Error) as error :
-            LOG.debug (error)
-            exception_message = str(error)
-            return exception_message, 401
-        finally:
-            #closing database connection.
-                if(connection):
-                    cursor.close()
-                    connection.close()
-                    LOG.debug("PostgreSQL connection is closed")  
 
 
 
@@ -395,6 +182,7 @@ class ServicePlatform:
                 connection.close()
 
     def countServicePlatforms(self):
+        LOG.debug("counting service platforms")
         try:
             connection = psycopg2.connect(user = "sonatatest",
                                         password = "sonata",
@@ -402,33 +190,22 @@ class ServicePlatform:
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()   
-            LOG.debug ( connection.get_dsn_parameters(),"\n")
-            #cursor.execute("SELECT * FROM service_platforms")
-            #cursor.execute("SELECT to_json(row) FROM (SELECT * FROM service_platforms) row")
-            #sql = "SELECT row_to_json(row) FROM (SELECT * FROM service_platforms) row"
-            #cursor.execute(sql)
-            #all = cursor.fetchall()
-
-            #LOG.debug (all)
 
             sql = "SELECT count(*) from service_platforms WHERE type = \'sonata\';"
             cursor.execute(sql)
             results = cursor.fetchone()
-            LOG.debug (results)
             LOG.debug (results[0])
             sonata = results[0]
 
             sql = "SELECT count(*) from service_platforms WHERE type = \'osm\';"
             cursor.execute(sql)
             results = cursor.fetchone()
-            LOG.debug (results)
             LOG.debug (results[0])
             osm = results[0]
 
             sql = "SELECT count(*) from service_platforms WHERE type = \'onap\';"
             cursor.execute(sql)
             results = cursor.fetchone()
-            LOG.debug (results)
             LOG.debug (results[0])
             onap = results[0]
 
@@ -437,6 +214,9 @@ class ServicePlatform:
                 'OSM': osm,
                 'ONAP': onap
                 }
+            
+            LOG.debug(json)
+            
             json_replaced = json.__str__().replace("\'","\"")
             LOG.debug (json_replaced)
 

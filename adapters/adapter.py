@@ -26,7 +26,7 @@ from configparser import ConfigParser
 import requests
 import psycopg2
 
-from osmclient import client as osmcli
+from osmclient import client as osmclient
 from osmclient.common.exceptions import ClientException
 
 from logger import TangoLogger
@@ -57,7 +57,6 @@ class Adapter:
         self.db_project = self.__getDBProject()
         self.db_host = self.__getDBHost()
         self.mon_url = self.__getMonitoringURLs()
-        
          
 
     def getName(self):
@@ -991,14 +990,11 @@ class Adapter:
             instances_2 = instances_1 +token + "\" "  + url_2
             LOG.debug("instances"+ instances_2)        
             ns_instances = subprocess.check_output([instances_2], shell=True)
-            ns_instances = subprocess.check_output([instances_2], shell=True)
             return (ns_instances)         
 
     def instantiation(self,request):    
         LOG.info("instantiation starts")
-        LOG.debug(request)
-        request_str = request.__str__()
-        LOG.debug(request_str)
+        LOG.info("request: {}".format(request.__str__()))
         JSON_CONTENT_HEADER = {'content-Type':'application/json'}   
 
         if self.db_type == 'onap':
@@ -1033,24 +1029,23 @@ class Adapter:
                 return msg                  
 
         if self.db_type == 'osm':
-            LOG.debug("REQUEST")
-            LOG.debug(request)
             content = json.loads(request.__str__())
-            LOG.debug("CONTENT:")
-            LOG.debug(content)
+            LOG.info("osm-request: {}".format(content))
             token = self.getOSMToken(request)
-            LOG.debug(token)
             #content = request.get_json()           
-            url = self.db_host + ':9999/osm/nslcm/v1/ns_instances_content'
-            url_2 = url.replace("http","https")
-            LOG.debug("ns_instances_content endpoint : "+url_2)
+            
             vim_id = self.getVimId(self.vim_account)
-            LOG.debug("vim_id : "+vim_id)
-            LOG.debug("nsd_name : "+content['nsd_name'])
+            LOG.info("vim_id : {}".format(vim_id))
+            LOG.info("nsd_name : {}".format(content['nsd_name']))
             #nsd_id = self.getOSMNsdId(content['nsd_name'])
             nsd_id = content['nsd_name']
             ns_name = content['ns_name']
-            LOG.debug(nsd_id)
+            
+            LOG.info("nsd_id : {}".format(nsd_id))
+            
+            url = self.db_host + ':9999/osm/nslcm/v1/ns_instances_content'
+            url_2 = url.replace("http","https")
+            LOG.debug("ns_instances_content endpoint : "+url_2)
 
             HEADERS = {
                 'Accept':'application/json',
@@ -1068,7 +1063,7 @@ class Adapter:
             instantiate_nsd_2 = instantiate_nsd +token + "\" "
             instantiate_nsd_3 = instantiate_nsd_2 + " --data \"" + str(data_inst) + "\""
             instantiate_nsd_4 = instantiate_nsd_3 + " " + url_2
-            LOG.debug(instantiate_nsd_4)
+            LOG.info("instantiate_nsd : {}".format(instantiate_nsd_4) )
 
             inst = subprocess.check_output([instantiate_nsd_4], shell=True)
 
@@ -1577,43 +1572,56 @@ class Adapter:
             return (status)     
 
     def OSMInstantiateCallback(self, callback_url,inst_resp_yaml):
-
-        token = self.getOSMToken(request)
-        url = self.db_host + ':9999/osm/nslcm/v1/ns_instances_content'
-        url_2 = url.replace("http","https")        
-
         LOG.info("osm instantiate callback starts")
         LOG.debug("callback start")                
         response = yaml.load(inst_resp_yaml)
-        service_id = response['id']
-        LOG.debug(service_id)        
+        LOG.debug("inst_resp_yaml: {}".format(inst_resp_yaml))
+        token = self.getOSMToken(request)
+        
+        url = self.db_host + ':9999/osm/nslcm/v1/ns_instances_content'
+        url_2 = url.replace("http","https")         
+
         status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id 
         LOG.debug("status_url: {}".format(status_url))
-        status_curl = subprocess.check_output([status_url], shell=True)
-        instance_json = json.loads(status_curl)
         
-        operational_status = instance_json['operational-status']
-        LOG.debug("operational_status: {}".format(operational_status))
+        LOG.debug("nsd_name: {}".format(nsd_name))
+        LOG.debug("ns_name: {}".format(ns_name))
         
+        operational_status = None
         status = None 
-                    
+        '''
+        kwargs = {}
+        osmcli = osmclient.Client(host=self.db_host, sol005=True, **kwargs)
+        resp = osmcli.ns.create(nsd_name, ns_name, self.vim_account)
+        LOG.info("osmcli_inst_dump: {}".format(yaml.safe_dump(resp)))            
+        '''
         while ( operational_status != 'running' and operational_status != 'error' and operational_status != 'failed' ):               
             try:
+                '''
+                resp = osmcli.ns.create(nsd_name, ns_name, self.vim_account)
+                LOG.debug("osmcli_inst_dump: {}".format(yaml.safe_dump(resp)))
+                '''
+                status_curl = subprocess.check_output([status_url], shell=True)
+                
+                LOG.debug("status_curl: {}".format(status_curl))
+                instance_json = json.loads(status_curl)
+                
+                operational_status = instance_json['operational-status']
+                LOG.debug("operational_status: {}".format(operational_status))
+                
                 status = instance_json['config-status']
                 LOG.debug("config-status: {}".format(status)) 
-            except:
-                LOG.debug("Retraying in 3 sec")
-                LOG.debug(status)
-                time.sleep(3)
-                status_curl = subprocess.check_output([status_url], shell=True)
-                LOG.debug(status_curl)
-                instance_json = json.loads(status_curl)
-                config_status = instance_json['config-status']
-                LOG.debug(config_status)
-                operational_status = instance_json['operational-status']
-                LOG.debug(operational_status)
+                
                 detailed_status = instance_json['detailed-status']
-                LOG.debug(detailed_status)
+                LOG.debug("detailed_status: {}".format(detailed_status))
+                
+                LOG.debug("Retraying in 3 sec")
+                time.sleep(3)
+                
+            except:
+                LOG.debug("Exception while retrying")
+                
+               
 
         callback_msg = None
 
@@ -3028,8 +3036,8 @@ class Adapter:
             instantiation_call = None
 
             try:
-                instantiation_call = self.instantiation(instantiate_str)    
-                LOG.debug(instantiation_call)
+                instantiation_call = self.instantiation(instantiate_str)  
+                LOG.debug("instantiation_call: {}".format(instantiation_call))  
             except:
                 msg = "{\"error\": \"error instantiating, check the logs\"}"
                 return msg 
