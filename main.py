@@ -513,6 +513,8 @@ def monitoring(service_platform):
     
 @app.route('/adapters/instantiate_service', methods=['POST'])
 def adapter_instatiate_service():
+    LOG.info("start /adapters/instantiate_service")
+    LOG.info("request : {}".format(request.get_json()) )
     LOG.debug(request.is_json)
     content = request.get_json()
     LOG.debug("Request: {}".format(content))
