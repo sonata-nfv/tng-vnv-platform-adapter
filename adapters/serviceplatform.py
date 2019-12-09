@@ -74,8 +74,6 @@ class ServicePlatform:
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()
-            LOG.debug ( connection.get_dsn_parameters(),"\n")            
-            LOG.debug (self.name)
             #new_sp = "INSERT INTO service_platforms (name, host, type, username, password, project_name, service_token,monitoring_urls) VALUES (\'" +self.name+ "\',\'" +self.host+ "\',\'" +self.type+ "\',\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.project_name+ "\',\'" +self.service_token+ "\',\'" +self.monitoring_urls+ "\')"
             new_sp = "UPDATE service_platforms SET host=\'" +self.host+ "\',type=\'" +self.type+ "\',username=\'" +self.username+ "\',password=\'" +self.password+ "\',project_name=\'" +self.project_name+ "\',vim_account=\'" +self.vim_account+ "\',service_token=\'" +self.service_token+ "\',monitoring_urls=\'" +self.monitoring_urls+ "\' WHERE name=\'" +self.name+ "\'"                
             LOG.debug ("patch_string")
