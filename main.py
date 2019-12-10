@@ -85,9 +85,8 @@ def sps():
         return "delete", 200
 
     if request.method == 'PATCH':    
-        LOG.debug(request.is_json)
         content = request.get_json()
-        LOG.debug(content)  
+        LOG.debug("PATCH_SP: {}".format(content))
         try:      
             mon_urls = content['monitoring_urls']
             LOG.debug("mon_url exists")
@@ -124,7 +123,7 @@ def sp(service_platform):
     if request.method == 'PATCH':    
         LOG.debug(request.is_json)
         content = request.get_json()
-        LOG.debug(content) 
+        LOG.debug("PATCH_SP: {}".format(content))
 
         old_sp = ServicePlatform(service_platform,"host","type","username","password","project_name","vim_account","service_token","monitoring_urls")
         old_sp_response =  old_sp.getServicePlatform()         
@@ -143,11 +142,15 @@ def sp(service_platform):
         except:
             password = old_sp_content['password']
         try:
+            vim_account = content['vim_account']
+        except:
+            vim_account = old_sp_content['vim_account']    
+        try:
             monitoring_urls = content['monitoring_urls']
         except:
             monitoring_urls = old_sp_content['monitoring_urls']
 
-        sp = ServicePlatform(service_platform,host,old_sp_content['type'],username,password,old_sp_content['project_name'],old_sp_content['vim_account'],old_sp_content['service_token'],monitoring_urls)
+        sp = ServicePlatform(service_platform,host,old_sp_content['type'],username,password,old_sp_content['project_name'],vim_account,old_sp_content['service_token'],monitoring_urls)
         return sp.patchServicePlatform()
 
 
