@@ -1581,11 +1581,10 @@ class Adapter:
         url = self.db_host + ':9999/osm/nslcm/v1/ns_instances_content'
         url_2 = url.replace("http","https")         
 
+        service_id = response['id']
         status_url = "curl -s --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer " + token + "\" " + url_2 + "/" + service_id 
         LOG.debug("status_url: {}".format(status_url))
         
-        LOG.debug("nsd_name: {}".format(nsd_name))
-        LOG.debug("ns_name: {}".format(ns_name))
         
         operational_status = None
         status = None 
