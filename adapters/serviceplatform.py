@@ -12,8 +12,6 @@ LOG = TangoLogger.getLogger("adapter", log_level=logging.DEBUG, log_json=True)
 
 LOG.setLevel(logging.DEBUG)
 
-
-
 class ServicePlatform:
 
     def __init__(self,  name=None, host=None, type=None, username=None, password=None, project_name=None,vim_account=None, service_token=None,monitoring_urls=None):
@@ -26,15 +24,6 @@ class ServicePlatform:
         self.vim_account = vim_account
         self.service_token = service_token
         self.monitoring_urls = monitoring_urls
-
-
-
-
-
-
-
-
-
 
     def registerServicePlatform(self):
         try:
@@ -94,11 +83,6 @@ class ServicePlatform:
                     cursor.close()
                     connection.close()
                     LOG.debug("PostgreSQL connection is closed")   
-
-
-
-
-
 
     def getServicePlatforms(self):
         try:
@@ -188,24 +172,31 @@ class ServicePlatform:
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()   
+            print ( connection.get_dsn_parameters(),"\n")
+            onap = 0
+            sonata = 0
+            osm = 0
 
             sql = "SELECT count(*) from service_platforms WHERE type = \'sonata\';"
             cursor.execute(sql)
             results = cursor.fetchone()
             LOG.debug (results[0])
-            sonata = results[0]
+            if results[0]:
+                sonata = results[0]
 
             sql = "SELECT count(*) from service_platforms WHERE type = \'osm\';"
             cursor.execute(sql)
             results = cursor.fetchone()
             LOG.debug (results[0])
-            osm = results[0]
+            if results[0]:
+                osm = results[0]
 
             sql = "SELECT count(*) from service_platforms WHERE type = \'onap\';"
             cursor.execute(sql)
             results = cursor.fetchone()
             LOG.debug (results[0])
-            onap = results[0]
+            if results[0]:
+                onap = results[0]
 
             json = {
                 'SONATA': sonata,
@@ -228,9 +219,6 @@ class ServicePlatform:
                     cursor.close()
                     connection.close()
                     LOG.debug("PostgreSQL connection is closed")                      
-
-
-
 
     def getServicePlatform(self):
         try:
@@ -270,7 +258,6 @@ class ServicePlatform:
                     cursor.close()
                     connection.close()
                     LOG.debug("PostgreSQL connection is closed")                            
-
 
     def deleteServicePlatform(self):
         try:
