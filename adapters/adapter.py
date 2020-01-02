@@ -1607,8 +1607,8 @@ class Adapter:
                 operational_status = instance_json['operational-status']
                 LOG.debug("operational_status: {}".format(operational_status))
                 
-                status = instance_json['config-status']
-                LOG.debug("config-status: {}".format(status)) 
+                config_status = instance_json['config-status']
+                LOG.debug("config-status: {}".format(config_status)) 
                 
                 detailed_status = instance_json['detailed-status']
                 LOG.debug("detailed_status: {}".format(detailed_status))
@@ -1685,21 +1685,21 @@ class Adapter:
         if ( operational_status == 'running' and config_status == 'configured' ) :             
             LOG.debug("RUNNING/CONFIGURED NS")
             status = config_status
-            LOG.debug(status)
+            LOG.debug("status: ".format(status))
             callback_msg = self.instantiationInfoCurator(service_id)
-            LOG.debug(callback_msg)  
+            LOG.debug("callback_msg: ".format(callback_msg))
 
             callback_post = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + callback_url
-            LOG.debug(callback_post)
+            LOG.debug("callback_post: ".format(callback_post))
             call = subprocess.check_output([callback_post], shell=True)
             LOG.debug(call)
 
             #Monitoring callback       
             callback_msg = self.instantiationInfoMonitoring(service_id)
             callback_post_monitoring = "curl -s -X POST --insecure -H 'Content-type: application/json' " + " --data '" + callback_msg + "'" + " " + self.mon_url
-            LOG.debug(callback_post_monitoring)
+            LOG.debug("callback_post_monitoring: ".format(callback_post_monitoring))
             call_monitoring = subprocess.check_output([callback_post_monitoring], shell=True)
-            LOG.debug(call_monitoring)
+            LOG.debug("call_monitoring: ".format(call_monitoring))
         
         LOG.debug("callback ends")            
 
