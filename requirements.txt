@@ -5,3 +5,4 @@ pyyaml
 flask_cors
 coloredlogs
 validators
+git+https://osm.etsi.org/gerrit/osm/osmclient@v5.0.2

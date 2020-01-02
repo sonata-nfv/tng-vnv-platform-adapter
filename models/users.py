@@ -20,14 +20,13 @@ class User:
         try:
             connection = psycopg2.connect(user = "sonatatest",
                                         password = "sonata",
-                                        host = "172.18.0.2",
+                                        host = "son-postgres",
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()
             print ( connection.get_dsn_parameters(),"\n")
             #create table Service Platforms
             get_user = "SELECT * FROM pm_users WHERE username=\'" +self.username+ "\'"
-            print (get_user)
             cursor.execute(get_user)
             all = cursor.fetchall()
             return jsonify(all), 200     
@@ -47,7 +46,7 @@ class User:
         try:
             connection = psycopg2.connect(user = "sonatatest",
                                         password = "sonata",
-                                        host = "172.18.0.2",
+                                        host = "son-postgres",
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()
@@ -56,7 +55,7 @@ class User:
             #new_user = "INSERT INTO pm_users (username, password, service_platform) VALUES ('\'+ self.username + '\','\' + self.password + '\','\'+self.service_platform + '\')"
             print (self.username)
             new_user = "INSERT INTO pm_users (username, password, service_platform) VALUES (\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.service_platform+ "\')"
-            print (new_user)                    
+            LOG.info("new_user_created username : {}",format(self.username))
             cursor.execute(new_user)
             connection.commit()
             create_text = "New user registered"
@@ -81,7 +80,7 @@ class User:
         try:
             connection = psycopg2.connect(user = "sonatatest",
                                         password = "sonata",
-                                        host = "172.18.0.2",
+                                        host = "son-postgres",
                                         port = "5432",
                                         database = "gatekeeper")
             cursor = connection.cursor()   

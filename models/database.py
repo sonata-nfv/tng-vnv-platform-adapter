@@ -34,7 +34,6 @@ class Database:
             print ( connection.get_dsn_parameters(),"\n")
             #create table Service Platforms
             get_user = "SELECT * FROM pm_users WHERE username=\'" +self.username+ "\'"
-            print (get_user)
             cursor.execute(get_user)
             all = cursor.fetchall()
             return jsonify(all), 200     
@@ -63,7 +62,7 @@ class Database:
             #new_user = "INSERT INTO pm_users (username, password, service_platform) VALUES ('\'+ self.username + '\','\' + self.password + '\','\'+self.service_platform + '\')"
             print (self.username)
             new_user = "INSERT INTO pm_users (username, password, service_platform) VALUES (\'" +self.username+ "\',\'" +self.password+ "\',\'" +self.service_platform+ "\')"
-            print (new_user)                    
+            LOG.info("new_user_created username : {}",format(self.username))                  
             cursor.execute(new_user)
             connection.commit()
             create_text = "New user registered"

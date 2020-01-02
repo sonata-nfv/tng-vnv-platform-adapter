@@ -37,6 +37,7 @@ import sys
 import traceback
 
 
+
 class TangoLogger(object):
     """
     5GTAGNO logger that allows to switch to "JSON mode" to creat
