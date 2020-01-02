@@ -412,27 +412,32 @@ class ServicePlatform:
             #all = cursor.fetchall()
 
             #print (all)
-
+            onap = 0
+            sonata = 0
+            osm = 0
             sql = "SELECT count(*) from service_platforms WHERE type = \'sonata\';"
             cursor.execute(sql)
             results = cursor.fetchone()
             print (results)
             print (results[0])
-            sonata = results[0]
+            if results[0]:
+                sonata = results[0]
 
             sql = "SELECT count(*) from service_platforms WHERE type = \'osm\';"
             cursor.execute(sql)
             results = cursor.fetchone()
             print (results)
             print (results[0])
-            osm = results[0]
+            if results[0]:
+                osm = results[0]
 
             sql = "SELECT count(*) from service_platforms WHERE type = \'onap\';"
             cursor.execute(sql)
             results = cursor.fetchone()
             print (results)
             print (results[0])
-            onap = results[0]
+            if results[0]:
+                onap = results[0]
 
             json = {
                 'SONATA': sonata,

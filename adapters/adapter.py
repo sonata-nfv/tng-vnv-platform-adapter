@@ -1098,7 +1098,7 @@ class Adapter:
             except:
                 LOG.error("Error sending the request, check the connection and logs")
                 msg = "{\"error\": \"error sending the request, check the connection and logs\"}"
-                return msg                  
+                return msg
 
         if my_type == 'osm':
             #LOG.debug('this SP is a OSM')  
@@ -1156,7 +1156,8 @@ class Adapter:
             LOG.debug(inst)
             return (inst)
 
-    def instantiationDelete(self,request):    
+    def instantiationDelete(self,request):
+        INSTANTIATION_MAX_TIME: 1200
         LOG.info("instantiation delete starts")
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         my_type =  self.getDBType()
@@ -1201,16 +1202,11 @@ class Adapter:
             ns_id = content['instance_uuid']
             LOG.debug(ns_id)
 
-
-            #termination_request_json_dumps = json.dumps(terminate)
-            #LOG.debug(termination_request_json_dumps)
             termination_request_json = json.loads(terminate)
             LOG.debug(termination_request_json)
             LOG.debug(termination_request_json['id'])
             termination_request_id = termination_request_json['id']        
             LOG.debug(termination_request_id)
-
-
 
             # deleting the descriptors
             package_uploaded = content['package_uploaded']
@@ -1222,11 +1218,15 @@ class Adapter:
                     #request_status = self.SonataTerminateStatus(ns_id)
                     request_status = self.getRequestStatus(termination_request_id)
                     LOG.debug(request_status)
+                    time_start = time.time()
                     while request_status != 'READY':
                         time.sleep(5)
                         request_status = self.getRequestStatus(termination_request_id)
                         #request_status = self.SonataTerminateStatus(ns_id)      
-                        LOG.debug(request_status)  
+                        LOG.debug(request_status)
+                        time_total = time_start - time.time()
+                        if time_total > INSTANTIATION_MAX_TIME:
+                            return {"error": "PA Cannot terminate the service after 20 minutes"}
                     descriptor_reference_id = self.SonataTerminateDescriptorReference(ns_id)
                     LOG.debug(descriptor_reference_id)
                     name = self.SonataTerminateDescriptorName(descriptor_reference_id)
@@ -2768,27 +2768,16 @@ class Adapter:
         LOG.info("wait for instantiation starts")
         time.sleep(2)
         status = None
-        while status == None:
+        time_start = time.time()
+        while status != "READY":
             status =  self.getRequestStatus(id)
-            LOG.debug(status)
-            if status == None:
-                time.sleep(7)
-        while status == 'NEW':
-            status =  self.getRequestStatus(id)
-            LOG.debug(status)
-            if status == 'NEW':
-                time.sleep(7)        
-        while status == 'INSTANTIATING':
-            status =  self.getRequestStatus(id)
-            LOG.debug(status)
-            if status == 'INSTANTIATING':
-                time.sleep(7)  
-        if status == 'ERROR':
-            status =  self.getRequestError(id)
-            return "ERROR" 
-        if status == 'READY':
-            return status           
-        LOG.debug(status)
+            LOG.debug(status)        
+            if status == 'ERROR':
+                status =  self.getRequestError(id)
+                break
+            time_total = time_start - time.time()
+            if time_total > 1200:
+                return {"error": "PA Cannot instantiate the service after 20 minutes"}
         return status
         
     def getRequestError(self,id):
