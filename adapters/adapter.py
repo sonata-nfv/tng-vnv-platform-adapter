@@ -341,13 +341,12 @@ class Adapter:
         JSON_CONTENT_HEADER = {'Content-Type':'application/json'}   
         if self.db_type == 'sonata':               
             url = self.db_host + ':32002/api/v3/packages'
-            
             response = requests.get(url, headers=JSON_CONTENT_HEADER)    
-            if response.ok:        
-            
-                    LOG.info(response)                    
-                    LOG.debug(response.text.__str__())
-                    return response.text
+            LOG.debug("response: {}".format(response))
+            if response.ok:
+                LOG.debug("resp_ok: {}".format(response.text.__str__()))        
+                return response.text
+        
         if self.db_type == 'osm': 
             return "osm packages"
 
@@ -3591,20 +3590,17 @@ class Adapter:
 
 
     def getSPPackageIdfromServiceId (self,service_id):
-        LOG.info("get sp paclage id from service id starts")
+        LOG.info("get sp package id from service id starts")
         package_id = None
         correct_package = None
         vnv_packages = self.getPackages()
-        LOG.debug(vnv_packages)
         vnv_packages_json = json.loads(vnv_packages)
-        LOG.debug(vnv_packages_json)        
+        LOG.debug("vnv_packages: {}".format(vnv_packages_json))      
 
         for package in vnv_packages_json:
-            LOG.debug(package)
             package_pd = package['pd']
-            LOG.debug(package_pd)            
             package_content = package_pd['package_content']
-            LOG.debug(package_content)
+            LOG.debug("package_content: {}".format(package_content))
             
             for pc in package_content:
                 nsd_uuid = pc['uuid']
@@ -3613,7 +3609,7 @@ class Adapter:
                     correct_package = package
         
         package_id = correct_package['uuid']
-        LOG.debug(package_id)
+        LOG.debug("package_id: {}".format(package_id))
         return package_id
 
 
