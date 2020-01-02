@@ -1160,45 +1160,42 @@ class Adapter:
             return terminate
 
         if self.db_type == 'osm':
-            LOG.debug(request)
-            LOG.debug(url)
+            LOG.debug("request: {}".format(request))
+            # LOG.debug("OSM url: ".format(url))
             token = self.getOSMToken(request)
-            LOG.debug(token)
+            LOG.debug("token: {}".format(token))
 
             url = self.db_host + ':9999/osm/nslcm/v1/ns_instances_content'
             url_2 = url.replace("http","https")
             
             content = json.loads(request)
             ns_id = content['instance_uuid']
-            LOG.debug(ns_id)
+            LOG.debug("ns_id: {}".format(ns_id))
             
             
             LOG.debug(ns_id)
             delete_ns = "curl -s -X DELETE --insecure -H \"Content-type: application/json\"  -H \"Accept: application/json\" -H \"Authorization: Bearer "
-            delete_ns_2 = delete_ns +token + "\" "
-            delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id          
-            LOG.debug(delete_ns_3)
+            delete_ns_2 = delete_ns + token + "\" "
+            delete_ns_3 = delete_ns_2 + " " + url_2 + "/" + ns_id
+            LOG.debug("delete_ns: {}".format(delete_ns_3))
 
             # terminating the instance
             terminate = subprocess.check_output([delete_ns_3], shell=True)
             # deleting the descriptors
             package_uploaded = content['package_uploaded']
-            LOG.debug(package_uploaded)
+            LOG.debug("package_uploaded:  {}".format(package_uploaded))
             if ( package_uploaded == True ) or ( package_uploaded == "true" ) or ( package_uploaded == "True" ):
                 instance_status = self.OSMTerminateStatus(url_2,ns_id)
-                LOG.debug(instance_status)
+                LOG.debug("instance_status: {}".format(instance_status))
                 while instance_status != 'terminated':
                     time.sleep(2)
                     instance_status = self.OSMTerminateStatus(url_2,ns_id)
                 delete_descriptors = self.deleteOSMDescriptors(ns_id)
                 
-                LOG.debug(delete_descriptors)
-
-            LOG.debug(terminate)
-            #_thread.start_new_thread(self.OSMUploadServiceCallback, (token,url_2,callback_url,content['ns_id']))
+                LOG.debug("delete_descriptors: {}".format(delete_descriptors))
                                  
-            LOG.debug(terminate)
-            return (terminate)            
+            LOG.debug("terminate log: {}".format(terminate))
+            return (terminate)
 
 
     def SonataTerminateStatus(self,ns_id):
@@ -1738,25 +1735,21 @@ class Adapter:
         with open('/app/temp.file') as f:
             data = json.load(f)
 
-        status = 'my_status'
-        is_active = 'not'
+        status = '200'
 
-        while status != '404':    
-            while is_active == 'not':
-                try:
-                    status = data['admin']['deployed']['RO']['nsr_status'] 
-                    is_active = 'yes'
-                    status = '404'
-                except:
-                    is_active = 'not'
-                    status = 'my_status'
-                    LOG.debug("Retraying in 3 sec")
-                    LOG.debug(status)
-                    time.sleep(3)
+        while status != '404':
+            try:
+                status = data['status']
+                if status == '404':
+                    break
+                else:
                     status_curl = subprocess.check_output([status_url], shell=True)
-                    LOG.debug(status_curl)
                     with open('/app/temp.file') as f:
                         data = json.load(f)
+                    LOG.debug("status_curl: {}".format(status_curl))
+                    time.sleep(3)
+            except:
+                break
 
         status = "terminated"  
         return status
